@@ -10,8 +10,8 @@ before_script:
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
   - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-  - chmod 600 $ACHORD_SSH_KEY
-  - ssh-add $ACHORD_SSH_KEY
+  - chmod 600 $SSH_PRIVATE_KEY
+  - ssh-add $SSH_PRIVATE_KEY
   - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
 stages:

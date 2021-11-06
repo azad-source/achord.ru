@@ -1,0 +1,31 @@
+before_script:
+  - apt update -y
+  - apt upgrade -y
+  - apt -y install curl dirmngr apt-transport-https lsb-release ca-certificates
+  - curl -sL https://deb.nodesource.com/setup_12.x | bash -
+  - apt-get install -y nodejs
+  - apt -y install rsync
+  - 'which ssh-agent || ( apt-get install openssh-client -y )'
+  - eval $(ssh-agent -s)
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" >> ~/.ssh/config'
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -  
+  - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+stages:
+  - deploy-prod
+deploy-prod:
+  stage: deploy-prod
+  only:
+    - master
+  script:
+    - cd frontend/pianosheet/
+    - npm install
+    - npm run build
+    - pwd
+    - ssh $ACHORD_HOST_CONNECT "cd /var/www/pianosheet; git pull origin master; docker-compose restart; exit"
+    - scp -i ~/.ssh/known_hosts ./build/ $ACHORD_HOST_CONNECT:/var/www/pianosheet/frontend/pianosheet/build
+    
+    # - rsync -avz -e ssh ./build/ $ACHORD_HOST_CONNECT:/var/www/pianosheet/frontend/pianosheet/build
+    # - rsync -avz --del -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" ./build/ $ACHORD_HOST_CONNECT:$FRONTEND_BUILD_FOLDER_FULLPATH

@@ -1,8 +1,10 @@
 import { LogoutIcon } from 'components/shared/icons/LogoutIcon';
 import * as React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import styles from './MenuMobile.module.scss';
 import cn from 'classnames';
+import { Toggle } from 'components/shared/Toggle/Toggle';
+import { SheetsNav } from '../SheetsNav/SheetsNav';
 
 interface Props {
     items: { caption: string; link: string }[];
@@ -16,6 +18,14 @@ export const MenuMobile: React.FC<Props> = ({ items, logged, logout }) => {
         burger: { transform: 'none' },
         overlay: { display: 'none' },
     });
+
+    const location = useLocation();
+
+    React.useEffect(() => {
+        closeMenu();
+    }, [location]);
+
+    const [navLang, setNavLang] = React.useState<'ru' | 'en'>('en');
 
     const openMenu = () => {
         setMenu({
@@ -36,6 +46,10 @@ export const MenuMobile: React.FC<Props> = ({ items, logged, logout }) => {
     const logoutHandle = () => {
         logout();
         closeMenu();
+    };
+
+    const handleChangeNavLang = () => {
+        setNavLang((prev) => (prev === 'en' ? 'ru' : 'en'));
     };
 
     return (
@@ -81,6 +95,14 @@ export const MenuMobile: React.FC<Props> = ({ items, logged, logout }) => {
                             Вход
                         </NavLink>
                     )}
+                </div>
+                <div className={styles.sheetNav}>
+                    <Toggle
+                        onChange={handleChangeNavLang}
+                        position={navLang === 'en' ? 'right' : 'left'}
+                        items={['EN', 'RU']}
+                    />
+                    <SheetsNav isMenu hideEn={navLang != 'en'} hideRu={navLang != 'ru'} />
                 </div>
             </div>
         </div>

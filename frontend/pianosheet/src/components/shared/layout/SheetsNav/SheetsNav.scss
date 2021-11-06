@@ -6,46 +6,56 @@
   border-bottom: 1px solid #ccc;
   padding: 15px $sideSpace;
   margin-bottom: 10px;
+
+  &_isMenu {
+    padding: 15px 0;
+  }
 }
 
-.abcWrap {
+.wrapper {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.letterItem {
-  padding: 1px 1px;
-}
-
-.letterItemLink {
-  width: 31px;
-  height: 31px;
+.letter {
+  margin: 1px 1px;
+  width: 32px;
+  height: 32px;
   display: flex;
   justify-content: center;
   align-items: center;
   text-decoration: none;
   color: $mainText;
-  font-size: 17px;
+  font-size: 16px;
   text-transform: uppercase;
   border-radius: 50%;
-}
 
-.letterItemLink:hover {
-  background-color: $defaultBg;
-  color: #fff;
-  transition: 0.25s;
-}
+  &_inversion {
+    color: #fff;
+  }
 
-.activeLetterItem .letterItemLink {
-  background-color: $defaultBg;
-  color: #fff;
+  &:hover {
+    background-color: $defaultBg;
+    color: #fff;
+    transition: 0.25s;
+  }
+
+  &_active {
+    background-color: $defaultBg;
+    color: #fff;
+  }
 }
 
 @media screen and (max-width: 480px) {
   .root {
+    display: none;
     padding: 15px $sideSpace_480;
+
+    &_isMenu {
+      display: block;
+      padding: 15px 0;
+    }
   }
-  
 }

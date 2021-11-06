@@ -6,7 +6,7 @@ import { logout, useAuth } from 'api/UsersClient';
 import { SearchField } from 'components/shared/layout/SearchField/SearchField';
 import { SiteName } from 'domain/SiteInfo';
 import { Menu } from 'components/shared/layout/Menu/Menu';
-import { MenuMobile } from '../MenuMobile/MenuMobile';
+import { MenuMobile } from '../Menu/MenuMobile';
 import { Paths } from 'utils/routes/Paths';
 
 export const Header = () => {

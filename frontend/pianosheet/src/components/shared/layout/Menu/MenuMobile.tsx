@@ -11,29 +11,26 @@ interface Props {
 }
 
 export const MenuMobile: React.FC<Props> = ({ items, logged, logout }) => {
-    const [menuStyles, setMenuStyles] = React.useState({
-        transform: 'translateX(-150%)',
-    });
-    const [burgerBtnStyles, setBurgerBtnStyles] = React.useState({
-        transform: 'none',
-    });
-    const [overlayBtnStyles, setOverlayStyles] = React.useState({
-        display: 'none',
+    const [menu, setMenu] = React.useState({
+        main: { transform: 'translateY(-150%)' },
+        burger: { transform: 'none' },
+        overlay: { display: 'none' },
     });
 
     const openMenu = () => {
-        setMenuStyles({
-            transform: 'translateX(0)',
+        setMenu({
+            main: { transform: 'translateY(0)' },
+            burger: { transform: 'translateY(-300%)' },
+            overlay: { display: 'block' },
         });
-        setBurgerBtnStyles({ transform: 'translateY(-300%)' });
-        setOverlayStyles({ display: 'block' });
     };
+
     const closeMenu = () => {
-        setMenuStyles({
-            transform: 'translateX(-150%)',
+        setMenu({
+            main: { transform: 'translateY(-150%)' },
+            burger: { transform: 'none' },
+            overlay: { display: 'none' },
         });
-        setBurgerBtnStyles({ transform: 'none' });
-        setOverlayStyles({ display: 'none' });
     };
 
     const logoutHandle = () => {
@@ -43,21 +40,13 @@ export const MenuMobile: React.FC<Props> = ({ items, logged, logout }) => {
 
     return (
         <div className={styles.root}>
-            <div
-                className={styles.burgerMenu}
-                onClick={openMenu}
-                style={burgerBtnStyles}
-            >
+            <div className={styles.burgerMenu} onClick={openMenu} style={menu.burger}>
                 <span className={styles.burgerMenu_line}></span>
                 <span className={styles.burgerMenu_line}></span>
                 <span className={styles.burgerMenu_line}></span>
             </div>
-            <div
-                className={styles.overlay}
-                style={overlayBtnStyles}
-                onClick={closeMenu}
-            ></div>
-            <div className={styles.menuWrapper} style={menuStyles}>
+            <div className={styles.overlay} style={menu.overlay} onClick={closeMenu}></div>
+            <div className={styles.menuWrapper} style={menu.main}>
                 <div className={styles.closeMenu} onClick={closeMenu}></div>
                 <div className={styles.menuitems}>
                     {items.length > 0 &&

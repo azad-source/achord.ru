@@ -1,0 +1,66 @@
+@import 'styles/colors.scss';
+
+.root {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  height: 40px;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  flex-grow: 1;
+  border: 1px solid #ccc !important;
+  border-radius: 4px;
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+  margin: 0 !important;
+  box-sizing: border-box;
+  padding: 8px 10px !important;
+  font-size: 14px;
+  outline: none;
+}
+
+.input:focus {
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
+  transition: 0.3s;
+}
+
+.input::placeholder {
+  font-size: 16px !important;
+}
+
+.label {
+  position: relative;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  transition: 0.3s ease-in;
+}
+
+.loupe {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: $defaultBg !important;
+  padding-left: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+  color: #fff;
+  box-sizing: border-box;
+  padding: 5px 13px;
+  width: 50px;
+  height: calc(100% - 2px);
+  box-sizing: border-box;
+  border: 1px solid #fff;
+  border-radius: 0 4px 4px 0;
+}
+
+.loupe:hover {
+  opacity: 0.8;
+  transition: 0.2s;
+}

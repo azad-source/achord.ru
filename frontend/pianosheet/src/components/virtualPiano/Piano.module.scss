@@ -1,0 +1,185 @@
+*,
+body,
+html,
+div {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  line-height: 1;
+}
+
+body {
+  display: flex;
+  background-color: rgb(0, 0, 0);
+}
+
+/*----------- TABS ---------------  */
+/*----------------------------------*/
+
+.tab {
+  background-color: #01004b;
+  display: flex;
+  flex-direction: row;
+  box-shadow: 2px 1px 3px 4px rgba(0, 0, 0, 0.3);
+}
+
+.tab button {
+  background-color: inherit;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 25px 30px;
+  transition: 0.3s;
+  font-size: 24px;
+  color: #fff;
+}
+
+.tab button:hover {
+  background-color: rgb(47, 51, 255);
+}
+
+.tab button.active {
+  background-color: rgb(146, 162, 255);
+}
+
+.tabcontent {
+  display: none;
+  padding: 20px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+  background-color: rgb(205, 248, 255);
+}
+
+/*----------- TABS END -----------  */
+/*----------------------------------*/
+
+#root {
+  width: 100%;
+}
+
+/*----------------------------------*/
+/*----------- PIANO --------------  */
+
+.keyboard-wrapper {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  box-sizing: border-box;
+  box-shadow: 1px 1px 30px 15px rgb(255 255 255 / 65%);
+}
+
+.key-element {
+  box-sizing: border-box;
+  cursor: pointer;
+  border-radius: 0 0 10px 10px;
+  transition: 0.1s;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: column;
+  padding-bottom: 20px;
+  font-size: 0;
+  font-weight: bold;
+  font-family: sans-serif;
+}
+
+.key-element__white {
+  background-color: #fff;
+  width: 100%;
+  height: 400px;
+  max-height: 95vh;
+  box-shadow: 0 2px 3px 1px rgb(0 0 0 / 20%);
+  border: 3px outset rgba(0, 0, 0, 0.2);
+  border-top: 2px solid #bbb;
+  color: #333;
+}
+
+.key-element__black {
+  background-color: #000;
+  height: 200px;
+  position: absolute;
+  box-shadow: 0 1px 3px 1px rgb(0 0 0 / 20%);
+  border: 5px outset rgba(255, 255, 255, 0.3);
+  border-top: unset;
+  color: #ccc;
+}
+
+.key-element__white.key-element__pressed {
+  box-shadow: unset;
+  transition: 0.2s;
+  transform: scale3d(0.99, 0.97, 0.97);
+}
+
+.key-element__black.key-element__pressed {
+  box-shadow: unset;
+  transition: 0.2s;
+  height: 195px;
+  border: unset;
+}
+
+.keyboard-wrapper:hover .key-element {
+  font-size: 28px;
+}
+
+.accord-panel {
+  margin-top: 40px;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.accord-item {
+  font-size: 20px;
+  padding: 5px 20px;
+  border: unset;
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px 2px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: 0.1s;
+  box-sizing: border-box;
+  background-color: wheat;
+  margin-right: 20px;
+}
+
+.accord-item:active {
+  box-shadow: 1px 1px 1px 2px rgba(0, 0, 0, 0.15);
+  transition: 0.1s;
+}
+
+/*----------- DRUMS --------------  */
+/*----------------------------------*/
+
+.drums-wrapper {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-column-gap: 15px;
+  grid-row-gap: 15px;
+  padding: 20px;
+  box-shadow: 0 0 2px 4px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  width: 800px;
+  margin: 0 auto;
+}
+
+.drum-element {
+  padding: 50px 0;
+  box-shadow: 0 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  text-align: center;
+  font-size: 40px;
+  font-family: sans-serif;
+  font-weight: bold;
+  background-color: rgb(103, 180, 136);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.drum-element.drum-element__pressed {
+  box-shadow: unset;
+  transition: 0.2s;
+}

@@ -1,0 +1,32 @@
+@import 'styles/colors.scss';
+
+.root {
+  display: block;
+  width: 300px;
+}
+
+.title {
+  font-size: 20px;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.input {
+  width: 100%;
+  margin: 0 0 12px 0;
+}
+
+.btnsWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.errorsMsg {
+  margin: 15px 0;
+  color: $errorMsgColor;
+  font-size: 14px;
+  max-width: 300px;
+}

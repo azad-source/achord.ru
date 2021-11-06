@@ -1,0 +1,18 @@
+.root {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin-top: 20vh;
+}
+
+.successAuth {
+    display: flex;
+    flex-direction: column;
+}
+
+.successAuthMsg {
+    text-align: center;
+    font-size: 16px;
+    line-height: 2;
+}

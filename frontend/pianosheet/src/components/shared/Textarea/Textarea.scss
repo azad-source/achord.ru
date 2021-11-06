@@ -1,0 +1,19 @@
+.root {
+    display: block;
+    padding: 14px;
+    min-width: 240px;
+    border: none;
+    border-bottom: 1px solid #dedede;
+    background-color: #fff;
+    font-size: 18px;
+    color: #666;
+    letter-spacing: 1px;
+    margin: 0 12px 12px 0;
+    outline: none;
+    resize: none;
+}
+
+.root::placeholder {
+    color: #999;
+    font-size: 14px;
+}

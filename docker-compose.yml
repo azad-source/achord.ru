@@ -1,0 +1,24 @@
+version: "3.7"
+
+services: 
+    db:
+        image: postgres:12
+        volumes: 
+            - ./docker/postgres/backups/init.sql:/docker-entrypoint-initdb.d/init.sql
+            - ./pg_data:/db/data
+        env_file: .env
+        restart: always
+    web:
+        build: .
+        command: bash -c "python /usr/src/pianosheet/backend/manage.py collectstatic --noinput &&
+                cd ../../backend &&
+                gunicorn backend.wsgi:application --reload --bind 0.0.0.0:9001 --workers=3 --log-level debug"
+
+        volumes: 
+            - .:/usr/src/pianosheet
+        ports: 
+            - 127.0.0.1:9001:9001
+        depends_on: 
+            - db
+        env_file: .env
+        restart: always

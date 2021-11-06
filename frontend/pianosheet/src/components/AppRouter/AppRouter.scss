@@ -1,0 +1,10 @@
+@import 'styles/default.scss';
+@import 'styles/colors.scss';
+
+.root {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 100vh;
+    box-sizing: border-box;
+}

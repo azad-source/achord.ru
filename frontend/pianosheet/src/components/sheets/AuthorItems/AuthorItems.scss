@@ -1,0 +1,56 @@
+@import 'styles/default.scss';
+
+.root {
+  display: block;
+}
+
+.items {
+  display: grid;
+  grid-template-columns: repeat($authorGridColCount, 1fr);
+  grid-row-gap: 20px;
+  margin-bottom: 20px;
+}
+
+.formItem {
+  min-width: 100%;
+  margin: 0 12px 12px 0;
+}
+
+.formItem_Textarea::-webkit-scrollbar {
+  display: none;
+}
+
+.buttonsWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 25px;
+}
+
+@media screen and (max-width: 768px) {
+  .items {
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 10px;
+    grid-row-gap: 30px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .items {
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+  }
+
+  .item {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .item {
+    width: 130px;
+    height: 130px;
+  }
+}

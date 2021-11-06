@@ -1,0 +1,51 @@
+@import 'styles/colors.scss';
+@import 'styles/default.scss';
+
+.root {
+  display: block;
+  border-bottom: 1px solid #ccc;
+  padding: 15px $sideSpace;
+  margin-bottom: 10px;
+}
+
+.abcWrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.letterItem {
+  padding: 1px 1px;
+}
+
+.letterItemLink {
+  width: 31px;
+  height: 31px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: $mainText;
+  font-size: 17px;
+  text-transform: uppercase;
+  border-radius: 50%;
+}
+
+.letterItemLink:hover {
+  background-color: $defaultBg;
+  color: #fff;
+  transition: 0.25s;
+}
+
+.activeLetterItem .letterItemLink {
+  background-color: $defaultBg;
+  color: #fff;
+}
+
+@media screen and (max-width: 480px) {
+  .root {
+    padding: 15px $sideSpace_480;
+  }
+  
+}

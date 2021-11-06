@@ -1,0 +1,53 @@
+@import 'styles/colors.scss';
+
+.root {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.item {
+  border: 1px solid #333;
+  border-radius: 6px;
+  width: 50px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+  margin-right: 10px;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+}
+
+.item:last-child {
+  margin-right: 0;
+}
+
+.currentItem {
+  cursor: default;
+  background-color: #ccc;
+  border: none;
+}
+
+.item:not(.currentItem):hover {
+  background-color: $defaultBg;
+  color: #fff;
+}
+
+.small.root {
+  margin-top: 10px;
+  justify-content: left;
+}
+
+.small .item {
+  border: none;
+  width: unset;
+  height: unset;
+  padding: 8px;
+  border-radius: 4px;
+  margin-right: 8px;
+  font-size: 16px;
+}

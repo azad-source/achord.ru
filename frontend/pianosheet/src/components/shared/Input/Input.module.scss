@@ -1,0 +1,46 @@
+@import 'styles/colors.scss';
+
+.root {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  min-width: 240px;
+}
+
+.input {
+  display: block;
+  padding: 14px;
+  width: 100%;
+  max-width: 400px;
+  border: none;
+  border-bottom: 1px solid #dedede;
+  background-color: #fff;
+  font-size: 18px;
+  color: #666;
+  letter-spacing: 1px;
+  outline: none;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.input::placeholder {
+  color: #999;
+  font-size: 14px;
+}
+
+.file {
+  font-size: 14px;
+}
+
+.required {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.required::before {
+  position: relative;
+  content: '*';
+  color: $errorMsgColor;
+  margin-right: 2px;
+}

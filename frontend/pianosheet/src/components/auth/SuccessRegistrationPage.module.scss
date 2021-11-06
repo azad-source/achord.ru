@@ -1,0 +1,21 @@
+@import 'styles/colors.scss';
+
+.confirmMessage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  font-size: 24px;
+
+  &_success {
+    color: $mainText;
+  }
+  &_error {
+    color: $errorMsgColor;
+  }
+  &__description {
+    margin-top: 20px;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,56 @@
+@import './default.scss';
+@import './fonts.scss';
+@import './colors';
+
+body,
+html {
+  width: 100%;
+  height: auto;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $mainBgColor;
+  min-width: $siteWidth;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #444;
+  height: 0;
+  width: 0;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 5px;
+}
+
+::-webkit-scrollbar-button {
+  background: #444;
+}
+
+::-webkit-scrollbar-track-piece {
+  background: #eee;
+}
+
+.title {
+  margin-bottom: 35px;
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    display: block;
+    min-width: 275px;
+    width: 100%;
+  }
+}

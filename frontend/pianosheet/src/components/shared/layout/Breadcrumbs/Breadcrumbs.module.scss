@@ -1,0 +1,22 @@
+.root {
+  display: block;
+  margin-bottom: 25px;
+}
+
+.items {
+  display: flex;
+  flex-direction: row;
+}
+
+.item {
+  font-size: 14px;
+}
+
+.item,
+.link {
+  color: #333;
+}
+
+.separator {
+  margin: 0 5px;
+}

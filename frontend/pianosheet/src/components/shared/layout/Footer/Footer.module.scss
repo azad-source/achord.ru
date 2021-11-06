@@ -1,0 +1,20 @@
+@import '../../../../styles/default.scss';
+@import '../../../../styles/colors.scss';
+
+.root {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: $headerBgColor;
+    height: $footerHeight;
+    min-height: $footerHeight;
+    padding: 0 $sideSpace;
+    margin-top: auto;
+}
+
+.copyright {
+    color: #fff;
+    font-size: 16px;
+    letter-spacing: 1px;
+}

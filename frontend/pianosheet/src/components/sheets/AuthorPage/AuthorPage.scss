@@ -1,0 +1,183 @@
+@import 'styles/colors.scss';
+@import 'styles/default.scss';
+
+.root {
+  display: block;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  width: 100%;
+  letter-spacing: 1px;
+}
+
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.description {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
+}
+
+.photo {
+  margin-right: 20px;
+  overflow: hidden;
+  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  width: 400px;
+  height: 400px;
+  background-color: #cecece;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.authorInfo {
+  display: block;
+  width: 550px;
+  line-height: 1.8;
+  text-align: justify;
+}
+
+.sheets {
+  display: flex;
+  flex-direction: column;
+}
+
+.sheetItem {
+  padding: 4px 0 3px 45px;
+  background-color: #eee;
+  margin-bottom: 10px;
+  position: relative;
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
+}
+
+.sheetLink,
+.sheetLink:visited {
+  color: $linkColor;
+  font-size: 16px;
+  display: block;
+  text-decoration: none;
+}
+
+.sheetItem::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 25px;
+  height: 100%;
+  background-color: $defaultBg2;
+  transition: 0.4s;
+}
+
+.sheetItem:hover {
+  box-shadow: none;
+  transition: 0.25s;
+}
+
+.sheetItem:hover::before {
+  transform: rotate(45deg);
+  transition: 0.4s;
+  background-color: $defaultBg;
+  border-radius: 50%;
+}
+
+.sheetTitle {
+  font-size: 20px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ababab;
+}
+
+.notYetSheets {
+  font-size: 18px;
+  color: $errorMsgColor;
+  margin-bottom: 20px;
+}
+
+.sheetItemAdd {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #333;
+  box-sizing: border-box;
+  color: #fff;
+  padding: 3px;
+  border-radius: 4px;
+  transition: 0.2s;
+}
+
+.addSheetIcon {
+  margin-right: 20px;
+  width: 24px;
+  height: auto;
+  color: #fff;
+  transition: 0.2s;
+}
+
+.sheetItemAdd:hover {
+  color: #333;
+  background-color: transparent;
+  transition: 0.2s;
+}
+
+.sheetItemAdd:hover .addSheetIcon {
+  color: #333;
+  transition: 0.2s;
+}
+
+.items {
+  display: grid;
+  grid-template-columns: repeat($authorGridColCount, 1fr);
+  grid-row-gap: 20px;
+  margin-bottom: 20px;
+}
+
+.formItem {
+  min-width: 100%;
+  margin: 0 12px 12px 0;
+}
+
+.buttonsWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 25px;
+}
+
+@media screen and (max-width: 768px) {
+  .photo {
+    height: 300px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .description {
+    flex-direction: column;
+  }
+  .photo {
+    width: 100%;
+  }
+  .authorInfo {
+    margin-top: 20px;
+    width: 100%;
+  }
+}

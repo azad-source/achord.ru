@@ -1,0 +1,16 @@
+@import 'styles/default.scss';
+@import 'styles/colors.scss';
+
+.root {
+  padding: 10px $sideSpace;
+  box-sizing: border-box;
+  height: 100%;
+  flex-grow: 1;
+  position: relative;
+}
+
+@media screen and (max-width: 480px) {
+  .root {
+    padding: 10px $sideSpace_480;
+  }
+}

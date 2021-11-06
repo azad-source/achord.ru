@@ -1,0 +1,63 @@
+@import 'styles/default.scss';
+@import 'styles/colors.scss';
+
+.root {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background: $headerBgColor;
+  height: $headerHeight;
+  min-height: $headerHeight;
+  padding: 0 $sideSpace;
+}
+
+.logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-decoration: none;
+  outline: none;
+}
+
+.logoIcon {
+  box-sizing: border-box;
+  color: #fff;
+  transition: 0.5s ease-in-out;
+}
+
+.logo:hover .logoIcon {
+  transform: rotate(360deg);
+  transition: 0.5s ease-in-out;
+}
+
+.svg {
+  display: block;
+}
+
+.logoName {
+  margin-left: 16px;
+  font-size: 32px;
+  font-weight: bold;
+  color: #fff;
+  font-style: italic;
+  letter-spacing: 1px;
+}
+
+.search {
+  margin-left: 20px;
+}
+
+@media screen and (max-width: 480px) {
+  .root {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+  .logo {
+    display: none;
+  }
+  .search {
+    margin-left: 50px;
+  }
+}

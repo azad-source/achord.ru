@@ -1,0 +1,100 @@
+@import 'styles/colors.scss';
+
+.root {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  transition: 0.3s;
+}
+
+.modal {
+  background-color: #fff;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: auto;
+  z-index: 15;
+  box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.modalTitle {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #aaa;
+}
+
+.modalClose {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.modalClose::after,
+.modalClose::before {
+  position: absolute;
+  content: '';
+  width: 60%;
+  height: 2px;
+  background-color: $defaultBg;
+  top: 50%;
+  left: 50%;
+}
+
+.modalClose::after {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.modalClose::before {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.modalClose:hover {
+  background-color: $defaultBg;
+  transition: 0.25s;
+}
+
+.modalClose:hover.modalClose::after,
+.modalClose:hover.modalClose::before {
+  background-color: #fff;
+  transition: 0.25s;
+}
+
+.submitOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.05);
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+}
+
+@media screen and (max-width: 620px) {
+  .modal {
+    width: 97%;
+  }
+}

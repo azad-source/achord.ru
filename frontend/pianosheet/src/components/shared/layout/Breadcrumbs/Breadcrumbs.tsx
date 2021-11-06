@@ -2,7 +2,7 @@ import * as React from 'react';
 import styles from './Breadcrumbs.module.scss';
 
 interface Props {
-    items: { caption: string; link: string }[];
+    items: { caption: string; link?: string }[];
 }
 
 export const Breadcrumbs: React.FC<Props> = ({ items }) => {
@@ -15,21 +15,18 @@ export const Breadcrumbs: React.FC<Props> = ({ items }) => {
                             Главная
                         </a>
                     </div>
-                    {items.map(({ caption, link }, index) =>
-                        index === items.length - 1 ? (
-                            <div key={caption} className={styles.item}>
-                                <span className={styles.separator}>/</span>
-                                <span>{caption}</span>
-                            </div>
-                        ) : (
-                            <div key={caption} className={styles.item}>
-                                <span className={styles.separator}>/</span>
+                    {items.map(({ caption, link }) => (
+                        <div key={caption} className={styles.item}>
+                            <span className={styles.separator}>/</span>
+                            {link ? (
                                 <a className={styles.link} href={link}>
                                     {caption}
                                 </a>
-                            </div>
-                        ),
-                    )}
+                            ) : (
+                                <span>{caption}</span>
+                            )}
+                        </div>
+                    ))}
                 </div>
             )}
         </div>

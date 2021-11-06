@@ -19,11 +19,9 @@ export const SheetDownloadPage: React.FC<Props> = ({ className }) => {
     const { letter, authorAlias, sheetId } =
         useParams<{ letter: string; authorAlias: string; sheetId: string }>();
 
-    const [sheet, setSheet] =
-        React.useState<SheetItemJsModel>(defaultSheetItem);
+    const [sheet, setSheet] = React.useState<SheetItemJsModel>(defaultSheetItem);
 
-    const [author, setAuthor] =
-        React.useState<AuthorItemJsModel>(defaultAuthorItem);
+    const [author, setAuthor] = React.useState<AuthorItemJsModel>(defaultAuthorItem);
 
     const [disabled, setDisabled] = React.useState<boolean>(false);
 
@@ -31,9 +29,7 @@ export const SheetDownloadPage: React.FC<Props> = ({ className }) => {
         SheetsClient.getSheetById(sheetId).then((res) => {
             setSheet(res);
             document.title = `${SiteName} - ${res.name}`;
-            SheetsClient.getAuthorById(res.author).then((author) =>
-                setAuthor(author),
-            );
+            SheetsClient.getAuthorById(res.author).then((author) => setAuthor(author));
         });
     }, []);
 
@@ -50,10 +46,14 @@ export const SheetDownloadPage: React.FC<Props> = ({ className }) => {
         }, 1000);
     };
 
-    const breadcrumbs: { caption: string; link: string }[] = [
+    const breadcrumbs: { caption: string; link?: string }[] = [
         {
             caption: letter.toUpperCase(),
             link: Paths.getLetterPath(letter),
+        },
+        {
+            caption: 'Ноты',
+            link: Paths.sheetPage,
         },
         {
             caption: author.name,
@@ -61,7 +61,6 @@ export const SheetDownloadPage: React.FC<Props> = ({ className }) => {
         },
         {
             caption: sheet.name,
-            link: Paths.getSheetDownloadPath(letter, authorAlias, sheetId),
         },
     ];
 

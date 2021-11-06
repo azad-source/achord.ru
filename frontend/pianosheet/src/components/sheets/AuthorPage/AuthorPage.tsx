@@ -39,8 +39,7 @@ const AuthorPageFC: React.FC<Props> = ({
     addSheet,
 }) => {
     const [logged] = useAuth();
-    const { letter, authorAlias } =
-        useParams<{ letter: string; authorAlias: string }>();
+    const { letter, authorAlias } = useParams<{ letter: string; authorAlias: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const [showModal, setShowModal] = React.useState<boolean>(false);
     const [form, setForm] = React.useState<{
@@ -81,14 +80,17 @@ const AuthorPageFC: React.FC<Props> = ({
         setPageNumber(page);
     };
 
-    const breadcrumbs: { caption: string; link: string }[] = [
+    const breadcrumbs: { caption: string; link?: string }[] = [
         {
             caption: letter.toUpperCase(),
             link: Paths.getLetterPath(letter),
         },
         {
+            caption: 'Ноты',
+            link: Paths.sheetPage,
+        },
+        {
             caption: viewAuthor.name,
-            link: Paths.getAuthorPath(letter, authorAlias),
         },
     ];
 
@@ -106,9 +108,7 @@ const AuthorPageFC: React.FC<Props> = ({
                                 className={styles.image}
                             />
                         </div>
-                        <div className={styles.authorInfo}>
-                            {viewAuthor.info}
-                        </div>
+                        <div className={styles.authorInfo}>{viewAuthor.info}</div>
                     </div>
                     <div className={styles.sheetTitle}>НОТЫ</div>
                     {sheets.page_count > 1 && (
@@ -139,9 +139,7 @@ const AuthorPageFC: React.FC<Props> = ({
                                 ))}
                             </>
                         ) : (
-                            <div className={styles.notYetSheets}>
-                                Тут скоро появятся ноты
-                            </div>
+                            <div className={styles.notYetSheets}>Тут скоро появятся ноты</div>
                         )}
                         {sheets.page_count > 1 && (
                             <Pagination
@@ -152,10 +150,7 @@ const AuthorPageFC: React.FC<Props> = ({
                             />
                         )}
                         {logged && (
-                            <div
-                                className={cn(styles.sheetItemAdd)}
-                                onClick={openModal}
-                            >
+                            <div className={cn(styles.sheetItemAdd)} onClick={openModal}>
                                 <AddIcon className={styles.addSheetIcon} />
                                 Добавить ноты
                             </div>
@@ -164,18 +159,13 @@ const AuthorPageFC: React.FC<Props> = ({
                 </div>
             </div>
             {showModal && (
-                <Modal
-                    title="Добавление нот"
-                    onClose={() => setShowModal(false)}
-                >
+                <Modal title="Добавление нот" onClose={() => setShowModal(false)}>
                     <form onSubmit={(e) => addSheetHandler(e)}>
                         <Input
                             placeholder="Название нот"
                             className={styles.formItem}
                             value={form.sheetname}
-                            onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>,
-                            ) =>
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                 setForm({ ...form, sheetname: e.target.value })
                             }
                             minLength={4}
@@ -225,7 +215,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     );
 };
 
-export const AuthorPage = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(AuthorPageFC);
+export const AuthorPage = connect(mapStateToProps, mapDispatchToProps)(AuthorPageFC);

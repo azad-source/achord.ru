@@ -10,7 +10,6 @@ import { AuthorItemJsModel, AuthorJsModel } from 'domain/api/JsModels';
 import { AuthorItems } from '../AuthorItems/AuthorItems';
 import { QueryStatus } from 'domain/QueryStatus';
 import { SiteName } from 'domain/SiteInfo';
-import { Paths } from 'utils/routes/Paths';
 import { Breadcrumbs } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 
 interface Props {
@@ -20,12 +19,7 @@ interface Props {
     addAuthor: (author: FormData) => Promise<AuthorItemJsModel | false>;
 }
 
-const LetterPageFC: React.FC<Props> = ({
-    authors,
-    status,
-    getAuthors,
-    addAuthor,
-}) => {
+const LetterPageFC: React.FC<Props> = ({ authors, status, getAuthors, addAuthor }) => {
     const { letter } = useParams<{ letter: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const location = useLocation();
@@ -45,16 +39,9 @@ const LetterPageFC: React.FC<Props> = ({
         window.scroll({ top: 0, behavior: 'smooth' });
     };
 
-    const breadcrumbs: { caption: string; link: string }[] = [
-        {
-            caption: letter.toUpperCase(),
-            link: Paths.getLetterPath(letter),
-        },
-    ];
-
     return (
         <Page loadStatus={status}>
-            <Breadcrumbs items={breadcrumbs} />
+            <Breadcrumbs items={[{ caption: letter.toUpperCase() }]} />
             <div className={styles.root}>
                 <h1>{letter.toUpperCase()}</h1>
                 <AuthorItems
@@ -83,7 +70,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     );
 };
 
-export const LetterPage = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(LetterPageFC);
+export const LetterPage = connect(mapStateToProps, mapDispatchToProps)(LetterPageFC);

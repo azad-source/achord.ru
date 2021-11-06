@@ -1,24 +1,6 @@
 # pianosheet
 
-### Устновка backend
-``` 
-install_backend.bat
-```
 
-### Устновка frontend (файл в папке frontend)
-```
-install_frontend.bat
-```
-
-### Сборка frontend  (файл в папке frontend)
-```
-run_frontend.bat
-```
-
-### Запуск backend
-```
-run_backend.bat
-```
 
 ### Docker
 

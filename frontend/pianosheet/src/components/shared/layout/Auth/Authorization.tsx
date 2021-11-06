@@ -107,7 +107,7 @@ export const Authorization: React.FC<Props> = ({
                     Забыли пароль?
                 </Button>
             </div>
-            <div className={styles.socialItems}>
+            {/* <div className={styles.socialItems}>
                 {socialAuth.map((item) => (
                     <div className={styles.socialItem} key={item.provider}>
                         <a href={item.link} title={item.provider}>
@@ -115,7 +115,7 @@ export const Authorization: React.FC<Props> = ({
                         </a>
                     </div>
                 ))}
-            </div>
+            </div> */}
             {!!errorMessage && (
                 <div className={styles.errorsMsg}>{errorMessage}</div>
             )}

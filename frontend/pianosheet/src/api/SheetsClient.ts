@@ -29,7 +29,7 @@ export class SheetsClient {
 
     /** Получение автора по id */
     public static getAuthorById(id?: number): Promise<AuthorItemJsModel> {
-        return api.get(`${apiPath}/author/${id}`).then(retrieveData);
+        return api.get(`${apiPath}/author/${id}/`).then(retrieveData);
     }
 
     /** Получение всех нот */
@@ -46,7 +46,7 @@ export class SheetsClient {
 
     /** Получение нот по id */
     public static getSheetById(noteId?: string): Promise<SheetItemJsModel> {
-        return api.get(`${apiPath}/note/${noteId}`).then(retrieveData);
+        return api.get(`${apiPath}/note/${noteId}/`).then(retrieveData);
     }
 
     /** Добавление автора */

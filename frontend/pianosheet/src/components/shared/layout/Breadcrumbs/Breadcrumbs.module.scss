@@ -1,6 +1,7 @@
 .root {
   display: block;
   margin-bottom: 25px;
+  user-select: none;
 }
 
 .items {
@@ -10,11 +11,9 @@
 
 .item {
   font-size: 14px;
-}
-
-.item,
-.link {
   color: #333;
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .separator {

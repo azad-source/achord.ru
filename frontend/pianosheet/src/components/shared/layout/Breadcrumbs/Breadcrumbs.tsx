@@ -1,30 +1,36 @@
 import * as React from 'react';
+import { useHistory } from 'react-router';
 import styles from './Breadcrumbs.module.scss';
+import cn from 'classnames';
 
 interface Props {
     items: { caption: string; link?: string }[];
 }
 
 export const Breadcrumbs: React.FC<Props> = ({ items }) => {
+    const history = useHistory();
+
+    const goToPage = (link?: string) => {
+        if (link) history.push(link);
+    };
+
     return (
         <div className={styles.root}>
             {items.length > 0 && (
                 <div className={styles.items}>
-                    <div className={styles.item}>
-                        <a className={styles.link} href="/">
-                            Главная
-                        </a>
+                    <div className={styles.item} onClick={() => goToPage('/')}>
+                        Главная
                     </div>
+
                     {items.map(({ caption, link }) => (
-                        <div key={caption} className={styles.item}>
+                        <div key={caption}>
                             <span className={styles.separator}>/</span>
-                            {link ? (
-                                <a className={styles.link} href={link}>
-                                    {caption}
-                                </a>
-                            ) : (
-                                <span>{caption}</span>
-                            )}
+                            <span
+                                className={cn(!!link && styles.item)}
+                                onClick={() => goToPage(link)}
+                            >
+                                {caption}
+                            </span>
                         </div>
                     ))}
                 </div>

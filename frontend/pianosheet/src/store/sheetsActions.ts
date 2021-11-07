@@ -71,6 +71,7 @@ function addAuthor(
             })
             .catch((error) => {
                 dispatch(addAuthorFailed('', '', error));
+                dispatch(showWarning(error.response.data.detail));
                 return false;
             });
     };
@@ -274,6 +275,23 @@ function dropSearch(): GeneralThunkAction<void, SheetsState> {
     };
 }
 
+const ADD_WARNING = 'SHEETS/ADD_WARNING';
+function addWarning(warning: string): PayloadedAction<string> {
+    return { type: ADD_WARNING, payload: warning };
+}
+
+const CLEAR_WARNING = 'SHEETS/CLEAR_WARNING';
+function clearWarning(): Action<string> {
+    return { type: CLEAR_WARNING };
+}
+
+function showWarning(warning: string): GeneralThunkAction<void> {
+    return (dispatch) => {
+        dispatch(addWarning(warning));
+        setTimeout(() => dispatch(clearWarning()), 500);
+    };
+}
+
 export const sheetsAction = {
     getSheets,
     getAuthors,
@@ -329,4 +347,7 @@ export const sheetsActionTypes = {
     applySearchAuthorsComplete,
     DROP_SEARCH_COMPLETE,
     dropSearchComplete,
+    ADD_WARNING,
+    addWarning,
+    CLEAR_WARNING,
 };

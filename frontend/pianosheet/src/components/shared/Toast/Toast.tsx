@@ -22,7 +22,7 @@ export const useToast = (): {
         ),
         push: (notification: string) => {
             return toast(notification, {
-                position: 'bottom-center',
+                position: 'top-center',
                 autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,

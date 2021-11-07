@@ -10,6 +10,7 @@ import { sheetsAction } from 'store/sheetsActions';
 import { SheetsNav } from '../SheetsNav/SheetsNav';
 import { SearchApiResults } from 'store/sheetsReducer';
 import { SearchResults } from 'components/search/SearchResults';
+import { useToast } from 'components/shared/Toast/Toast';
 
 interface Props {
     className?: string;
@@ -17,6 +18,7 @@ interface Props {
     children: React.ReactNode;
     search: SearchApiResults;
     hideSheetsNav?: boolean;
+    warning?: string;
     dropSearch: () => void;
     searchSheets: (query: string, page: number) => void;
     searchAuthors: (query: string, page: number) => void;
@@ -28,13 +30,20 @@ const PageFC: React.FC<Props> = ({
     loadStatus = QueryStatus.success(),
     search,
     hideSheetsNav = false,
+    warning,
     dropSearch,
     searchSheets,
     searchAuthors,
 }) => {
-    let output: React.ReactNode = '';
-
     const [showContent, setShowContent] = React.useState<boolean>(false);
+
+    React.useEffect(() => {
+        setTimeout(() => {
+            setShowContent(true);
+        }, 500);
+    }, []);
+
+    let output: React.ReactNode = '';
 
     if (search.applied) {
         output = (
@@ -49,32 +58,29 @@ const PageFC: React.FC<Props> = ({
         output = loadStatus.isRequest() ? <Spinner /> : children;
     }
 
+    const { toast, push } = useToast();
+
     React.useEffect(() => {
-        setTimeout(() => {
-            setShowContent(true);
-        }, 500);
-    }, []);
+        if (warning) push(warning);
+    }, [warning]);
 
     return (
         <>
             {!hideSheetsNav && <SheetsNav />}
-            <div className={cn(styles.root, className)}>
-                {showContent ? output : <Spinner />}
-            </div>
+            <div className={cn(styles.root, className)}>{showContent ? output : <Spinner />}</div>
+            {toast}
         </>
     );
 };
 
 type OwnProps = Pick<Props, 'className' | 'loadStatus' | 'children'>;
 
-const mapStateToProps = (
-    state: RootState,
-    { className, loadStatus, children }: OwnProps,
-) => ({
+const mapStateToProps = (state: RootState, { className, loadStatus, children }: OwnProps) => ({
     className,
     loadStatus,
     children,
     search: state.sheets.search,
+    warning: state.sheets.warning,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {

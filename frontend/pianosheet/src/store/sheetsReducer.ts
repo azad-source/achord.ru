@@ -70,6 +70,7 @@ const sheetsDefaultState: SheetsState = {
     total: 0,
     status: QueryStatus.initial(),
     search: { ...defaultSearch },
+    warning: '',
 };
 
 export interface SheetsState {
@@ -79,6 +80,7 @@ export interface SheetsState {
     total: number;
     status: QueryStatus;
     search: SearchApiResults;
+    warning: string;
 }
 
 const {
@@ -117,6 +119,9 @@ const {
     APPLY_SEARCH_AUTHORS_COMPLETE,
     applySearchAuthorsComplete,
     DROP_SEARCH_COMPLETE,
+    ADD_WARNING,
+    addWarning,
+    CLEAR_WARNING,
 } = sheetsActionTypes;
 
 export function sheetsReducer(
@@ -291,6 +296,18 @@ export function sheetsReducer(
         case DROP_SEARCH_COMPLETE: {
             return produce(state, (draft) => {
                 draft.search = defaultSearch;
+            });
+        }
+
+        case ADD_WARNING: {
+            const { payload: warning } = action as ReturnType<typeof addWarning>;
+            return produce(state, (draft) => {
+                draft.warning = warning;
+            });
+        }
+        case CLEAR_WARNING: {
+            return produce(state, (draft) => {
+                draft.warning = '';
             });
         }
 

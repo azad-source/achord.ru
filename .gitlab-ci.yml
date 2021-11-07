@@ -16,7 +16,7 @@ before_script:
 stages:
   - deploy-prod
 deploy-prod:
-  stage: deploy-prod
+  stage: deploy-prod 
   only:
     - master
     - merge_requests

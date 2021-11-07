@@ -44,7 +44,7 @@ const TopAuthorsFC: React.FC<Props> = ({}) => {
 
     return (
         <div className={styles.root}>
-            <h1 className={defaultStyles.title}>Топ 10</h1>
+            <h1 className={defaultStyles.title}>Топ 10 Композиций</h1>
             <ol className={styles.topSheets}>
                 {topSheets.results.map((sheet, index) => {
                     if (index < 10) {

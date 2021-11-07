@@ -1,4 +1,5 @@
 import { SheetsClient } from 'api/SheetsClient';
+import { AxiosError } from 'axios';
 import {
     AuthorJsModel,
     AuthorItemJsModel,
@@ -36,6 +37,7 @@ function addSheet(sheet: FormData): GeneralThunkAction<void, RootState> {
             })
             .catch((error) => {
                 dispatch(addSheetFailed('', '', error));
+                errorHandler(error);
             });
     };
 }
@@ -71,7 +73,7 @@ function addAuthor(
             })
             .catch((error) => {
                 dispatch(addAuthorFailed('', '', error));
-                dispatch(showWarning(error.response.data.detail));
+                dispatch(errorHandler(error));
                 return false;
             });
     };
@@ -285,8 +287,14 @@ function clearWarning(): Action<string> {
     return { type: CLEAR_WARNING };
 }
 
-function showWarning(warning: string): GeneralThunkAction<void> {
+function errorHandler(e: AxiosError): GeneralThunkAction<void> {
     return (dispatch) => {
+        const statusCode = e.response?.status;
+        const statusText = e.response?.statusText;
+        const errorDetail = e.response?.data.detail;
+
+        const warning = `Код ошибки: ${statusCode}. ${errorDetail || statusText}`;
+
         dispatch(addWarning(warning));
         setTimeout(() => dispatch(clearWarning()), 500);
     };

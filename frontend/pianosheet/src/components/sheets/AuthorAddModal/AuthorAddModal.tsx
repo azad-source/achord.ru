@@ -20,13 +20,25 @@ interface Props {
 
 export const AuthorAddModal: React.FC<Props> = ({ closeModal, addAuthor }) => {
     const [form, setForm] = React.useState<authorAddModel>({ author: '', file: '', info: '' });
+    const [tempImage, setTempImage] = React.useState<string | ArrayBuffer | null>('');
 
     const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, author: e.target.value });
     };
 
     const chooseFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) setForm({ ...form, file: e.target.files[0] });
+        if (e.target.files) {
+            const file = e.target.files[0];
+            setForm({ ...form, file });
+
+            if (FileReader && file) {
+                var fileReader = new FileReader();
+                fileReader.onloadend = function () {
+                    setTempImage(fileReader.result);
+                };
+                fileReader.readAsDataURL(file);
+            }
+        }
     };
 
     const changeDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -50,14 +62,16 @@ export const AuthorAddModal: React.FC<Props> = ({ closeModal, addAuthor }) => {
                     maxLength={40}
                     required
                 />
-                <Input
-                    placeholder="Фото"
-                    type="file"
-                    className={styles.formItem}
-                    onChange={chooseFile}
-                    accept=".jpg, .jpeg, .png"
-                    size={maxUploadImageSize}
-                />
+                <div className={styles.formItem}>
+                    <img src={tempImage || form.file} width={150} />
+                    <Input
+                        placeholder="Фото"
+                        type="file"
+                        onChange={chooseFile}
+                        accept=".jpg, .jpeg, .png"
+                        size={maxUploadImageSize}
+                    />
+                </div>
                 <Textarea
                     placeholder="Описание"
                     maxLength={1000}

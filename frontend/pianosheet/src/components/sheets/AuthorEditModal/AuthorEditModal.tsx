@@ -27,6 +27,8 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
         preview: '',
     });
 
+    const [tempImage, setTempImage] = React.useState<string | ArrayBuffer | null>('');
+
     React.useEffect(() => {
         if (author)
             setForm({
@@ -41,7 +43,18 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
     };
 
     const chooseFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) setForm({ ...form, preview: e.target.files[0] });
+        if (e.target.files) {
+            const file = e.target.files[0];
+            setForm({ ...form, preview: file });
+
+            if (FileReader && file) {
+                var fileReader = new FileReader();
+                fileReader.onloadend = function () {
+                    setTempImage(fileReader.result);
+                };
+                fileReader.readAsDataURL(file);
+            }
+        }
     };
 
     const changeDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -65,14 +78,16 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
                     maxLength={40}
                     required
                 />
-                <Input
-                    placeholder="Фото"
-                    type="file"
-                    className={styles.formItem}
-                    onChange={chooseFile}
-                    accept=".jpg, .jpeg, .png"
-                    size={maxUploadImageSize}
-                />
+                <div className={styles.formItem}>
+                    <img src={tempImage || form.preview} width={150} />
+                    <Input
+                        placeholder="Фото"
+                        type="file"
+                        onChange={chooseFile}
+                        accept=".jpg, .jpeg, .png"
+                        size={maxUploadImageSize}
+                    />
+                </div>
                 <Textarea
                     placeholder="Описание"
                     maxLength={1000}

@@ -4,6 +4,7 @@ import cn from 'classnames';
 import { Link, useParams } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
 import defaultImg from 'images/default.png';
+import { Button } from '../Button/Button';
 
 interface Props {
     className?: string;
@@ -22,8 +23,7 @@ export const AuthorCard: React.FC<Props> = ({
     firstAuthorletter,
     index,
 }) => {
-    const { letter, composerName } =
-        useParams<{ letter: string; composerName: string }>();
+    const { letter, composerName } = useParams<{ letter: string; composerName: string }>();
 
     const curLetter = firstAuthorletter ? firstAuthorletter : letter;
 
@@ -43,4 +43,12 @@ export const AuthorCard: React.FC<Props> = ({
             <div className={styles.authorName}>{authorName}</div>
         </Link>
     );
+};
+
+interface AddProps {
+    onClick: () => void;
+}
+
+export const AuthorCardAdd: React.FC<AddProps> = ({ onClick }) => {
+    return <div className={styles.authorAddButton} onClick={onClick}></div>;
 };

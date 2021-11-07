@@ -1,10 +1,10 @@
 import * as React from 'react';
-import styles from './AuthorCardAdd.scss';
+import styles from './AuthorAddModal.scss';
 import cn from 'classnames';
 import { Button } from 'components/shared/Button/Button';
-import { Modal } from '../Modal/Modal';
-import { Input } from '../Input/Input';
-import { Textarea } from '../Textarea/Textarea';
+import { Modal } from 'components/shared/Modal/Modal';
+import { Input } from 'components/shared/Input/Input';
+import { Textarea } from 'components/shared/Textarea/Textarea';
 import { maxUploadImageSize } from 'domain/SiteInfo';
 
 export type authorEditModel = {
@@ -18,7 +18,7 @@ interface Props {
     addAuthor: (options: authorEditModel) => void;
 }
 
-export const AuthorCardAdd: React.FC<Props> = ({ closeModal, addAuthor }) => {
+export const AuthorAddModal: React.FC<Props> = ({ closeModal, addAuthor }) => {
     const [form, setForm] = React.useState<authorEditModel>({ author: '', file: '', info: '' });
 
     const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,7 +1,7 @@
 import { AuthorItemJsModel, AuthorJsModel } from 'domain/api/JsModels';
 import * as React from 'react';
-import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
-import { AuthorCardAdd, authorEditModel } from 'components/shared/AuthorCard/AuthorCardAdd';
+import { AuthorCard, AuthorCardAdd } from 'components/shared/AuthorCard/AuthorCard';
+import { AuthorAddModal, authorEditModel } from 'components/sheets/AuthorAddModal/AuthorAddModal';
 import styles from './AuthorItems.scss';
 import { Button } from 'components/shared/Button/Button';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
@@ -54,7 +54,7 @@ export const AuthorItems: React.FC<Props> = ({
                         className={styles.item}
                     />
                 ))}
-                {logged && <Button className={styles.authorAddButton} onClick={openModal}></Button>}
+                {logged && <AuthorCardAdd onClick={openModal} />}
             </div>
             {authors.page_count > 1 && (
                 <Pagination
@@ -63,7 +63,7 @@ export const AuthorItems: React.FC<Props> = ({
                     switchPage={getAuthorsByPage}
                 />
             )}
-            {showModal && <AuthorCardAdd closeModal={closeModal} addAuthor={addAuthorHandler} />}
+            {showModal && <AuthorAddModal closeModal={closeModal} addAuthor={addAuthorHandler} />}
         </div>
     );
 };

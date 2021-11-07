@@ -12,7 +12,7 @@ import { defaultAuthor, defaultSheet } from 'store/sheetsReducer';
 import styles from './TopAuthors.scss';
 import defaultStyles from 'styles/app.scss';
 import { Paths } from 'utils/routes/Paths';
-import { AuthorCard } from 'components/sheets/AuthorCard/AuthorCard';
+import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 
 interface Props {}
 

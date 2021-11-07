@@ -4,7 +4,7 @@ import { SearchApiResults } from 'store/sheetsReducer';
 import styles from './SearchResults.scss';
 import defaultStyles from 'styles/app.scss';
 import cn from 'classnames';
-import { AuthorCard } from 'components/sheets/AuthorCard/AuthorCard';
+import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { useLocation } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';

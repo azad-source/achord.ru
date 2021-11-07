@@ -1,7 +1,7 @@
 import { AuthorItemJsModel, AuthorJsModel } from 'domain/api/JsModels';
 import * as React from 'react';
 import { AuthorCard, AuthorCardAdd } from 'components/shared/AuthorCard/AuthorCard';
-import { AuthorAddModal, authorEditModel } from 'components/sheets/AuthorAddModal/AuthorAddModal';
+import { AuthorAddModal, authorAddModel } from 'components/sheets/AuthorAddModal/AuthorAddModal';
 import styles from './AuthorItems.scss';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { useAuth } from 'api/UsersClient';
@@ -28,7 +28,7 @@ export const AuthorItems: React.FC<Props> = ({
     const closeModal = () => setShowModal(false);
     const openModal = () => setShowModal(true);
 
-    const addAuthorHandler = (options: authorEditModel) => {
+    const addAuthorHandler = (options: authorAddModel) => {
         let formData = new FormData();
         formData.append('preview', options.file);
         formData.append('name', options.author);
@@ -44,13 +44,12 @@ export const AuthorItems: React.FC<Props> = ({
     return (
         <div className={styles.root}>
             <div className={styles.items}>
-                {authors.results.map(({ id, name, alias, preview_s }) => (
+                {authors.results.map((author) => (
                     <AuthorCard
-                        key={id + name}
-                        authorName={name}
-                        authorAlias={alias}
-                        authorPreview={preview_s}
+                        key={author.id}
+                        author={author}
                         className={styles.item}
+                        editable={logged}
                     />
                 ))}
                 {logged && <AuthorCardAdd onClick={openModal} />}

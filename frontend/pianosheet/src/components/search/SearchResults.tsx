@@ -11,6 +11,7 @@ import { Paths } from 'utils/routes/Paths';
 import { SheetItemJsModel } from 'domain/api/JsModels';
 import { SheetsClient } from 'api/SheetsClient';
 import { SiteName } from 'domain/SiteInfo';
+import { useAuth } from 'api/UsersClient';
 
 interface Props {
     search: SearchApiResults;
@@ -29,6 +30,7 @@ export const SearchResults: React.FC<Props> = ({
     const [pageNumberSheet, setPageNumberSheet] = React.useState<number>(1);
     const [pageNumberAuthor, setPageNumberAuthor] = React.useState<number>(1);
     const location = useLocation();
+    const [logged] = useAuth();
 
     const getSheetsByPage = (page: number) => {
         searchSheets(search.query, page);
@@ -100,20 +102,14 @@ export const SearchResults: React.FC<Props> = ({
                 {search.authors.results.length > 0 && (
                     <>
                         <h2>Найденные композиторы</h2>
-                        <div
-                            className={cn(
-                                styles.searchItems,
-                                styles.searchAuthors,
-                            )}
-                        >
+                        <div className={cn(styles.searchItems, styles.searchAuthors)}>
                             {search.authors.results.map((author) => (
                                 <AuthorCard
                                     key={author.id}
-                                    authorName={author.name}
-                                    authorAlias={author.alias}
-                                    authorPreview={author.preview_s}
+                                    author={author}
                                     className={styles.searchAuthor}
                                     firstAuthorletter={author.name.charAt(0)}
+                                    editable={logged}
                                 />
                             ))}
                         </div>

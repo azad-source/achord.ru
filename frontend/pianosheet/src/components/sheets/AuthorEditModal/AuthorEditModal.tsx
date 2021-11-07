@@ -1,32 +1,38 @@
 import * as React from 'react';
-import styles from './AuthorAddModal.module.scss';
+import styles from './AuthorEditModal.module.scss';
 import cn from 'classnames';
 import { Button } from 'components/shared/Button/Button';
 import { Modal } from 'components/shared/Modal/Modal';
 import { Input } from 'components/shared/Input/Input';
 import { Textarea } from 'components/shared/Textarea/Textarea';
 import { maxUploadImageSize } from 'domain/SiteInfo';
+import { AuthorItemJsModel } from 'domain/api/JsModels';
 
-export type authorAddModel = {
-    author: string;
-    file: any;
+export type authorEditModel = {
+    name: string;
     info: string;
+    preview: any;
 };
 
 interface Props {
+    author: AuthorItemJsModel;
     closeModal: () => void;
-    addAuthor: (options: authorAddModel) => void;
+    editAuthor: (options: authorEditModel) => void;
 }
 
-export const AuthorAddModal: React.FC<Props> = ({ closeModal, addAuthor }) => {
-    const [form, setForm] = React.useState<authorAddModel>({ author: '', file: '', info: '' });
+export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAuthor }) => {
+    const [form, setForm] = React.useState<authorEditModel>({
+        name: '',
+        info: '',
+        preview: '',
+    });
 
     const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({ ...form, author: e.target.value });
+        setForm({ ...form, name: e.target.value });
     };
 
     const chooseFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) setForm({ ...form, file: e.target.files[0] });
+        if (e.target.files) setForm({ ...form, preview: e.target.files[0] });
     };
 
     const changeDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -35,7 +41,7 @@ export const AuthorAddModal: React.FC<Props> = ({ closeModal, addAuthor }) => {
 
     const onSave = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        addAuthor(form);
+        editAuthor(form);
     };
 
     return (
@@ -44,7 +50,7 @@ export const AuthorAddModal: React.FC<Props> = ({ closeModal, addAuthor }) => {
                 <Input
                     placeholder="Автор"
                     className={styles.formItem}
-                    value={form.author}
+                    value={form.name}
                     onChange={changeName}
                     minLength={4}
                     maxLength={40}
@@ -68,7 +74,7 @@ export const AuthorAddModal: React.FC<Props> = ({ closeModal, addAuthor }) => {
                     onChange={changeDescription}
                 />
                 <div className={styles.buttonsWrapper}>
-                    <Button onClick={() => addAuthor(form)}>Добавить</Button>
+                    <Button onClick={() => editAuthor(form)}>Сохранить</Button>
                     <Button use="link" onClick={closeModal}>
                         Отменить
                     </Button>

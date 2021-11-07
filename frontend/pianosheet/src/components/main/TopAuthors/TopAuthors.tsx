@@ -1,9 +1,5 @@
 import { SheetsClient } from 'api/SheetsClient';
-import {
-    AuthorJsModel,
-    SheetItemJsModel,
-    SheetJsModel,
-} from 'domain/api/JsModels';
+import { AuthorJsModel, SheetItemJsModel, SheetJsModel } from 'domain/api/JsModels';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -13,14 +9,14 @@ import styles from './TopAuthors.scss';
 import defaultStyles from 'styles/app.scss';
 import { Paths } from 'utils/routes/Paths';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
+import { useAuth } from 'api/UsersClient';
 
 interface Props {}
 
 const TopAuthorsFC: React.FC<Props> = ({}) => {
-    const [topSheets, setTopSheets] =
-        React.useState<SheetJsModel>(defaultSheet);
-    const [topAuthors, setTopAuthors] =
-        React.useState<AuthorJsModel>(defaultAuthor);
+    const [topSheets, setTopSheets] = React.useState<SheetJsModel>(defaultSheet);
+    const [topAuthors, setTopAuthors] = React.useState<AuthorJsModel>(defaultAuthor);
+    const [logged] = useAuth();
 
     React.useEffect(() => {
         SheetsClient.getTopSheets().then((res) => {
@@ -66,12 +62,11 @@ const TopAuthorsFC: React.FC<Props> = ({}) => {
                         return (
                             <AuthorCard
                                 key={author.id}
-                                authorName={author.name}
-                                authorAlias={author.alias}
-                                authorPreview={author.preview_s}
+                                author={author}
                                 className={styles.topAuthorItem}
                                 firstAuthorletter={author.name.charAt(0)}
                                 index={index + 1}
+                                editable={logged}
                             />
                         );
                     }
@@ -89,7 +84,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     return bindActionCreators({}, dispatch);
 };
 
-export const TopAuthors = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(TopAuthorsFC);
+export const TopAuthors = connect(mapStateToProps, mapDispatchToProps)(TopAuthorsFC);

@@ -15,7 +15,7 @@ import { Paths } from 'utils/routes/Paths';
 import { SiteName } from 'domain/SiteInfo';
 import { useAuth } from 'api/UsersClient';
 import { Breadcrumbs } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
-import { SheetAddModal, sheetEditModel } from '../SheetAddModal/SheetAddModal';
+import { SheetAddModal, sheetAddModel } from '../SheetAddModal/SheetAddModal';
 
 interface Props {
     className?: string;
@@ -55,7 +55,7 @@ const AuthorPageFC: React.FC<Props> = ({
     const openModal = () => setShowModal(true);
     const closeModal = () => setShowModal(false);
 
-    const addSheetHandler = (options: sheetEditModel) => {
+    const addSheetHandler = (options: sheetAddModel) => {
         let formData = new FormData();
         formData.append('filename', options.filename);
         formData.append('name', options.sheetname);

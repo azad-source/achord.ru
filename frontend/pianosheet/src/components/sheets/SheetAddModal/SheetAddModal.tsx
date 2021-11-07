@@ -5,18 +5,18 @@ import { maxUploadPdfSize } from 'domain/SiteInfo';
 import * as React from 'react';
 import styles from './SheetAddModal.module.scss';
 
-export type sheetEditModel = {
+export type sheetAddModel = {
     sheetname: string;
     filename: any;
 };
 
 interface Props {
     closeModal: () => void;
-    addSheet: (options: sheetEditModel) => void;
+    addSheet: (options: sheetAddModel) => void;
 }
 
 export const SheetAddModal: React.FC<Props> = ({ closeModal, addSheet }) => {
-    const [form, setForm] = React.useState<sheetEditModel>({ sheetname: '', filename: '' });
+    const [form, setForm] = React.useState<sheetAddModel>({ sheetname: '', filename: '' });
 
     const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, sheetname: e.target.value });

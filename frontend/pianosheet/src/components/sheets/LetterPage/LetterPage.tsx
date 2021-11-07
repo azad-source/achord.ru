@@ -11,6 +11,7 @@ import { AuthorItems } from '../AuthorItems/AuthorItems';
 import { QueryStatus } from 'domain/QueryStatus';
 import { SiteName } from 'domain/SiteInfo';
 import { Breadcrumbs } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
+import { Paths } from 'utils/routes/Paths';
 
 interface Props {
     authors: AuthorJsModel;
@@ -39,9 +40,19 @@ const LetterPageFC: React.FC<Props> = ({ authors, status, getAuthors, addAuthor 
         window.scroll({ top: 0, behavior: 'smooth' });
     };
 
+    const breadcrumbs: { caption: string; link?: string }[] = [
+        {
+            caption: 'Ноты',
+            link: Paths.sheetPage,
+        },
+        {
+            caption: letter.toUpperCase(),
+        },
+    ];
+
     return (
         <Page loadStatus={status}>
-            <Breadcrumbs items={[{ caption: letter.toUpperCase() }]} />
+            <Breadcrumbs items={breadcrumbs} />
             <div className={styles.root}>
                 <h1>{letter.toUpperCase()}</h1>
                 <AuthorItems

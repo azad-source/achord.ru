@@ -19,6 +19,7 @@ deploy-prod:
   stage: deploy-prod
   only:
     - master
+    - merge_requests
   script:
     - cd frontend/pianosheet/
     - npm install

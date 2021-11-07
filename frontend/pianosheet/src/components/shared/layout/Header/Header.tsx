@@ -28,7 +28,7 @@ export const Header = () => {
             link: Paths.sheetPage,
         },
         {
-            caption: 'Виртуальное пианино',
+            caption: 'Piano',
             link: Paths.virtPianoPage,
         },
     ];

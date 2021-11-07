@@ -175,6 +175,45 @@ function getAuthor(alias: string): GeneralThunkAction<void, SheetsState> {
     };
 }
 
+const EDIT_AUTHOR_STARTED = 'SHEETS/EDIT_AUTHOR_STARTED';
+const EDIT_AUTHOR_COMPLETE = 'SHEETS/EDIT_AUTHOR_COMPLETE';
+const EDIT_AUTHOR_FAILED = 'SHEETS/EDIT_AUTHOR_FAILED';
+function editAuthorStarted(): Action {
+    return { type: EDIT_AUTHOR_STARTED };
+}
+function editAuthorComplete(
+    authorId: number,
+    author: AuthorItemJsModel,
+): PayloadedAction<{ authorId: number; author: AuthorItemJsModel }> {
+    return { type: EDIT_AUTHOR_COMPLETE, payload: { authorId, author } };
+}
+function editAuthorFailed(
+    reason: string,
+    message: string,
+    error: Error,
+): PayloadedAction<{ reason: string; message: string; error: Error }> {
+    return { type: EDIT_AUTHOR_FAILED, payload: { reason, message, error } };
+}
+
+function editAuthor(
+    authorId: number,
+    author: FormData,
+): GeneralThunkAction<Promise<AuthorItemJsModel | false>, RootState> {
+    return (dispatch) => {
+        dispatch(editAuthorStarted());
+        return SheetsClient.editAuthorById(authorId, author)
+            .then((res) => {
+                dispatch(editAuthorComplete(authorId, res));
+                return res;
+            })
+            .catch((error) => {
+                dispatch(editAuthorFailed('', '', error));
+                dispatch(errorHandler(error));
+                return false;
+            });
+    };
+}
+
 const APPLY_SEARCH_STARTED = 'SHEETS/APPLY_SEARCH_STARTED';
 const APPLY_SEARCH_COMPLETE = 'SHEETS/APPLY_SEARCH_COMPLETE';
 const APPLY_SEARCH_FAILED = 'SHEETS/APPLY_SEARCH_FAILED';
@@ -306,6 +345,7 @@ export const sheetsAction = {
     getAuthor,
     addAuthor,
     addSheet,
+    editAuthor,
     searchSheets,
     searchSheetsByPage,
     searchAuthorsByPage,
@@ -358,4 +398,10 @@ export const sheetsActionTypes = {
     ADD_WARNING,
     addWarning,
     CLEAR_WARNING,
+    EDIT_AUTHOR_STARTED,
+    EDIT_AUTHOR_COMPLETE,
+    EDIT_AUTHOR_FAILED,
+    editAuthorStarted,
+    editAuthorComplete,
+    editAuthorFailed,
 };

@@ -11,20 +11,13 @@ const apiPath = `/api/pianosheet`;
 
 export class SheetsClient {
     /** Получение всех авторов */
-    public static getAuthors(
-        letter?: string,
-        page?: number,
-    ): Promise<AuthorJsModel> {
-        return api
-            .get(`${apiPath}/author/`, { params: { letter, page } })
-            .then(retrieveData);
+    public static getAuthors(letter?: string, page?: number): Promise<AuthorJsModel> {
+        return api.get(`${apiPath}/author/`, { params: { letter, page } }).then(retrieveData);
     }
 
     /** Получение автора по алиасу */
     public static getAuthorByAlias(alias?: string): Promise<AuthorJsModel> {
-        return api
-            .get(`${apiPath}/author/`, { params: { alias } })
-            .then(retrieveData);
+        return api.get(`${apiPath}/author/`, { params: { alias } }).then(retrieveData);
     }
 
     /** Получение автора по id */
@@ -33,10 +26,7 @@ export class SheetsClient {
     }
 
     /** Получение всех нот */
-    public static getSheets(
-        author_alias?: string,
-        page?: number,
-    ): Promise<SheetJsModel> {
+    public static getSheets(author_alias?: string, page?: number): Promise<SheetJsModel> {
         return api
             .get(`${apiPath}/note/`, {
                 params: { author_alias, page },
@@ -73,37 +63,28 @@ export class SheetsClient {
             .then(retrieveData);
     }
 
+    /** Редактирование автора по id */
+    public static editAuthorById(id: number, author: FormData): Promise<AuthorItemJsModel> {
+        return api.patch(`${apiPath}/author/${id}/`, author).then(retrieveData);
+    }
+
     /** Поиск нот */
-    public static searchSheets(
-        query: string,
-        page?: number,
-    ): Promise<SheetJsModel> {
-        return api
-            .get(`${apiPath}/search/note/`, { params: { query, page } })
-            .then(retrieveData);
+    public static searchSheets(query: string, page?: number): Promise<SheetJsModel> {
+        return api.get(`${apiPath}/search/note/`, { params: { query, page } }).then(retrieveData);
     }
 
     /** Поиск авторов */
-    public static searchAuthors(
-        query: string,
-        page?: number,
-    ): Promise<AuthorJsModel> {
-        return api
-            .get(`${apiPath}/search/author/`, { params: { query, page } })
-            .then(retrieveData);
+    public static searchAuthors(query: string, page?: number): Promise<AuthorJsModel> {
+        return api.get(`${apiPath}/search/author/`, { params: { query, page } }).then(retrieveData);
     }
 
     /** Топ авторов */
     public static getTopAuthors(): Promise<AuthorJsModel> {
-        return api
-            .get(`${apiPath}/author/`, { params: { order_by: '-rate' } })
-            .then(retrieveData);
+        return api.get(`${apiPath}/author/`, { params: { order_by: '-rate' } }).then(retrieveData);
     }
 
     /** Топ нот */
     public static getTopSheets(): Promise<SheetJsModel> {
-        return api
-            .get(`${apiPath}/note/`, { params: { order_by: '-rate' } })
-            .then(retrieveData);
+        return api.get(`${apiPath}/note/`, { params: { order_by: '-rate' } }).then(retrieveData);
     }
 }

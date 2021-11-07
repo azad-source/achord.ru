@@ -1,5 +1,10 @@
 import { SheetsClient } from 'api/SheetsClient';
-import { AuthorJsModel, SheetItemJsModel, SheetJsModel } from 'domain/api/JsModels';
+import {
+    AuthorItemJsModel,
+    AuthorJsModel,
+    SheetItemJsModel,
+    SheetJsModel,
+} from 'domain/api/JsModels';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -10,10 +15,13 @@ import defaultStyles from 'styles/app.scss';
 import { Paths } from 'utils/routes/Paths';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { useAuth } from 'api/UsersClient';
+import { sheetsAction } from 'store/sheetsActions';
 
-interface Props {}
+interface Props {
+    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
+}
 
-const TopAuthorsFC: React.FC<Props> = ({}) => {
+const TopAuthorsFC: React.FC<Props> = ({ editAuthor }) => {
     const [topSheets, setTopSheets] = React.useState<SheetJsModel>(defaultSheet);
     const [topAuthors, setTopAuthors] = React.useState<AuthorJsModel>(defaultAuthor);
     const [logged] = useAuth();
@@ -67,6 +75,7 @@ const TopAuthorsFC: React.FC<Props> = ({}) => {
                                 firstAuthorletter={author.name.charAt(0)}
                                 index={index + 1}
                                 editable={logged}
+                                editAuthor={editAuthor}
                             />
                         );
                     }
@@ -76,12 +85,15 @@ const TopAuthorsFC: React.FC<Props> = ({}) => {
     );
 };
 
-const mapStateToProps = (state: RootState) => ({
-    authors: state.sheets.authors,
-});
+const mapStateToProps = (state: RootState) => ({});
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
-    return bindActionCreators({}, dispatch);
+    return bindActionCreators(
+        {
+            editAuthor: sheetsAction.editAuthor,
+        },
+        dispatch,
+    );
 };
 
 export const TopAuthors = connect(mapStateToProps, mapDispatchToProps)(TopAuthorsFC);

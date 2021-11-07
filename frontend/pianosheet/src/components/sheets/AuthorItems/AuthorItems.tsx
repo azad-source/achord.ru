@@ -13,6 +13,7 @@ interface Props {
     pageNumber: number;
     addAuthor: (author: FormData) => Promise<AuthorItemJsModel | false>;
     getAuthorsByPage: (page: number) => void;
+    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
 }
 
 export const AuthorItems: React.FC<Props> = ({
@@ -20,6 +21,7 @@ export const AuthorItems: React.FC<Props> = ({
     pageNumber,
     addAuthor,
     getAuthorsByPage,
+    editAuthor,
 }) => {
     const [logged] = useAuth();
     const [showModal, setShowModal] = React.useState<boolean>(false);
@@ -50,6 +52,7 @@ export const AuthorItems: React.FC<Props> = ({
                         author={author}
                         className={styles.item}
                         editable={logged}
+                        editAuthor={editAuthor}
                     />
                 ))}
                 {logged && <AuthorCardAdd onClick={openModal} />}

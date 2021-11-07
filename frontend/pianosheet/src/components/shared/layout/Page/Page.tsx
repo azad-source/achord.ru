@@ -11,6 +11,7 @@ import { SheetsNav } from '../SheetsNav/SheetsNav';
 import { SearchApiResults } from 'store/sheetsReducer';
 import { SearchResults } from 'components/search/SearchResults';
 import { useToast } from 'components/shared/Toast/Toast';
+import { AuthorItemJsModel } from 'domain/api/JsModels';
 
 interface Props {
     className?: string;
@@ -22,6 +23,7 @@ interface Props {
     dropSearch: () => void;
     searchSheets: (query: string, page: number) => void;
     searchAuthors: (query: string, page: number) => void;
+    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
 }
 
 const PageFC: React.FC<Props> = ({
@@ -34,6 +36,7 @@ const PageFC: React.FC<Props> = ({
     dropSearch,
     searchSheets,
     searchAuthors,
+    editAuthor,
 }) => {
     const [showContent, setShowContent] = React.useState<boolean>(false);
 
@@ -52,6 +55,7 @@ const PageFC: React.FC<Props> = ({
                 skipSearch={dropSearch}
                 searchSheets={searchSheets}
                 searchAuthors={searchAuthors}
+                editAuthor={editAuthor}
             />
         );
     } else {
@@ -89,6 +93,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
             dropSearch: sheetsAction.dropSearch,
             searchSheets: sheetsAction.searchSheetsByPage,
             searchAuthors: sheetsAction.searchAuthorsByPage,
+            editAuthor: sheetsAction.editAuthor,
         },
         dispatch,
     );

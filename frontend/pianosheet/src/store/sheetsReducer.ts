@@ -122,6 +122,11 @@ const {
     ADD_WARNING,
     addWarning,
     CLEAR_WARNING,
+    EDIT_AUTHOR_STARTED,
+    EDIT_AUTHOR_COMPLETE,
+    EDIT_AUTHOR_FAILED,
+    editAuthorComplete,
+    editAuthorFailed,
 } = sheetsActionTypes;
 
 export function sheetsReducer(
@@ -239,6 +244,33 @@ export function sheetsReducer(
             return produce(state, (draft) => {
                 draft.status = QueryStatus.error(reason, message, error);
                 draft.viewAuthor = defaultAuthorItem;
+            });
+        }
+
+        case EDIT_AUTHOR_STARTED: {
+            return produce(state, (draft) => {
+                draft.status = QueryStatus.request();
+            });
+        }
+        case EDIT_AUTHOR_COMPLETE: {
+            const {
+                payload: { authorId, author },
+            } = action as ReturnType<typeof editAuthorComplete>;
+            return produce(state, (draft) => {
+                const modifed = draft.authors.results.map((item) =>
+                    item.id === authorId ? author : item,
+                );
+
+                draft.authors.results = modifed;
+                draft.status = QueryStatus.success();
+            });
+        }
+        case EDIT_AUTHOR_FAILED: {
+            const {
+                payload: { reason, message, error },
+            } = action as ReturnType<typeof editAuthorFailed>;
+            return produce(state, (draft) => {
+                draft.status = QueryStatus.error(reason, message, error);
             });
         }
 

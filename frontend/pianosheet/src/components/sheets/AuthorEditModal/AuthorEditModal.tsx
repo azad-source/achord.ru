@@ -27,6 +27,15 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
         preview: '',
     });
 
+    React.useEffect(() => {
+        if (author)
+            setForm({
+                name: author.name,
+                info: author.info || '',
+                preview: author.preview,
+            });
+    }, [author]);
+
     const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, name: e.target.value });
     };

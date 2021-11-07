@@ -8,7 +8,7 @@ import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { useLocation } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
-import { SheetItemJsModel } from 'domain/api/JsModels';
+import { AuthorItemJsModel, SheetItemJsModel } from 'domain/api/JsModels';
 import { SheetsClient } from 'api/SheetsClient';
 import { SiteName } from 'domain/SiteInfo';
 import { useAuth } from 'api/UsersClient';
@@ -18,6 +18,7 @@ interface Props {
     skipSearch: () => void;
     searchSheets: (query: string, page: number) => void;
     searchAuthors: (query: string, page: number) => void;
+    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
 }
 
 export const SearchResults: React.FC<Props> = ({
@@ -25,6 +26,7 @@ export const SearchResults: React.FC<Props> = ({
     skipSearch,
     searchSheets,
     searchAuthors,
+    editAuthor,
 }) => {
     let output: React.ReactNode;
     const [pageNumberSheet, setPageNumberSheet] = React.useState<number>(1);
@@ -110,6 +112,7 @@ export const SearchResults: React.FC<Props> = ({
                                     className={styles.searchAuthor}
                                     firstAuthorletter={author.name.charAt(0)}
                                     editable={logged}
+                                    editAuthor={editAuthor}
                                 />
                             ))}
                         </div>

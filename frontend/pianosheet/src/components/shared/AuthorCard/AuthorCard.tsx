@@ -5,7 +5,10 @@ import { useHistory, useParams } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
 import defaultImg from 'images/default.png';
 import { EditIcon } from '../icons/EditIcon';
-import { AuthorEditModal } from 'components/sheets/AuthorEditModal/AuthorEditModal';
+import {
+    AuthorEditModal,
+    authorEditModel,
+} from 'components/sheets/AuthorEditModal/AuthorEditModal';
 import { AuthorItemJsModel } from 'domain/api/JsModels';
 
 interface Props {
@@ -14,6 +17,7 @@ interface Props {
     firstAuthorletter?: string;
     index?: number;
     editable?: boolean;
+    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
 }
 
 export const AuthorCard: React.FC<Props> = ({
@@ -22,6 +26,7 @@ export const AuthorCard: React.FC<Props> = ({
     firstAuthorletter,
     index,
     editable = false,
+    editAuthor,
 }) => {
     const { letter, composerName } = useParams<{ letter: string; composerName: string }>();
 
@@ -31,7 +36,7 @@ export const AuthorCard: React.FC<Props> = ({
 
     const curLetter = firstAuthorletter ? firstAuthorletter : letter;
 
-    const { preview, alias, name } = author;
+    const { id, preview, alias, name } = author;
 
     const backgroundImage = preview ? 'url(' + preview + ')' : 'url(' + defaultImg + ')';
 
@@ -46,7 +51,18 @@ export const AuthorCard: React.FC<Props> = ({
 
     const goToAuthorPage = () => history.push(path);
 
-    const handleSave = () => {};
+    const handleSave = (options: authorEditModel) => {
+        let formData = new FormData();
+        formData.append('preview', options.preview);
+        formData.append('name', options.name);
+        formData.append('info', options.info);
+        editAuthor(id, formData).then((res) => {
+            if (res) {
+                history.push(Paths.getAuthorPath(res.alias.charAt(0), res.alias));
+            }
+        });
+        closeEditModal();
+    };
 
     return (
         <>

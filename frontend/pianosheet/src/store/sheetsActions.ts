@@ -37,7 +37,7 @@ function addSheet(sheet: FormData): GeneralThunkAction<void, RootState> {
             })
             .catch((error) => {
                 dispatch(addSheetFailed('', '', error));
-                errorHandler(error);
+                dispatch(errorHandler(error));
             });
     };
 }

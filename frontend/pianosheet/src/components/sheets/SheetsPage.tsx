@@ -18,7 +18,7 @@ export default function SheetsPage() {
     return (
         <Page>
             <Breadcrumbs items={breadcrumbs} />
-            Здесь будут ноты
+            Здесь будут ноты 
         </Page>
     );
 }

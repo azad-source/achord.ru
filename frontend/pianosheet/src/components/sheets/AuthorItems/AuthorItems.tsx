@@ -1,17 +1,13 @@
-import { Input } from 'components/shared/Input/Input';
-import { Modal } from 'components/shared/Modal/Modal';
-import { Textarea } from 'components/shared/Textarea/Textarea';
 import { AuthorItemJsModel, AuthorJsModel } from 'domain/api/JsModels';
 import * as React from 'react';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
-import { AuthorCardAdd } from 'components/shared/AuthorCard/AuthorCardAdd';
-import cn from 'classnames';
+import { AuthorCardAdd, authorEditModel } from 'components/shared/AuthorCard/AuthorCardAdd';
 import styles from './AuthorItems.scss';
 import { Button } from 'components/shared/Button/Button';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
-import { maxUploadImageSize } from 'domain/SiteInfo';
 import { useAuth } from 'api/UsersClient';
 import { Paths } from 'utils/routes/Paths';
+import { useHistory } from 'react-router';
 
 interface Props {
     authors: AuthorJsModel;
@@ -28,29 +24,20 @@ export const AuthorItems: React.FC<Props> = ({
 }) => {
     const [logged] = useAuth();
     const [showModal, setShowModal] = React.useState<boolean>(false);
-    const [form, setForm] = React.useState<{
-        author: string;
-        file: any;
-        info: string;
-    }>({ author: '', file: '', info: '' });
+    const history = useHistory();
 
-    const closeModal = () => {
-        setShowModal(false);
-        setForm({ author: '', file: '', info: '' });
-    };
+    const closeModal = () => setShowModal(false);
     const openModal = () => setShowModal(true);
-    const addAuthorHandler = (e: React.FormEvent) => {
-        e.preventDefault();
+
+    const addAuthorHandler = (options: authorEditModel) => {
         let formData = new FormData();
-        formData.append('preview', form.file);
-        formData.append('name', form.author);
-        formData.append('info', form.info);
+        formData.append('preview', options.file);
+        formData.append('name', options.author);
+        formData.append('info', options.info);
         addAuthor(formData).then((res) => {
+            closeModal();
             if (res) {
-                window.location.href = Paths.getAuthorPath(
-                    res.alias.charAt(0),
-                    res.alias,
-                );
+                history.push(Paths.getAuthorPath(res.alias.charAt(0), res.alias));
             }
         });
     };
@@ -67,62 +54,7 @@ export const AuthorItems: React.FC<Props> = ({
                         className={styles.item}
                     />
                 ))}
-                {logged && <AuthorCardAdd openModal={openModal} />}
-                {showModal && (
-                    <Modal
-                        title="Добавление автора"
-                        onClose={() => setShowModal(false)}
-                    >
-                        <form onSubmit={(e) => addAuthorHandler(e)}>
-                            <Input
-                                placeholder="Автор"
-                                className={styles.formItem}
-                                value={form.author}
-                                onChange={(
-                                    e: React.ChangeEvent<HTMLInputElement>,
-                                ) =>
-                                    setForm({ ...form, author: e.target.value })
-                                }
-                                minLength={4}
-                                maxLength={40}
-                                required
-                            />
-                            <Input
-                                placeholder="Фото"
-                                type="file"
-                                className={styles.formItem}
-                                onChange={(e: any) =>
-                                    setForm({
-                                        ...form,
-                                        file: e.target.files[0],
-                                    })
-                                }
-                                accept=".jpg, .jpeg, .png"
-                                size={maxUploadImageSize}
-                            />
-                            <Textarea
-                                placeholder="Описание"
-                                maxLength={1000}
-                                rows={7}
-                                cols={50}
-                                className={cn(
-                                    styles.formItem,
-                                    styles.formItem_Textarea,
-                                )}
-                                value={form.info}
-                                onChange={(
-                                    e: React.ChangeEvent<HTMLTextAreaElement>,
-                                ) => setForm({ ...form, info: e.target.value })}
-                            />
-                            <div className={styles.buttonsWrapper}>
-                                <Button>Добавить</Button>
-                                <Button use="link" onClick={closeModal}>
-                                    Отменить
-                                </Button>
-                            </div>
-                        </form>
-                    </Modal>
-                )}
+                {logged && <Button className={styles.authorAddButton} onClick={openModal}></Button>}
             </div>
             {authors.page_count > 1 && (
                 <Pagination
@@ -131,6 +63,7 @@ export const AuthorItems: React.FC<Props> = ({
                     switchPage={getAuthorsByPage}
                 />
             )}
+            {showModal && <AuthorCardAdd closeModal={closeModal} addAuthor={addAuthorHandler} />}
         </div>
     );
 };

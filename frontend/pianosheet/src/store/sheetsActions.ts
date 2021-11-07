@@ -9,7 +9,6 @@ import { Action } from 'redux';
 import { GeneralThunkAction, PayloadedAction } from 'utils/store/actionTypes';
 import { RootState } from './rootReducer';
 import { SheetsState } from './sheetsReducer';
-import { AuthorsMock, SheetsMock } from 'mockData/allMocks';
 
 const ADD_SHEET_STARTED = 'SHEETS/ADD_SHEET_STARTED';
 const ADD_SHEET_COMPLETE = 'SHEETS/ADD_SHEET_COMPLETE';
@@ -17,9 +16,7 @@ const ADD_SHEET_FAILED = 'SHEETS/ADD_SHEET_FAILED';
 function addSheetStarted(): Action {
     return { type: ADD_SHEET_STARTED };
 }
-function addSheetComplete(
-    sheet: SheetItemJsModel,
-): PayloadedAction<{ sheet: SheetItemJsModel }> {
+function addSheetComplete(sheet: SheetItemJsModel): PayloadedAction<{ sheet: SheetItemJsModel }> {
     return { type: ADD_SHEET_COMPLETE, payload: { sheet } };
 }
 function addSheetFailed(
@@ -28,6 +25,19 @@ function addSheetFailed(
     error: Error,
 ): PayloadedAction<{ reason: string; message: string; error: Error }> {
     return { type: ADD_SHEET_FAILED, payload: { reason, message, error } };
+}
+
+function addSheet(sheet: FormData): GeneralThunkAction<void, RootState> {
+    return (dispatch) => {
+        dispatch(addSheetStarted());
+        SheetsClient.addSheet(sheet)
+            .then((res) => {
+                dispatch(addSheetComplete(res));
+            })
+            .catch((error) => {
+                dispatch(addSheetFailed('', '', error));
+            });
+    };
 }
 
 const ADD_AUTHOR_STARTED = 'SHEETS/ADD_AUTHOR_STARTED';
@@ -49,15 +59,30 @@ function addAuthorFailed(
     return { type: ADD_AUTHOR_FAILED, payload: { reason, message, error } };
 }
 
+function addAuthor(
+    author: FormData,
+): GeneralThunkAction<Promise<AuthorItemJsModel | false>, RootState> {
+    return (dispatch) => {
+        dispatch(addAuthorStarted());
+        return SheetsClient.addAuthor(author)
+            .then((res) => {
+                dispatch(addAuthorComplete(res));
+                return res;
+            })
+            .catch((error) => {
+                dispatch(addAuthorFailed('', '', error));
+                return false;
+            });
+    };
+}
+
 const GET_SHEETS_STARTED = 'SHEETS/GET_SHEETS_STARTED';
 const GET_SHEETS_COMPLETE = 'SHEETS/GET_SHEETS_COMPLETE';
 const GET_SHEETS_FAILED = 'SHEETS/GET_SHEETS_FAILED';
 function getSheetsStarted(): Action {
     return { type: GET_SHEETS_STARTED };
 }
-function getSheetsComplete(
-    sheets: SheetJsModel,
-): PayloadedAction<{ sheets: SheetJsModel }> {
+function getSheetsComplete(sheets: SheetJsModel): PayloadedAction<{ sheets: SheetJsModel }> {
     return { type: GET_SHEETS_COMPLETE, payload: { sheets } };
 }
 function getSheetsFailed(
@@ -68,15 +93,25 @@ function getSheetsFailed(
     return { type: GET_SHEETS_FAILED, payload: { reason, message, error } };
 }
 
+function getSheets(author_alias?: string, page?: number): GeneralThunkAction<void, SheetsState> {
+    return (dispatch) => {
+        SheetsClient.getSheets(author_alias, page)
+            .then((sheets) => {
+                dispatch(getSheetsComplete(sheets));
+            })
+            .catch((error) => {
+                dispatch(getSheetsFailed('', '', error));
+            });
+    };
+}
+
 const GET_AUTHORS_STARTED = 'SHEETS/GET_AUTHORS_STARTED';
 const GET_AUTHORS_COMPLETE = 'SHEETS/GET_AUTHORS_COMPLETE';
 const GET_AUTHORS_FAILED = 'SHEETS/GET_AUTHORS_FAILED';
 function getAuthorsStarted(): Action {
     return { type: GET_AUTHORS_STARTED };
 }
-function getAuthorsComplete(
-    authors: AuthorJsModel,
-): PayloadedAction<{ authors: AuthorJsModel }> {
+function getAuthorsComplete(authors: AuthorJsModel): PayloadedAction<{ authors: AuthorJsModel }> {
     return { type: GET_AUTHORS_COMPLETE, payload: { authors } };
 }
 function getAuthorsFailed(
@@ -85,6 +120,20 @@ function getAuthorsFailed(
     error: Error,
 ): PayloadedAction<{ reason: string; message: string; error: Error }> {
     return { type: GET_AUTHORS_FAILED, payload: { reason, message, error } };
+}
+
+function getAuthors(letter?: string, page?: number): GeneralThunkAction<void, SheetsState> {
+    return (dispatch) => {
+        if (!page) dispatch(getAuthorsStarted());
+
+        SheetsClient.getAuthors(letter, page)
+            .then((authors) => {
+                dispatch(getAuthorsComplete(authors));
+            })
+            .catch((error) => {
+                dispatch(getAuthorsFailed('', '', error));
+            });
+    };
 }
 
 const GET_AUTHOR_BY_ALIAS_STARTED = 'SHEETS/GET_AUTHOR_BY_ALIAS_STARTED';
@@ -106,6 +155,20 @@ function getAuthorsByAliasFailed(
     return {
         type: GET_AUTHOR_BY_ALIAS_FAILED,
         payload: { reason, message, error },
+    };
+}
+
+function getAuthor(alias: string): GeneralThunkAction<void, SheetsState> {
+    return (dispatch) => {
+        dispatch(getAuthorsByAliasStarted());
+        SheetsClient.getAuthorByAlias(alias)
+            .then((res) => {
+                dispatch(getAuthorsByAliasComplete(res));
+                dispatch(getSheets(res.results[0].alias));
+            })
+            .catch((error) => {
+                dispatch(getAuthorsByAliasFailed('', '', error));
+            });
     };
 }
 
@@ -140,6 +203,20 @@ function applySearchFailed(
     };
 }
 
+function searchSheets(query: string): GeneralThunkAction<void, SheetsState> {
+    return (dispatch) => {
+        dispatch(applySearchStarted());
+
+        Promise.all([SheetsClient.searchSheets(query), SheetsClient.searchAuthors(query)]).then(
+            (results) => {
+                const sheets = results[0];
+                const authors = results[1];
+                dispatch(applySearchComplete(sheets, authors, query));
+            },
+        );
+    };
+}
+
 const APPLY_SEARCH_SHEETS_COMPLETE = 'SHEETS/APPLY_SEARCH_SHEETS_COMPLETE';
 function applySearchSheetsComplete(
     sheets: SheetJsModel,
@@ -151,6 +228,15 @@ function applySearchSheetsComplete(
     return {
         type: APPLY_SEARCH_SHEETS_COMPLETE,
         payload: { sheets, searchQuery },
+    };
+}
+
+function searchSheetsByPage(query: string, page: number): GeneralThunkAction<void, SheetsState> {
+    return (dispatch) => {
+        // dispatch(applySearchStarted());
+        SheetsClient.searchSheets(query, page).then((results) => {
+            dispatch(applySearchSheetsComplete(results, query));
+        });
     };
 }
 
@@ -168,124 +254,18 @@ function applySearchAuthorsComplete(
     };
 }
 
-const DROP_SEARCH_COMPLETE = 'SHEETS/DROP_SEARCH_COMPLETE';
-function dropSearchComplete(): Action {
-    return { type: DROP_SEARCH_COMPLETE };
-}
-
-function addSheet(sheet: FormData): GeneralThunkAction<void, RootState> {
-    return (dispatch) => {
-        dispatch(addSheetStarted());
-        SheetsClient.addSheet(sheet)
-            .then((res) => {
-                dispatch(addSheetComplete(res));
-            })
-            .catch((error) => {
-                dispatch(addSheetFailed('', '', error));
-            });
-    };
-}
-
-function addAuthor(
-    author: FormData,
-): GeneralThunkAction<Promise<AuthorItemJsModel | false>, RootState> {
-    return (dispatch) => {
-        dispatch(addAuthorStarted());
-        return SheetsClient.addAuthor(author)
-            .then((res) => {
-                dispatch(addAuthorComplete(res));
-                return res;
-            })
-            .catch((error) => {
-                dispatch(addAuthorFailed('', '', error));
-                return false;
-            });
-    };
-}
-
-function getSheets(
-    author_alias?: string,
-    page?: number,
-): GeneralThunkAction<void, SheetsState> {
-    return (dispatch) => {
-        SheetsClient.getSheets(author_alias, page)
-            .then((sheets) => {
-                dispatch(getSheetsComplete(sheets));
-            })
-            .catch((error) => {
-                dispatch(getSheetsFailed('', '', error));
-            });
-    };
-}
-
-function getAuthors(
-    letter?: string,
-    page?: number,
-): GeneralThunkAction<void, SheetsState> {
-    return (dispatch) => {
-        if (!page) dispatch(getAuthorsStarted());
-
-        SheetsClient.getAuthors(letter, page)
-            .then((authors) => {
-                dispatch(getAuthorsComplete(authors));
-            })
-            .catch((error) => {
-                dispatch(getAuthorsFailed('', '', error));
-            });
-    };
-}
-
-function getAuthor(alias: string): GeneralThunkAction<void, SheetsState> {
-    return (dispatch) => {
-        dispatch(getAuthorsByAliasStarted());
-        SheetsClient.getAuthorByAlias(alias)
-            .then((res) => {
-                dispatch(getAuthorsByAliasComplete(res));
-                dispatch(getSheets(res.results[0].alias));
-            })
-            .catch((error) => {
-                dispatch(getAuthorsByAliasFailed('', '', error));
-            });
-    };
-}
-
-function searchSheets(query: string): GeneralThunkAction<void, SheetsState> {
-    return (dispatch) => {
-        dispatch(applySearchStarted());
-
-        Promise.all([
-            SheetsClient.searchSheets(query),
-            SheetsClient.searchAuthors(query),
-        ]).then((results) => {
-            const sheets = results[0];
-            const authors = results[1];
-            dispatch(applySearchComplete(sheets, authors, query));
-        });
-    };
-}
-
-function searchSheetsByPage(
-    query: string,
-    page: number,
-): GeneralThunkAction<void, SheetsState> {
-    return (dispatch) => {
-        // dispatch(applySearchStarted());
-        SheetsClient.searchSheets(query, page).then((results) => {
-            dispatch(applySearchSheetsComplete(results, query));
-        });
-    };
-}
-
-function searchAuthorsByPage(
-    query: string,
-    page: number,
-): GeneralThunkAction<void, SheetsState> {
+function searchAuthorsByPage(query: string, page: number): GeneralThunkAction<void, SheetsState> {
     return (dispatch) => {
         // dispatch(applySearchStarted());
         SheetsClient.searchAuthors(query, page).then((results) => {
             dispatch(applySearchAuthorsComplete(results, query));
         });
     };
+}
+
+const DROP_SEARCH_COMPLETE = 'SHEETS/DROP_SEARCH_COMPLETE';
+function dropSearchComplete(): Action {
+    return { type: DROP_SEARCH_COMPLETE };
 }
 
 function dropSearch(): GeneralThunkAction<void, SheetsState> {

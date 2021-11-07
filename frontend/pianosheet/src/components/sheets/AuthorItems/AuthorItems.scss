@@ -1,4 +1,5 @@
 @import 'styles/default.scss';
+@import 'styles/colors.scss';
 
 .root {
   display: block;
@@ -11,20 +12,39 @@
   margin-bottom: 20px;
 }
 
-.formItem {
-  min-width: 100%;
-  margin: 0 12px 12px 0;
-}
+.authorAddButton {
+  position: relative;
+  display: block;
+  width: $authorCardWidth;
+  height: $authorCardWidth;
+  background-color: #ddd;
+  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  justify-self: center;
+  box-sizing: border-box;
+  border: 2px solid #555;
 
-.formItem_Textarea::-webkit-scrollbar {
-  display: none;
-}
+  &::after,
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: $defaultBg;
+    width: 60%;
+    height: 10px;
+    border-radius: 4px;
+  }
 
-.buttonsWrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: 25px;
+  &::after {
+    transform: translate(-50%, -50%);
+  }
+
+  &::before {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -46,10 +66,20 @@
     width: 150px;
     height: 150px;
   }
+
+  .authorAddButton {
+    width: 150px;
+    height: 150px;
+  }
 }
 
 @media screen and (max-width: 320px) {
   .item {
+    width: 130px;
+    height: 130px;
+  }
+
+  .authorAddButton {
     width: 130px;
     height: 130px;
   }

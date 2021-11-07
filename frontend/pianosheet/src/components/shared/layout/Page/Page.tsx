@@ -40,7 +40,7 @@ const PageFC: React.FC<Props> = ({
     React.useEffect(() => {
         setTimeout(() => {
             setShowContent(true);
-        }, 500);
+        }, 200);
     }, []);
 
     let output: React.ReactNode = '';

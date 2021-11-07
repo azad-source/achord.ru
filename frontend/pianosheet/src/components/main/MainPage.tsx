@@ -5,11 +5,11 @@ import { withRouter } from 'react-router-dom';
 import styles from './MainPage.scss';
 import { TopAuthors } from './TopAuthors/TopAuthors';
 
-const MainPage = () => {
+const MainPageFC = () => {
     React.useEffect(() => {
         document.title = `${SiteName} - Главная`;
     }, []);
-    
+
     return (
         <Page>
             <div className={styles.root}>
@@ -19,4 +19,4 @@ const MainPage = () => {
     );
 };
 
-export default withRouter(MainPage);
+export const MainPage = withRouter(MainPageFC);

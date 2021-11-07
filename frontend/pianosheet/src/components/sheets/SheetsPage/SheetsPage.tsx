@@ -4,7 +4,7 @@ import { Page } from 'components/shared/layout/Page/Page';
 import { SiteName } from 'domain/SiteInfo';
 import { Breadcrumbs } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 
-export default function SheetsPage() {
+export const SheetsPage = () => {
     React.useEffect(() => {
         document.title = `${SiteName} - Ноты`;
     }, []);
@@ -18,7 +18,7 @@ export default function SheetsPage() {
     return (
         <Page>
             <Breadcrumbs items={breadcrumbs} />
-            Здесь будут ноты 
+            Здесь будут ноты
         </Page>
     );
-}
+};

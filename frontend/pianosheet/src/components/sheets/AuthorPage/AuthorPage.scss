@@ -151,18 +151,6 @@
   margin-bottom: 20px;
 }
 
-.formItem {
-  min-width: 100%;
-  margin: 0 12px 12px 0;
-}
-
-.buttonsWrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: 25px;
-}
-
 @media screen and (max-width: 768px) {
   .photo {
     height: 300px;

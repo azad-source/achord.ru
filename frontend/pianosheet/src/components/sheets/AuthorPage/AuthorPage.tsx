@@ -11,13 +11,11 @@ import { AuthorItemJsModel, SheetJsModel } from 'domain/api/JsModels';
 import { QueryStatus } from 'domain/QueryStatus';
 import { AddIcon } from 'components/shared/icons/AddIcon';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
-import { Button } from 'components/shared/Button/Button';
 import { Paths } from 'utils/routes/Paths';
-import { Modal } from 'components/shared/Modal/Modal';
-import { Input } from 'components/shared/Input/Input';
-import { maxUploadPdfSize, SiteName } from 'domain/SiteInfo';
+import { SiteName } from 'domain/SiteInfo';
 import { useAuth } from 'api/UsersClient';
 import { Breadcrumbs } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
+import { SheetAddModal, sheetEditModel } from '../SheetAddModal/SheetAddModal';
 
 interface Props {
     className?: string;
@@ -42,10 +40,6 @@ const AuthorPageFC: React.FC<Props> = ({
     const { letter, authorAlias } = useParams<{ letter: string; authorAlias: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const [showModal, setShowModal] = React.useState<boolean>(false);
-    const [form, setForm] = React.useState<{
-        sheetname: string;
-        filename: any;
-    }>({ sheetname: '', filename: '' });
 
     const location = useLocation();
 
@@ -59,17 +53,12 @@ const AuthorPageFC: React.FC<Props> = ({
     }, []);
 
     const openModal = () => setShowModal(true);
+    const closeModal = () => setShowModal(false);
 
-    const closeModal = () => {
-        setShowModal(false);
-        setForm({ sheetname: '', filename: '' });
-    };
-
-    const addSheetHandler = (e: React.FormEvent) => {
-        e.preventDefault();
+    const addSheetHandler = (options: sheetEditModel) => {
         let formData = new FormData();
-        formData.append('filename', form.filename);
-        formData.append('name', form.sheetname);
+        formData.append('filename', options.filename);
+        formData.append('name', options.sheetname);
         formData.append('author', viewAuthor.id.toString());
         addSheet(formData);
         closeModal();
@@ -158,42 +147,7 @@ const AuthorPageFC: React.FC<Props> = ({
                     </div>
                 </div>
             </div>
-            {showModal && (
-                <Modal title="Добавление нот" onClose={() => setShowModal(false)}>
-                    <form onSubmit={(e) => addSheetHandler(e)}>
-                        <Input
-                            placeholder="Название нот"
-                            className={styles.formItem}
-                            value={form.sheetname}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                setForm({ ...form, sheetname: e.target.value })
-                            }
-                            minLength={4}
-                            maxLength={40}
-                            required
-                        />
-                        <Input
-                            placeholder="Файл"
-                            type="file"
-                            className={styles.formItem}
-                            onChange={(e: any) =>
-                                setForm({
-                                    ...form,
-                                    filename: e.target.files[0],
-                                })
-                            }
-                            accept=".pdf"
-                            size={maxUploadPdfSize}
-                        />
-                        <div className={styles.buttonsWrapper}>
-                            <Button>Добавить</Button>
-                            <Button use="link" onClick={closeModal}>
-                                Отменить
-                            </Button>
-                        </div>
-                    </form>
-                </Modal>
-            )}
+            {showModal && <SheetAddModal closeModal={closeModal} addSheet={addSheetHandler} />}
         </Page>
     );
 };

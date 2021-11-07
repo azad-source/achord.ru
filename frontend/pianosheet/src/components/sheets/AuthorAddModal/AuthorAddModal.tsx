@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styles from './AuthorAddModal.scss';
+import styles from './AuthorAddModal.module.scss';
 import cn from 'classnames';
 import { Button } from 'components/shared/Button/Button';
 import { Modal } from 'components/shared/Modal/Modal';

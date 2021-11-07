@@ -3,7 +3,6 @@ import * as React from 'react';
 import { AuthorCard, AuthorCardAdd } from 'components/shared/AuthorCard/AuthorCard';
 import { AuthorAddModal, authorEditModel } from 'components/sheets/AuthorAddModal/AuthorAddModal';
 import styles from './AuthorItems.scss';
-import { Button } from 'components/shared/Button/Button';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { useAuth } from 'api/UsersClient';
 import { Paths } from 'utils/routes/Paths';
@@ -35,11 +34,11 @@ export const AuthorItems: React.FC<Props> = ({
         formData.append('name', options.author);
         formData.append('info', options.info);
         addAuthor(formData).then((res) => {
-            closeModal();
             if (res) {
                 history.push(Paths.getAuthorPath(res.alias.charAt(0), res.alias));
             }
         });
+        closeModal();
     };
 
     return (

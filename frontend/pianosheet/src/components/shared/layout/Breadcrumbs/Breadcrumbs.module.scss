@@ -7,6 +7,9 @@
 .items {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  white-space: nowrap;
+  line-height: 1.8;
 }
 
 .item {
@@ -14,6 +17,7 @@
   color: #333;
   cursor: pointer;
   text-decoration: underline;
+  white-space: nowrap;
 }
 
 .separator {

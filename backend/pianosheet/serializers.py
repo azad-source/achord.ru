@@ -18,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class AuthorSerializer(serializers.ModelSerializer):
     owner = UserSerializer(read_only=True)
-    genres = GenreSerializer(many=True)
+    genres = GenreSerializer(many=True, required=False)
     class Meta:
         model = Author
         read_only_fields = ('id', 'preview_s', 'preview_xs', 'alias', 'rate', 'owner', 'genres')

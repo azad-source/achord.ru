@@ -7,6 +7,7 @@ import {
     SheetItemJsModel,
 } from 'domain/api/JsModels';
 import { Action } from 'redux';
+import { arrToString } from 'utils/arrayTransform';
 import { GeneralThunkAction, PayloadedAction } from 'utils/store/actionTypes';
 import { RootState } from './rootReducer';
 import { SheetsState } from './sheetsReducer';
@@ -74,6 +75,8 @@ function addAuthor(
             .catch((error) => {
                 dispatch(addAuthorFailed('', '', error));
                 dispatch(errorHandler(error));
+
+                console.log('error', error.response);
                 return false;
             });
     };
@@ -328,13 +331,19 @@ function clearWarning(): Action<string> {
 
 function errorHandler(e: AxiosError): GeneralThunkAction<void> {
     return (dispatch) => {
-        const statusCode = e.response?.status;
-        const statusText = e.response?.statusText;
-        const errorDetail = e.response?.data.detail;
+        const data = e.response?.data;
+        let message = '';
 
-        const warning = `Код ошибки: ${statusCode}. ${errorDetail || statusText}`;
+        if (data && Object.keys(data).length > 0) {
+            message = Object.keys(data).reduce(
+                (sum, field) => sum + `${field}: ${arrToString(data[field])} `,
+                '',
+            );
+        }
 
-        dispatch(addWarning(warning));
+        const out = `${message} (${e.response?.status}: ${data.detail || e.response?.statusText})`;
+
+        dispatch(addWarning(out));
         setTimeout(() => dispatch(clearWarning()), 500);
     };
 }

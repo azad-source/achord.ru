@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { arrToString } from 'utils/arrayTransform';
 import { buildSearchString } from '../utils/urlHelpers';
+import { headers } from './UsersClient';
 
 const baseURL = 'https://achord.ru';
 
@@ -25,9 +26,7 @@ export function errorData(error: AxiosError): {
     let reason: string = '';
 
     if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
-        Object.keys(data).forEach(
-            (key) => (reason += '' + arrToString(data[key])),
-        );
+        Object.keys(data).forEach((key) => (reason += '' + arrToString(data[key])));
     } else if (Array.isArray(data)) {
         reason = arrToString(data);
     } else {
@@ -47,9 +46,7 @@ function spaApiInterceptor(resp: AxiosResponse): Promise<AxiosResponse> {
         resp.config.baseURL === baseURL &&
         resp.headers['content-type'] === 'text/html'
     ) {
-        const err = new Error(
-            'Request failed with status code 404',
-        ) as AxiosError;
+        const err = new Error('Request failed with status code 404') as AxiosError;
         err.isAxiosError = true;
         err.response = {
             ...resp,
@@ -64,16 +61,18 @@ function spaApiInterceptor(resp: AxiosResponse): Promise<AxiosResponse> {
     return Promise.resolve(resp);
 }
 
-/**
- * Клеит к запросам время, чтобы ИЕ не использовал кеши ответов.
- */
-function ieCachePreventInterceptor(
-    config: AxiosRequestConfig,
-): AxiosRequestConfig {
-    // Сначала сделал через paramsSerializer, но логично оказалось, что он не вызывается в запросах без params.
-    // А кеш блокировать все равно надо.
-    config.params = config.params || {};
-    config.params._t = new Date().getTime();
+function ieCachePreventInterceptor(config: AxiosRequestConfig): AxiosRequestConfig {
+    if (config.method === 'patch' || config.method === 'post' || config.method === 'put') {
+        config.headers = {
+            'Content-Type': 'multipart/form-data',
+            ...headers(),
+        };
+    }
+
+    if (process.env.NODE_ENV === 'development') {
+        console.info('✉️ ', config);
+    }
+
     return config;
 }
 

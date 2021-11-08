@@ -5,7 +5,6 @@ import {
     SheetItemJsModel,
 } from 'domain/api/JsModels';
 import { api, retrieveData } from './apiConfig';
-import { headers } from './UsersClient';
 
 const apiPath = `/api/pianosheet`;
 
@@ -41,26 +40,12 @@ export class SheetsClient {
 
     /** Добавление автора */
     public static addAuthor(author: FormData): Promise<AuthorItemJsModel> {
-        return api
-            .post(`${apiPath}/author/`, author, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    ...headers(),
-                },
-            })
-            .then(retrieveData);
+        return api.post(`${apiPath}/author/`, author).then(retrieveData);
     }
 
     /** Добавление нот */
     public static addSheet(sheet: FormData): Promise<SheetItemJsModel> {
-        return api
-            .post(`${apiPath}/note/`, sheet, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    ...headers(),
-                },
-            })
-            .then(retrieveData);
+        return api.post(`${apiPath}/note/`, sheet).then(retrieveData);
     }
 
     /** Редактирование автора по id */

@@ -67,7 +67,7 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
     };
 
     return (
-        <Modal title="Добавление автора" onClose={closeModal}>
+        <Modal title="Редактирование автора" onClose={closeModal}>
             <form onSubmit={onSave}>
                 <Input
                     placeholder="Автор"

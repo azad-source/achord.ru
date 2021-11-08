@@ -156,8 +156,8 @@ const PianoKey: React.FC<PianoKeyProps> = ({
                 styles[`key-element_${isBlack ? 'black' : 'white'}`],
                 pressed && styles['key-element_pressed'],
             )}
-            onMouseDown={playOn}
-            onMouseUp={playOff}
+            onPointerDown={playOn}
+            onPointerUp={playOff}
             style={keyStyles}
         >
             {eventKey.toUpperCase()}

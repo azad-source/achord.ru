@@ -1,21 +1,33 @@
 from rest_framework import serializers
-from .models import Author, Note
+from .models import Author, Note, Genre
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
-class AuthorListSerializer(serializers.ModelSerializer):
+class GenreSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Author
+        model = Genre
         fields = ('id', 'name', 'alias')
 
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id',)
+
+
 class AuthorSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
+    owner = UserSerializer(read_only=True)
+    genres = GenreSerializer(many=True)
     class Meta:
         model = Author
-        fields = ('id', 'name', 'info', 'preview', 'preview_s', 'preview_xs', 'alias', "rate", 'owner')
+        read_only_fields = ('id', 'preview_s', 'preview_xs', 'alias', 'rate', 'owner', 'genres')
+        fields = (*read_only_fields, 'name', 'info', 'preview',  )
 
 
 class NoteSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
+    owner = UserSerializer(read_only=True)
     class Meta:
         model = Note
-        fields = ('id', 'name', 'filename', 'author', 'savedate', 'content_list', "rate", 'owner')
+        read_only_fields = ('id', 'savedate', 'rate', 'owner')
+        fields = (*read_only_fields, 'name', 'filename', 'author', 'content_list', )

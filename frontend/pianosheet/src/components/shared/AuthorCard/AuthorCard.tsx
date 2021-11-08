@@ -53,9 +53,9 @@ export const AuthorCard: React.FC<Props> = ({
 
     const handleSave = (options: authorEditModel) => {
         let formData = new FormData();
-        formData.append('preview', options.preview);
-        formData.append('name', options.name);
-        formData.append('info', options.info);
+        if (options.preview !== author.preview) formData.append('preview', options.preview);
+        if (options.name !== author.name) formData.append('name', options.name);
+        if (options.info !== author.info) formData.append('info', options.info);
         editAuthor(id, formData).then((res) => {
             if (res) {
                 history.push(Paths.getAuthorPath(res.alias.charAt(0), res.alias));

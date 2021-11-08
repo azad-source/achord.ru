@@ -4,6 +4,33 @@ from django.contrib.auth import get_user_model
 from . import managers
 User = get_user_model()
 
+
+class Genre(models.Model):
+    name = models.CharField(
+        "имя",
+        max_length=128,
+        unique=True,
+    )
+    alias = models.CharField(
+        "alias",
+        max_length=128,
+        null=True,
+        blank=True,
+        unique=True,
+    )
+
+    class Meta:
+        verbose_name = 'Жанр'
+        verbose_name_plural = 'Жанры'
+        ordering = ('name',)
+
+    def save(self, *args, **kwargs):
+        self.alias = Translate.create_alias(self.name)
+        super(Genre, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
 class Author(models.Model):
 
     name = models.CharField(
@@ -52,6 +79,14 @@ class Author(models.Model):
         "рейтинг",
         default=0,
     )
+    genres = models.ManyToManyField(
+        Genre, 
+        verbose_name='жанры', 
+        related_name='authors',
+        null=True, 
+        blank=True, 
+        default=None,
+    )
     owner = models.ForeignKey(
         User, 
         on_delete=models.SET_NULL,
@@ -89,7 +124,6 @@ class Note(models.Model):
     filename = models.FileField(
         "файл с нотами",
         upload_to=path_and_rename,
-        default=None,
         max_length=500,
     )
     author = models.ForeignKey(
@@ -104,7 +138,7 @@ class Note(models.Model):
         on_delete=models.SET_NULL,
         related_name='notes', 
         null=True,
-        ),
+        )
 
     savedate = models.DateTimeField(
         "Дата сохранения",

@@ -10,7 +10,8 @@ services:
         restart: always
     web:
         build: .
-        command: bash -c "python /usr/src/pianosheet/backend/manage.py collectstatic --noinput &&
+        command: bash -c "python /usr/src/pianosheet/backend/manage.py collectstatic --noinput && 
+                python /usr/src/pianosheet/backend/manage.py migrate --noinput &&
                 cd ../../backend &&
                 gunicorn backend.wsgi:application --reload --bind 0.0.0.0:9001 --workers=3 --log-level debug"
 

@@ -59,30 +59,23 @@ export const SheetDownloadPage: React.FC<Props> = ({ className }) => {
             caption: author.name,
             link: Paths.getAuthorPath(letter, authorAlias),
         },
-        {
-            caption: sheet.name,
-        },
     ];
 
     return (
         <Page>
             <Breadcrumbs items={breadcrumbs} />
-            <div className={cn(styles.root, className)}>
-                <h1>Скачивание нот</h1>
-
+            <div className={cn(styles.oot, className)}>
+                <div className={styles.fileName}>{sheet.name}</div>
                 {sheet.filename ? (
-                    <>
-                        <div className={styles.fileName}>{sheet.name}</div>
-                        <div className={styles.download}>
-                            <Button
-                                disabled={disabled}
-                                onClick={download}
-                                className={styles.downloadButton}
-                            >
-                                Download
-                            </Button>
-                        </div>
-                    </>
+                    <div className={styles.download}>
+                        <Button
+                            disabled={disabled}
+                            onClick={download}
+                            className={styles.downloadButton}
+                        >
+                            Download
+                        </Button>
+                    </div>
                 ) : (
                     <div className={styles.notFound}>...</div>
                 )}

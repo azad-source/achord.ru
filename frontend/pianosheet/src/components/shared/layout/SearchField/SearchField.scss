@@ -14,22 +14,26 @@
   flex-grow: 1;
   border: 1px solid #ccc !important;
   border-radius: 4px;
-  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
   margin: 0 !important;
   box-sizing: border-box;
   padding: 8px 10px !important;
-  font-size: 14px;
+  font-size: 16px;
+  opacity: 0;
   outline: none;
-}
 
-.input:focus {
-  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
-  transition: 0.3s;
-}
+  &:focus {
+    transition: 0.3s;
+    opacity: 1;
 
-.input::placeholder {
-  font-size: 16px !important;
+    & + .loupe {
+      color: #222;
+    }
+  }
+
+  &::placeholder {
+    font-size: 16px !important;
+  }
 }
 
 .label {
@@ -46,7 +50,7 @@
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-  background: $defaultBg !important;
+  color: #fff;
   padding-left: 8px;
   cursor: pointer;
   transition: 0.2s;
@@ -56,11 +60,8 @@
   width: 50px;
   height: calc(100% - 2px);
   box-sizing: border-box;
-  border: 1px solid #fff;
-  border-radius: 0 4px 4px 0;
-}
 
-.loupe:hover {
-  opacity: 0.8;
-  transition: 0.2s;
+  &:hover {
+    transition: 0.2s;
+  }
 }

@@ -6,11 +6,15 @@ import { Input } from 'components/shared/Input/Input';
 import { Textarea } from 'components/shared/Textarea/Textarea';
 import { maxAuthorDescriptionLength, maxUploadImageSize } from 'domain/SiteInfo';
 import { AuthorItemJsModel } from 'domain/api/JsModels';
+import { GenresMock } from 'mockData/allMocks';
+import cn from 'classnames';
+import { useToast } from 'components/shared/Toast/Toast';
 
 export type authorEditModel = {
     name: string;
     info: string;
     preview: any;
+    genres: string[];
 };
 
 interface Props {
@@ -24,10 +28,12 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
         name: '',
         info: '',
         preview: '',
+        genres: [],
     });
 
     const [selectedImage, setSelectedImage] = React.useState<string | ArrayBuffer | null>('');
-    const [selectedGenres, setSelectedGenres] = React.useState<string[]>([]);
+
+    const { push } = useToast();
 
     React.useEffect(() => {
         if (author)
@@ -35,6 +41,7 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
                 name: author.name,
                 info: author.info || '',
                 preview: author.preview,
+                genres: author.genres,
             });
     }, [author]);
 
@@ -61,14 +68,27 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
         setForm({ ...form, info: e.target.value });
     };
 
-    const onSave = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const onSave = () => {
+        if (form.genres.length < 1) {
+            push('Выберите хотябы один жанр');
+            return;
+        }
         editAuthor(form);
     };
 
+    const isGenreSelected = (genre: string) => form.genres.includes(genre);
+
+    const handleSelectGenre = (genre: string) => {
+        if (isGenreSelected(genre)) {
+            setForm((prev) => ({ ...prev, genres: prev.genres.filter((item) => item !== genre) }));
+            return;
+        }
+        setForm((prev) => ({ ...prev, genres: [...prev.genres, genre] }));
+    };
+
     return (
-        <Modal title="Редактирование автора" onClose={closeModal}>
-            <form onSubmit={onSave}>
+        <>
+            <Modal title="Редактирование автора" onClose={closeModal}>
                 <div className={styles.formItem}>
                     <Input
                         placeholder="Автор"
@@ -78,6 +98,22 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
                         maxLength={40}
                         required
                     />
+                </div>
+                <div className={cn(styles.formItem, styles.genres)}>
+                    {GenresMock.map((genre) => {
+                        return (
+                            <div
+                                key={genre}
+                                className={cn(
+                                    styles.genres_item,
+                                    isGenreSelected(genre) && styles.genres_item__selected,
+                                )}
+                                onClick={() => handleSelectGenre(genre)}
+                            >
+                                {genre}
+                            </div>
+                        );
+                    })}
                 </div>
                 <div className={styles.formItem}>
                     <img src={selectedImage || form.preview} width={150} />
@@ -93,19 +129,19 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
                     <Textarea
                         placeholder="Описание"
                         maxLength={maxAuthorDescriptionLength}
-                        rows={7}
+                        rows={5}
                         cols={50}
                         value={form.info}
                         onChange={changeDescription}
                     />
                 </div>
                 <div className={styles.buttonsWrapper}>
-                    <Button onClick={() => editAuthor(form)}>Сохранить</Button>
+                    <Button onClick={onSave}>Сохранить</Button>
                     <Button use="link" onClick={closeModal}>
                         Отменить
                     </Button>
                 </div>
-            </form>
-        </Modal>
+            </Modal>
+        </>
     );
 };

@@ -17,3 +17,10 @@
     font-size: 14px;
   }
 }
+
+@media screen and (max-width: 480px) {
+  .textarea {
+    font-size: 14px;
+    letter-spacing: unset;
+  }
+}

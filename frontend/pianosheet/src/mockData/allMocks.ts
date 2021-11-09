@@ -101,3 +101,18 @@ export const AuthorsMock: AuthorJsModel = {
     previous: '',
     results: AuthorList,
 };
+
+export const GenresMock: string[] = [
+    'Классика',
+    'Электронная',
+    'Джаз',
+    'Блюз',
+    'Рок-н-ролл',
+    'Рок',
+    'Хип-хоп',
+    'Кантри',
+    'Фолк',
+    'Регги',
+    'Шансон',
+    'Поп',
+];

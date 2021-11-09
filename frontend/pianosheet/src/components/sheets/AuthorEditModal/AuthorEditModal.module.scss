@@ -9,3 +9,38 @@
   justify-content: space-between;
   margin-top: 25px;
 }
+
+.genres {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  border-bottom: 1px solid #dedede;
+  margin-bottom: 8px;
+  padding: 4px 0;
+  font-size: 12px;
+
+  &_item {
+    padding: 3px 4px;
+    box-sizing: border-box;
+    border: 1px solid #222;
+    color: #222;
+    border-radius: 4px;
+    margin: 0 4px 6px 0;
+    cursor: pointer;
+    user-select: none;
+    line-height: 1.3;
+
+    &:hover {
+      background-color: #eee;
+    }
+
+    &__selected {
+      color: #fff;
+      background-color: #222;
+
+      &:hover {
+        background-color: #333;
+      }
+    }
+  }
+}

@@ -56,6 +56,7 @@ export const AuthorCard: React.FC<Props> = ({
         if (options.preview !== author.preview) formData.append('preview', options.preview);
         if (options.name !== author.name) formData.append('name', options.name);
         if (options.info !== author.info) formData.append('info', options.info);
+        if (options.genres !== author.genres) formData.append('genres', options.genres.join(', '));
         editAuthor(id, formData).then((res) => {
             if (res) {
                 history.push(Paths.getAuthorPath(res.alias.charAt(0), res.alias));

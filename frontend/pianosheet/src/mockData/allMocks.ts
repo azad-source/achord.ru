@@ -1,8 +1,4 @@
-import {
-    AuthorJsModel,
-    AuthorItemJsModel,
-    SheetItemJsModel,
-} from 'domain/api/JsModels';
+import { AuthorJsModel, AuthorItemJsModel, SheetItemJsModel } from 'domain/api/JsModels';
 import authorImage from './img200x200.jpg';
 
 const sheetDefault: SheetItemJsModel = {
@@ -93,6 +89,8 @@ const AuthorList: AuthorItemJsModel[] = authorsNames.map((name, index) => ({
     preview_s: authorImage,
     alias: 'author_alias',
     rate: 0,
+    genres: [],
+    owner: 1,
 }));
 
 export const AuthorsMock: AuthorJsModel = {

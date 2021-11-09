@@ -10,6 +10,7 @@ import { OKLogo } from 'components/shared/icons/OKLogo';
 import { FacebookLogo } from 'components/shared/icons/FacebookLogo';
 import { Modal } from 'components/shared/Modal/Modal';
 import { QueryStatus } from 'domain/QueryStatus';
+import cn from 'classnames';
 
 const SocialIcons: Record<string, React.ReactNode> = {
     'vk.com': <VkLogo className={styles.socialIcon} />,
@@ -21,11 +22,7 @@ interface Props {
     status: QueryStatus;
     errorMessage: string;
     onSwitchForm: (bool: boolean) => void;
-    loginHandler: (
-        email: string,
-        password: string,
-        event: React.FormEvent,
-    ) => void;
+    loginHandler: (email: string, password: string, event: React.FormEvent) => void;
     resetPassword: (email: string) => Promise<void>;
 }
 
@@ -42,8 +39,7 @@ export const Authorization: React.FC<Props> = ({
     }>({ auth: '', resetPass: '' });
     const [password, setPassword] = React.useState<string>('');
     const [socialAuth, setSocialAuth] = React.useState<SocialLinkJsModel[]>([]);
-    const [openModalResetPassword, setOpenModalResetPassword] =
-        React.useState<boolean>(false);
+    const [openModalResetPassword, setOpenModalResetPassword] = React.useState<boolean>(false);
 
     React.useEffect(() => {
         UsersClient.getSocialLinksAuth().then((res) => {
@@ -82,11 +78,7 @@ export const Authorization: React.FC<Props> = ({
                     }
                 />
                 <div className={styles.btnsWrapper}>
-                    <Button
-                        type="submit"
-                        className={styles.btnLogin}
-                        disabled={false}
-                    >
+                    <Button type="submit" className={styles.btnLogin} disabled={false}>
                         Войти
                     </Button>
                     <Button
@@ -116,9 +108,7 @@ export const Authorization: React.FC<Props> = ({
                     </div>
                 ))}
             </div> */}
-            {!!errorMessage && (
-                <div className={styles.errorsMsg}>{errorMessage}</div>
-            )}
+            {!!errorMessage && <div className={styles.errorsMsg}>{errorMessage}</div>}
             {openModalResetPassword && (
                 <Modal
                     title="Восстановление пароля"
@@ -127,6 +117,7 @@ export const Authorization: React.FC<Props> = ({
                 >
                     <form onSubmit={(e) => handleResetPassword(e)}>
                         <Input
+                            width="400px"
                             placeholder="e-mail"
                             onChange={(e: any) =>
                                 setEmail((prev) => ({
@@ -136,7 +127,7 @@ export const Authorization: React.FC<Props> = ({
                             }
                             value={email.resetPass}
                             required
-                            className={styles.input}
+                            className={cn(styles.input, styles.resetPassword)}
                             autoFocus
                         />
                         <Button>Восстановить</Button>

@@ -1,11 +1,10 @@
 import * as React from 'react';
 import styles from './AuthorEditModal.module.scss';
-import cn from 'classnames';
 import { Button } from 'components/shared/Button/Button';
 import { Modal } from 'components/shared/Modal/Modal';
 import { Input } from 'components/shared/Input/Input';
 import { Textarea } from 'components/shared/Textarea/Textarea';
-import { maxUploadImageSize } from 'domain/SiteInfo';
+import { maxAuthorDescriptionLength, maxUploadImageSize } from 'domain/SiteInfo';
 import { AuthorItemJsModel } from 'domain/api/JsModels';
 
 export type authorEditModel = {
@@ -27,7 +26,8 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
         preview: '',
     });
 
-    const [tempImage, setTempImage] = React.useState<string | ArrayBuffer | null>('');
+    const [selectedImage, setSelectedImage] = React.useState<string | ArrayBuffer | null>('');
+    const [selectedGenres, setSelectedGenres] = React.useState<string[]>([]);
 
     React.useEffect(() => {
         if (author)
@@ -50,7 +50,7 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
             if (FileReader && file) {
                 var fileReader = new FileReader();
                 fileReader.onloadend = function () {
-                    setTempImage(fileReader.result);
+                    setSelectedImage(fileReader.result);
                 };
                 fileReader.readAsDataURL(file);
             }
@@ -69,17 +69,18 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
     return (
         <Modal title="Редактирование автора" onClose={closeModal}>
             <form onSubmit={onSave}>
-                <Input
-                    placeholder="Автор"
-                    className={styles.formItem}
-                    value={form.name}
-                    onChange={changeName}
-                    minLength={4}
-                    maxLength={40}
-                    required
-                />
                 <div className={styles.formItem}>
-                    <img src={tempImage || form.preview} width={150} />
+                    <Input
+                        placeholder="Автор"
+                        value={form.name}
+                        onChange={changeName}
+                        minLength={4}
+                        maxLength={40}
+                        required
+                    />
+                </div>
+                <div className={styles.formItem}>
+                    <img src={selectedImage || form.preview} width={150} />
                     <Input
                         placeholder="Фото"
                         type="file"
@@ -88,15 +89,16 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
                         size={maxUploadImageSize}
                     />
                 </div>
-                <Textarea
-                    placeholder="Описание"
-                    maxLength={1000}
-                    rows={7}
-                    cols={50}
-                    className={cn(styles.formItem, styles.formItem_Textarea)}
-                    value={form.info}
-                    onChange={changeDescription}
-                />
+                <div className={styles.formItem}>
+                    <Textarea
+                        placeholder="Описание"
+                        maxLength={maxAuthorDescriptionLength}
+                        rows={7}
+                        cols={50}
+                        value={form.info}
+                        onChange={changeDescription}
+                    />
+                </div>
                 <div className={styles.buttonsWrapper}>
                     <Button onClick={() => editAuthor(form)}>Сохранить</Button>
                     <Button use="link" onClick={closeModal}>

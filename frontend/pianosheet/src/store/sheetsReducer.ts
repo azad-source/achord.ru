@@ -34,6 +34,8 @@ export const defaultAuthorItem: AuthorItemJsModel = {
     preview_s: '',
     preview_xs: '',
     rate: 0,
+    genres: [],
+    owner: 0,
 };
 
 export const defaultAuthor: AuthorJsModel = {

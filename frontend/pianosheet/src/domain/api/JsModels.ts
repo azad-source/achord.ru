@@ -12,8 +12,8 @@ export type AuthorItemJsModel = {
     preview_xs?: string;
     alias: string;
     rate: number;
-    // genres: number[];
-    // owner: number;
+    genres: number[];
+    owner: number;
 };
 
 export type AuthorJsModel = {

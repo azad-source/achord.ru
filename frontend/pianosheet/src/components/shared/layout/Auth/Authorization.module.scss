@@ -17,6 +17,10 @@
   margin: 0 0 12px 0;
 }
 
+.resetPassword {
+  margin-bottom: 32px;
+}
+
 .btnsWrapper {
   display: flex;
   flex-direction: row;
@@ -36,16 +40,16 @@
   width: 30px;
   height: 30px;
   display: block;
-}
 
-.socialItem a {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
+  &:last-child {
+    margin-right: 0;
+  }
 
-.socialItem:last-child {
-  margin-right: 0;
+  a {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .socialIcon {

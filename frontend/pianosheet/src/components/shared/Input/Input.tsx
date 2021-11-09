@@ -39,6 +39,7 @@ interface Props {
     minLength?: number;
     required?: boolean;
     icon?: React.ReactNode;
+    width?: number | string;
 }
 
 export const Input: React.FC<Props> = ({
@@ -46,15 +47,15 @@ export const Input: React.FC<Props> = ({
     type = 'text',
     required,
     icon,
+    width,
     onClick,
     ...props
 }) => {
+    const rootStyles = { width };
+
     return (
-        <div className={styles.root}>
-            <span
-                className={cn(required && styles.required)}
-                title="Это поле обязательное"
-            />
+        <div className={styles.root} style={rootStyles}>
+            <span className={cn(required && styles.required)} title="Это поле обязательное" />
             <input
                 type={type}
                 required={required}

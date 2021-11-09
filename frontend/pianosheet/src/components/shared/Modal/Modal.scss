@@ -51,36 +51,36 @@
   width: 30px;
   height: 30px;
   cursor: pointer;
-}
 
-.modalClose::after,
-.modalClose::before {
-  position: absolute;
-  content: '';
-  width: 60%;
-  height: 2px;
-  background-color: $defaultBg;
-  top: 50%;
-  left: 50%;
-}
+  &::after,
+  &::before {
+    position: absolute;
+    content: '';
+    width: 60%;
+    height: 2px;
+    background-color: $defaultBg;
+    top: 50%;
+    left: 50%;
+  }
 
-.modalClose::after {
-  transform: translate(-50%, -50%) rotate(45deg);
-}
+  &::after {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
 
-.modalClose::before {
-  transform: translate(-50%, -50%) rotate(-45deg);
-}
+  &::before {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
 
-.modalClose:hover {
-  background-color: $defaultBg;
-  transition: 0.25s;
-}
+  &:hover {
+    background-color: $defaultBg;
+    transition: 0.25s;
 
-.modalClose:hover.modalClose::after,
-.modalClose:hover.modalClose::before {
-  background-color: #fff;
-  transition: 0.25s;
+    &.modalClose::after,
+    &.modalClose::before {
+      background-color: #fff;
+      transition: 0.25s;
+    }
+  }
 }
 
 .submitOverlay {
@@ -95,6 +95,7 @@
 
 @media screen and (max-width: 620px) {
   .modal {
+    top: 50%;
     width: 97%;
   }
 }

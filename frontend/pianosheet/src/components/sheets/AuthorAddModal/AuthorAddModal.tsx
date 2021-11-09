@@ -1,11 +1,10 @@
 import * as React from 'react';
 import styles from './AuthorAddModal.module.scss';
-import cn from 'classnames';
 import { Button } from 'components/shared/Button/Button';
 import { Modal } from 'components/shared/Modal/Modal';
 import { Input } from 'components/shared/Input/Input';
 import { Textarea } from 'components/shared/Textarea/Textarea';
-import { maxUploadImageSize } from 'domain/SiteInfo';
+import { maxAuthorDescriptionLength, maxUploadImageSize } from 'domain/SiteInfo';
 
 export type authorAddModel = {
     author: string;
@@ -53,15 +52,16 @@ export const AuthorAddModal: React.FC<Props> = ({ closeModal, addAuthor }) => {
     return (
         <Modal title="Добавление автора" onClose={closeModal}>
             <form onSubmit={onSave}>
-                <Input
-                    placeholder="Автор"
-                    className={styles.formItem}
-                    value={form.author}
-                    onChange={changeName}
-                    minLength={4}
-                    maxLength={40}
-                    required
-                />
+                <div className={styles.formItem}>
+                    <Input
+                        placeholder="Автор"
+                        value={form.author}
+                        onChange={changeName}
+                        minLength={4}
+                        maxLength={40}
+                        required
+                    />
+                </div>
                 <div className={styles.formItem}>
                     <img src={tempImage || form.file} width={150} />
                     <Input
@@ -72,15 +72,16 @@ export const AuthorAddModal: React.FC<Props> = ({ closeModal, addAuthor }) => {
                         size={maxUploadImageSize}
                     />
                 </div>
-                <Textarea
-                    placeholder="Описание"
-                    maxLength={1000}
-                    rows={7}
-                    cols={50}
-                    className={cn(styles.formItem, styles.formItem_Textarea)}
-                    value={form.info}
-                    onChange={changeDescription}
-                />
+                <div className={styles.formItem}>
+                    <Textarea
+                        placeholder="Описание"
+                        maxLength={maxAuthorDescriptionLength}
+                        rows={7}
+                        cols={50}
+                        value={form.info}
+                        onChange={changeDescription}
+                    />
+                </div>
                 <div className={styles.buttonsWrapper}>
                     <Button onClick={() => addAuthor(form)}>Добавить</Button>
                     <Button use="link" onClick={closeModal}>

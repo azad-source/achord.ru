@@ -1,8 +1,9 @@
 
 
-from .models import Author, Note
+from rest_framework import viewsets
+from .models import Author, Genre, Note
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
-from .serializers import AuthorSerializer, NoteSerializer
+from .serializers import AuthorSerializer, NoteSerializer, GenreSerializer
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from core.permissions import IsOwnerOrReadOnly
 from django.core.exceptions import FieldError
@@ -41,6 +42,25 @@ class CustomModelViewSet(ModelViewSet):
     def up_rate_list(self, queryset):
         for instance in queryset:
             self.up_rate(instance)
+
+
+class GenreViewSet(viewsets.ModelViewSet):
+    serializer_class = GenreSerializer
+    queryset = Genre.objects.all()
+    permission_classes = (IsAdminUser,)
+    permission_dict = {
+        'list': (AllowAny, ),
+        'retrieve': (AllowAny, ),
+        'update': (IsAdminUser, ),
+        'create': (IsAdminUser, ),
+        'destroy': (IsAdminUser, ),
+    }
+
+    def get_permissions(self):
+        try:
+            return [permission() for permission in self.permission_dict[self.action]]
+        except KeyError:
+            return [permission() for permission in self.permission_classes]
 
 
 class AuthorViewSet(CustomModelViewSet):

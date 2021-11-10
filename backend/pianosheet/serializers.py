@@ -1,3 +1,4 @@
+from django.db.models import fields
 from rest_framework import serializers
 from .models import Author, Note, Genre
 from django.contrib.auth import get_user_model
@@ -31,3 +32,10 @@ class NoteSerializer(serializers.ModelSerializer):
         model = Note
         read_only_fields = ('id', 'savedate', 'rate', 'owner')
         fields = (*read_only_fields, 'name', 'filename', 'author', 'content_list', )
+
+
+class GenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        read_only_fields = ('id', 'alias')
+        fields = '__all__'

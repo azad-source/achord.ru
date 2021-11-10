@@ -26,38 +26,42 @@ export const SheetAddModal: React.FC<Props> = ({ closeModal, addSheet }) => {
         if (e.target.files) setForm({ ...form, filename: e.target.files[0] });
     };
 
-    const onSave = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const onSave = () => {
         addSheet(form);
     };
 
     return (
-        <Modal title="Добавление нот" onClose={closeModal}>
-            <form onSubmit={onSave}>
+        <Modal
+            title="Добавление нот"
+            onClose={closeModal}
+            bottomPanel={
+                <>
+                    <Button onClick={onSave}>Добавить</Button>
+                    <Button use="link" onClick={closeModal}>
+                        Отменить
+                    </Button>
+                </>
+            }
+        >
+            <div className={styles.formItem}>
                 <Input
                     placeholder="Название нот"
-                    className={styles.formItem}
                     value={form.sheetname}
                     onChange={changeName}
                     minLength={4}
                     maxLength={40}
                     required
                 />
+            </div>
+            <div className={styles.formItem}>
                 <Input
                     placeholder="Файл"
                     type="file"
-                    className={styles.formItem}
                     onChange={chooseFile}
                     accept=".pdf"
                     size={maxUploadPdfSize}
                 />
-                <div className={styles.buttonsWrapper}>
-                    <Button onClick={() => addSheet(form)}>Добавить</Button>
-                    <Button use="link" onClick={closeModal}>
-                        Отменить
-                    </Button>
-                </div>
-            </form>
+            </div>
         </Modal>
     );
 };

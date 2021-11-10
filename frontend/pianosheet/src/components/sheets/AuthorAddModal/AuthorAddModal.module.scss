@@ -1,15 +1,18 @@
 .formItem {
   min-width: 100%;
   margin: 0 12px 12px 0;
-
-  &_Textarea::-webkit-scrollbar {
-    display: none;
-  }
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
-.buttonsWrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: 25px;
+.image {
+  display: block;
+  width: 150px;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 440px) {
+  .image {
+    width: 100%;
+  }
 }

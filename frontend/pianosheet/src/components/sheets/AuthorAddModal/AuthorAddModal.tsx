@@ -44,51 +44,53 @@ export const AuthorAddModal: React.FC<Props> = ({ closeModal, addAuthor }) => {
         setForm({ ...form, info: e.target.value });
     };
 
-    const onSave = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const onSave = () => {
         addAuthor(form);
     };
 
     return (
-        <Modal title="Добавление автора" onClose={closeModal}>
-            <form onSubmit={onSave}>
-                <div className={styles.formItem}>
-                    <Input
-                        placeholder="Автор"
-                        value={form.author}
-                        onChange={changeName}
-                        minLength={4}
-                        maxLength={40}
-                        required
-                    />
-                </div>
-                <div className={styles.formItem}>
-                    <img src={tempImage || form.file} width={150} />
-                    <Input
-                        placeholder="Фото"
-                        type="file"
-                        onChange={chooseFile}
-                        accept=".jpg, .jpeg, .png"
-                        size={maxUploadImageSize}
-                    />
-                </div>
-                <div className={styles.formItem}>
-                    <Textarea
-                        placeholder="Описание"
-                        maxLength={maxAuthorDescriptionLength}
-                        rows={7}
-                        cols={50}
-                        value={form.info}
-                        onChange={changeDescription}
-                    />
-                </div>
-                <div className={styles.buttonsWrapper}>
-                    <Button onClick={() => addAuthor(form)}>Добавить</Button>
+        <Modal
+            title="Добавление автора"
+            onClose={closeModal}
+            bottomPanel={
+                <>
+                    <Button onClick={onSave}>Добавить</Button>
                     <Button use="link" onClick={closeModal}>
                         Отменить
                     </Button>
-                </div>
-            </form>
+                </>
+            }
+        >
+            <div className={styles.formItem}>
+                <Input
+                    placeholder="Автор"
+                    value={form.author}
+                    onChange={changeName}
+                    minLength={4}
+                    maxLength={40}
+                    required
+                />
+            </div>
+            <div className={styles.formItem}>
+                <img src={tempImage || form.file} className={styles.image} />
+                <Input
+                    placeholder="Фото"
+                    type="file"
+                    onChange={chooseFile}
+                    accept=".jpg, .jpeg, .png"
+                    size={maxUploadImageSize}
+                />
+            </div>
+            <div className={styles.formItem}>
+                <Textarea
+                    placeholder="Описание"
+                    maxLength={maxAuthorDescriptionLength}
+                    rows={7}
+                    cols={50}
+                    value={form.info}
+                    onChange={changeDescription}
+                />
+            </div>
         </Modal>
     );
 };

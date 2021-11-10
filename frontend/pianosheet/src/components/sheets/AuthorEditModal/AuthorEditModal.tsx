@@ -87,61 +87,64 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
     };
 
     return (
-        <>
-            <Modal title="Редактирование автора" onClose={closeModal}>
-                <div className={styles.formItem}>
-                    <Input
-                        placeholder="Автор"
-                        value={form.name}
-                        onChange={changeName}
-                        minLength={4}
-                        maxLength={40}
-                        required
-                    />
-                </div>
-                <div className={cn(styles.formItem, styles.genres)}>
-                    {GenresMock.map((genre) => {
-                        return (
-                            <div
-                                key={genre}
-                                className={cn(
-                                    styles.genres_item,
-                                    isGenreSelected(genre) && styles.genres_item__selected,
-                                )}
-                                onClick={() => handleSelectGenre(genre)}
-                            >
-                                {genre}
-                            </div>
-                        );
-                    })}
-                </div>
-                <div className={styles.formItem}>
-                    <img src={selectedImage || form.preview} width={150} />
-                    <Input
-                        placeholder="Фото"
-                        type="file"
-                        onChange={chooseFile}
-                        accept=".jpg, .jpeg, .png"
-                        size={maxUploadImageSize}
-                    />
-                </div>
-                <div className={styles.formItem}>
-                    <Textarea
-                        placeholder="Описание"
-                        maxLength={maxAuthorDescriptionLength}
-                        rows={5}
-                        cols={50}
-                        value={form.info}
-                        onChange={changeDescription}
-                    />
-                </div>
-                <div className={styles.buttonsWrapper}>
+        <Modal
+            title="Редактирование автора"
+            onClose={closeModal}
+            bottomPanel={
+                <>
                     <Button onClick={onSave}>Сохранить</Button>
                     <Button use="link" onClick={closeModal}>
                         Отменить
                     </Button>
-                </div>
-            </Modal>
-        </>
+                </>
+            }
+        >
+            <div className={styles.formItem}>
+                <Input
+                    placeholder="Автор"
+                    value={form.name}
+                    onChange={changeName}
+                    minLength={4}
+                    maxLength={40}
+                    required
+                />
+            </div>
+            <div className={cn(styles.formItem, styles.genres)}>
+                {GenresMock.map((genre) => {
+                    return (
+                        <div
+                            key={genre}
+                            className={cn(
+                                styles.genres_item,
+                                isGenreSelected(genre) && styles.genres_item__selected,
+                            )}
+                            onClick={() => handleSelectGenre(genre)}
+                        >
+                            {genre}
+                        </div>
+                    );
+                })}
+            </div>
+            <div className={styles.formItem}>
+                <img className={styles.image} src={selectedImage || form.preview} />
+                <Input
+                    placeholder="Фото"
+                    type="file"
+                    onChange={chooseFile}
+                    accept=".jpg, .jpeg, .png"
+                    size={maxUploadImageSize}
+                />
+            </div>
+            <div className={styles.formItem}>
+                <Textarea
+                    placeholder="Описание"
+                    maxLength={maxAuthorDescriptionLength}
+                    rows={5}
+                    cols={50}
+                    value={form.info}
+                    onChange={changeDescription}
+                />
+            </div>
+        </Modal>
     );
 };

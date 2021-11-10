@@ -60,6 +60,7 @@ export const SheetAddModal: React.FC<Props> = ({ closeModal, addSheet }) => {
                     onChange={chooseFile}
                     accept=".pdf"
                     size={maxUploadPdfSize}
+                    className={styles.fileInput}
                 />
             </div>
         </Modal>

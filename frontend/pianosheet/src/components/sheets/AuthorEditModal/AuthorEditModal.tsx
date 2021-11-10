@@ -133,6 +133,7 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
                     onChange={chooseFile}
                     accept=".jpg, .jpeg, .png"
                     size={maxUploadImageSize}
+                    className={styles.fileInput}
                 />
             </div>
             <div className={styles.formItem}>

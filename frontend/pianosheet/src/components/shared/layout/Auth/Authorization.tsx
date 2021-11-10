@@ -47,8 +47,7 @@ export const Authorization: React.FC<Props> = ({
         });
     }, []);
 
-    const handleResetPassword = (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleResetPassword = () => {
         resetPassword(email.resetPass).then(() => {
             setEmail((prev) => ({ ...prev, resetPass: '' }));
             setOpenModalResetPassword(false);
@@ -114,24 +113,22 @@ export const Authorization: React.FC<Props> = ({
                     title="Восстановление пароля"
                     onClose={() => setOpenModalResetPassword(false)}
                     loadStatus={status}
+                    bottomPanel={<Button onClick={handleResetPassword}>Восстановить</Button>}
                 >
-                    <form onSubmit={(e) => handleResetPassword(e)}>
-                        <Input
-                            width="400px"
-                            placeholder="e-mail"
-                            onChange={(e: any) =>
-                                setEmail((prev) => ({
-                                    ...prev,
-                                    resetPass: e.target.value,
-                                }))
-                            }
-                            value={email.resetPass}
-                            required
-                            className={cn(styles.input, styles.resetPassword)}
-                            autoFocus
-                        />
-                        <Button>Восстановить</Button>
-                    </form>
+                    <Input
+                        width="400px"
+                        placeholder="e-mail"
+                        onChange={(e: any) =>
+                            setEmail((prev) => ({
+                                ...prev,
+                                resetPass: e.target.value,
+                            }))
+                        }
+                        value={email.resetPass}
+                        required
+                        className={cn(styles.input, styles.resetPassword)}
+                        autoFocus
+                    />
                 </Modal>
             )}
         </div>

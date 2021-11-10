@@ -1,4 +1,10 @@
-import { AuthorJsModel, AuthorItemJsModel, SheetItemJsModel } from 'domain/api/JsModels';
+import {
+    AuthorJsModel,
+    AuthorItemJsModel,
+    SheetItemJsModel,
+    GenreJsModel,
+    GenreResultJsModel,
+} from 'domain/api/JsModels';
 import authorImage from './img200x200.jpg';
 
 const sheetDefault: SheetItemJsModel = {
@@ -102,17 +108,18 @@ export const AuthorsMock: AuthorJsModel = {
     results: AuthorList,
 };
 
-export const GenresMock: string[] = [
-    'Классика',
-    'Электронная',
-    'Джаз',
-    'Блюз',
-    'Рок-н-ролл',
-    'Рок',
-    'Хип-хоп',
-    'Кантри',
-    'Фолк',
-    'Регги',
-    'Шансон',
-    'Поп',
+export const GenresMock: GenreResultJsModel[] = [
+    { id: 1, name: 'Рок', alias: 'rok' },
+    { id: 2, name: 'Металл', alias: 'metall' },
+    { id: 3, name: 'Классика', alias: 'klassika' },
+    { id: 4, name: 'Электронная', alias: 'эlektronnaya' },
+    { id: 5, name: 'Джаз', alias: 'dzhaz' },
+    { id: 6, name: 'Блюз', alias: 'blyuz' },
+    { id: 7, name: 'Рок-н-ролл', alias: 'rok-n-roll' },
+    { id: 8, name: 'Хип-хоп', alias: 'hip-hop' },
+    { id: 9, name: 'Кантри', alias: 'kantri' },
+    { id: 10, name: 'Фолк', alias: 'folk' },
+    { id: 11, name: 'Регги', alias: 'reggi' },
+    { id: 12, name: 'Шансон', alias: 'shanson' },
+    { id: 13, name: 'Поп', alias: 'pop' },
 ];

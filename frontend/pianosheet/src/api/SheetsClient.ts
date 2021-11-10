@@ -3,6 +3,7 @@ import {
     AuthorItemJsModel,
     SheetJsModel,
     SheetItemJsModel,
+    GenreJsModel,
 } from 'domain/api/JsModels';
 import { api, retrieveData } from './apiConfig';
 
@@ -71,5 +72,10 @@ export class SheetsClient {
     /** Топ нот */
     public static getTopSheets(): Promise<SheetJsModel> {
         return api.get(`${apiPath}/note/`, { params: { order_by: '-rate' } }).then(retrieveData);
+    }
+
+    /** Получение списка жанров */
+    public static getGenres(): Promise<GenreJsModel> {
+        return api.get(`${apiPath}/genre/`).then(retrieveData);
     }
 }

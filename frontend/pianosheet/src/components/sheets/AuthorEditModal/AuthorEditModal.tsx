@@ -5,16 +5,16 @@ import { Modal } from 'components/shared/Modal/Modal';
 import { Input } from 'components/shared/Input/Input';
 import { Textarea } from 'components/shared/Textarea/Textarea';
 import { maxAuthorDescriptionLength, maxUploadImageSize } from 'domain/SiteInfo';
-import { AuthorItemJsModel } from 'domain/api/JsModels';
-import { GenresMock } from 'mockData/allMocks';
+import { AuthorItemJsModel, GenreResultJsModel } from 'domain/api/JsModels';
 import cn from 'classnames';
 import { useToast } from 'components/shared/Toast/Toast';
+import { SheetsClient } from 'api/SheetsClient';
 
 export type authorEditModel = {
     name: string;
     info: string;
     preview: any;
-    genres: string[];
+    genres: number[];
 };
 
 interface Props {
@@ -32,8 +32,13 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
     });
 
     const [selectedImage, setSelectedImage] = React.useState<string | ArrayBuffer | null>('');
+    const [allGenres, setAllGenres] = React.useState<GenreResultJsModel[]>([]);
 
     const { push } = useToast();
+
+    React.useEffect(() => {
+        if (allGenres.length < 1) SheetsClient.getGenres().then((r) => setAllGenres(r.results));
+    }, []);
 
     React.useEffect(() => {
         if (author)
@@ -76,14 +81,17 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
         editAuthor(form);
     };
 
-    const isGenreSelected = (genre: string) => form.genres.includes(genre);
+    const isGenreSelected = (genreId: number) => form.genres.some((id) => id === genreId);
 
-    const handleSelectGenre = (genre: string) => {
-        if (isGenreSelected(genre)) {
-            setForm((prev) => ({ ...prev, genres: prev.genres.filter((item) => item !== genre) }));
+    const handleSelectGenre = (genreId: number) => {
+        if (isGenreSelected(genreId)) {
+            setForm((prev) => ({
+                ...prev,
+                genres: prev.genres.filter((id) => id !== genreId),
+            }));
             return;
         }
-        setForm((prev) => ({ ...prev, genres: [...prev.genres, genre] }));
+        setForm((prev) => ({ ...prev, genres: [...prev.genres, genreId] }));
     };
 
     return (
@@ -110,20 +118,21 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
                 />
             </div>
             <div className={cn(styles.formItem, styles.genres)}>
-                {GenresMock.map((genre) => {
-                    return (
-                        <div
-                            key={genre}
-                            className={cn(
-                                styles.genres_item,
-                                isGenreSelected(genre) && styles.genres_item__selected,
-                            )}
-                            onClick={() => handleSelectGenre(genre)}
-                        >
-                            {genre}
-                        </div>
-                    );
-                })}
+                {allGenres.length > 0 &&
+                    allGenres.map(({ id, name }) => {
+                        return (
+                            <div
+                                key={id}
+                                className={cn(
+                                    styles.genres_item,
+                                    isGenreSelected(id) && styles.genres_item__selected,
+                                )}
+                                onClick={() => handleSelectGenre(id)}
+                            >
+                                {name}
+                            </div>
+                        );
+                    })}
             </div>
             <div className={styles.formItem}>
                 <img className={styles.image} src={selectedImage || form.preview} />

@@ -15,26 +15,21 @@ export class Paths {
     public static readonly authPage = '/sign-in';
 
     /** Страница для выбранно буквы алфавита */
-    public static readonly letterPage = '/sheets/:letter';
+    public static readonly letterPage = `${Paths.sheetPage}/:letter`;
 
-    public static getLetterPath = (letter: string) => `/sheets/${letter}`;
+    public static getLetterPath = (letter: string) => `${Paths.sheetPage}/${letter}`;
 
     /** Страница детального просмотра автора */
-    public static readonly authorPage = '/sheets/:letter/:authorAlias';
+    public static readonly authorPage = `${Paths.letterPage}/:authorAlias`;
 
     public static getAuthorPath = (letter: string, authorAlias: string) =>
-        `/sheets/${letter.toLowerCase()}/${authorAlias.toLowerCase()}`;
+        `${Paths.sheetPage}/${letter.toLowerCase()}/${authorAlias.toLowerCase()}`;
 
     /** Страница просмотра нот */
-    public static readonly sheetDownloadPage =
-        '/sheets/:letter/:authorAlias/:sheetId';
+    public static readonly sheetDownloadPage = `${Paths.authorPage}/:sheetId`;
 
-    public static getSheetDownloadPath = (
-        letter: string,
-        authorAlias: string,
-        sheetId: string,
-    ) =>
-        `/sheets/${letter.toLowerCase()}/${authorAlias.toLowerCase()}/${sheetId}`;
+    public static getSheetDownloadPath = (letter: string, authorAlias: string, sheetId: string) =>
+        `${Paths.sheetPage}/${letter.toLowerCase()}/${authorAlias.toLowerCase()}/${sheetId}`;
 
     /** Страница авторизации в VK */
     public static readonly authVKPage = '/login/check';
@@ -44,4 +39,9 @@ export class Paths {
 
     /** Страница смены пароля */
     public static readonly changePasswordPage = '/password/reset/confirm/:uid/:token';
+
+    /** Раздел жанра */
+    public static readonly genrePage = '/genre';
+
+    public static getGenrePage = (genreId: string) => `${Paths.genrePage}/${genreId}`;
 }

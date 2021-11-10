@@ -151,6 +151,35 @@
   margin-bottom: 20px;
 }
 
+.genres {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 16px;
+  box-sizing: border-box;
+
+  &_item {
+    padding: 8px 12px;
+    background-color: rgb(16, 104, 104);
+    color: #fff;
+    margin-right: 8px;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    line-height: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: unset;
+    box-sizing: border-box;
+    box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      background-color: rgb(9, 71, 71);
+    }
+  }
+}
+
 @media screen and (max-width: 768px) {
   .photo {
     height: 300px;

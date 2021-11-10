@@ -35,6 +35,8 @@
     cursor: pointer;
     user-select: none;
     line-height: 1.3;
+    flex-grow: 1;
+    text-align: center;
 
     &:hover {
       background-color: #eee;

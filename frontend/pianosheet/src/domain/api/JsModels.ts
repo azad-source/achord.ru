@@ -12,14 +12,14 @@ export type AuthorItemJsModel = {
     preview_xs?: string;
     alias: string;
     rate: number;
-    genres: string[];
+    genres: number[];
     owner: number;
 };
 
 export type AuthorJsModel = {
     count: number;
-    page_count: number,
-    page_size: number,
+    page_count: number;
+    page_size: number;
     next: string;
     previous: string;
     results: AuthorItemJsModel[];
@@ -36,8 +36,8 @@ export type SheetItemJsModel = {
 
 export type SheetJsModel = {
     count: number;
-    page_count: number,
-    page_size: number,
+    page_count: number;
+    page_size: number;
     next: string;
     previous: string;
     results: SheetItemJsModel[];
@@ -53,4 +53,19 @@ export type UserJsModel = {
     email?: string;
     activate?: boolean;
     token?: string;
-}
+};
+
+export type GenreJsModel = {
+    count: number;
+    page_count: number;
+    page_size: number;
+    next: string;
+    previous: string;
+    results: GenreResultJsModel[];
+};
+
+export type GenreResultJsModel = {
+    id: number;
+    name: string;
+    alias: string;
+};

@@ -14,7 +14,7 @@ export type authorEditModel = {
     name: string;
     info: string;
     preview: any;
-    genres: number[];
+    genres: GenreResultJsModel[];
 };
 
 interface Props {
@@ -81,17 +81,18 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
         editAuthor(form);
     };
 
-    const isGenreSelected = (genreId: number) => form.genres.some((id) => id === genreId);
+    const isGenreSelected = (genre: GenreResultJsModel) =>
+        form.genres.some(({ id }) => id === genre.id);
 
-    const handleSelectGenre = (genreId: number) => {
-        if (isGenreSelected(genreId)) {
+    const handleSelectGenre = (genre: GenreResultJsModel) => {
+        if (isGenreSelected(genre)) {
             setForm((prev) => ({
                 ...prev,
-                genres: prev.genres.filter((id) => id !== genreId),
+                genres: prev.genres.filter(({ id }) => id !== genre.id),
             }));
             return;
         }
-        setForm((prev) => ({ ...prev, genres: [...prev.genres, genreId] }));
+        setForm((prev) => ({ ...prev, genres: [...prev.genres, genre] }));
     };
 
     return (
@@ -119,17 +120,17 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
             </div>
             <div className={cn(styles.formItem, styles.genres)}>
                 {allGenres.length > 0 &&
-                    allGenres.map(({ id, name }) => {
+                    allGenres.map((genre) => {
                         return (
                             <div
-                                key={id}
+                                key={genre.id}
                                 className={cn(
                                     styles.genres_item,
-                                    isGenreSelected(id) && styles.genres_item__selected,
+                                    isGenreSelected(genre) && styles.genres_item__selected,
                                 )}
-                                onClick={() => handleSelectGenre(id)}
+                                onClick={() => handleSelectGenre(genre)}
                             >
-                                {name}
+                                {genre.name}
                             </div>
                         );
                     })}

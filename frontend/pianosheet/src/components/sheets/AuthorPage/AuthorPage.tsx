@@ -7,16 +7,14 @@ import { connect } from 'react-redux';
 import { RootState } from 'store/rootReducer';
 import { bindActionCreators, Dispatch } from 'redux';
 import { sheetsAction } from 'store/sheetsActions';
-import { AuthorItemJsModel, GenreResultJsModel, SheetJsModel } from 'domain/api/JsModels';
+import { AuthorItemJsModel, SheetJsModel } from 'domain/api/JsModels';
 import { QueryStatus } from 'domain/QueryStatus';
 import { AddIcon } from 'components/shared/icons/AddIcon';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { Paths } from 'utils/routes/Paths';
-import { SiteName } from 'domain/SiteInfo';
 import { useAuth } from 'api/UsersClient';
 import { Breadcrumbs } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { SheetAddModal, sheetAddModel } from '../SheetAddModal/SheetAddModal';
-import { SheetsClient } from 'api/SheetsClient';
 
 interface Props {
     className?: string;
@@ -41,7 +39,6 @@ const AuthorPageFC: React.FC<Props> = ({
     const { letter, authorAlias } = useParams<{ letter: string; authorAlias: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const [showModal, setShowModal] = React.useState<boolean>(false);
-    const [allGenres, setAllGenres] = React.useState<GenreResultJsModel[]>([]);
 
     const location = useLocation();
     const history = useHistory();
@@ -50,11 +47,6 @@ const AuthorPageFC: React.FC<Props> = ({
         getAuthor(authorAlias);
         setPageNumber(1);
     }, [location]);
-
-    React.useEffect(() => {
-        if (allGenres.length < 1) SheetsClient.getGenres().then((r) => setAllGenres(r.results));
-        document.title = `${SiteName} - ${viewAuthor.name}`;
-    }, []);
 
     const openModal = () => setShowModal(true);
     const closeModal = () => setShowModal(false);
@@ -91,9 +83,6 @@ const AuthorPageFC: React.FC<Props> = ({
         history.push(Paths.getGenrePage(genreId.toString()));
     };
 
-    const getGenreNameById = (genreId: number): string =>
-        allGenres.find(({ id }) => genreId === id)?.name || '';
-
     return (
         <Page loadStatus={status}>
             <Breadcrumbs items={breadcrumbs} />
@@ -110,16 +99,15 @@ const AuthorPageFC: React.FC<Props> = ({
                                 />
                             </div>
                             <div className={styles.genres}>
-                                {allGenres.length > 0 &&
-                                    viewAuthor.genres.map((id) => (
-                                        <div
-                                            key={id}
-                                            className={styles.genres_item}
-                                            onClick={() => goToGenre(id)}
-                                        >
-                                            {getGenreNameById(id)}
-                                        </div>
-                                    ))}
+                                {viewAuthor.genres.map(({ name, id }) => (
+                                    <div
+                                        key={id}
+                                        className={styles.genres_item}
+                                        onClick={() => goToGenre(id)}
+                                    >
+                                        {name}
+                                    </div>
+                                ))}
                             </div>
                         </div>
                         <div className={styles.authorInfo}>{viewAuthor.info}</div>

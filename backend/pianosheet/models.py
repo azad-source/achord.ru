@@ -83,9 +83,6 @@ class Author(models.Model):
         Genre, 
         verbose_name='жанры', 
         related_name='authors',
-        null=True, 
-        blank=True, 
-        default=None,
     )
     owner = models.ForeignKey(
         User, 

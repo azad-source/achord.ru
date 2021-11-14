@@ -18,12 +18,15 @@ import piano_2_Csh from 'audio/key21.ogg';
 import piano_2_D from 'audio/key22.ogg';
 import piano_2_Dsh from 'audio/key23.ogg';
 import piano_2_E from 'audio/key24.ogg';
+import { Page } from 'components/shared/layout/Page/Page';
 
 export const PlayOnlinePage: React.FC = () => {
     return (
-        <div className={styles.root}>
-            <Piano />
-        </div>
+        <Page>
+            <div className={styles.root}>
+                <Piano />
+            </div>
+        </Page>
     );
 };
 

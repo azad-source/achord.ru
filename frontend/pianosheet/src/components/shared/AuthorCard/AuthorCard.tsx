@@ -152,6 +152,7 @@ export const AuthorCard: React.FC<Props> = ({
                 <RemoveModal
                     closeModal={closeRemoveModal}
                     onRemove={handleRemove}
+                    title="Удаление автора"
                     text={`Вы уверены, что хотите удалить ${author.name}?`}
                 />
             )}

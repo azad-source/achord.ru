@@ -5,12 +5,13 @@ import { Modal } from 'components/shared/Modal/Modal';
 import { useToast } from 'components/shared/Toast/Toast';
 
 interface Props {
+    title: string;
     text: string;
     closeModal: () => void;
     onRemove: () => void;
 }
 
-export const RemoveModal: React.FC<Props> = ({ text, closeModal, onRemove }) => {
+export const RemoveModal: React.FC<Props> = ({ title, text, closeModal, onRemove }) => {
     const { push } = useToast();
 
     const handleRemove = () => {
@@ -20,7 +21,7 @@ export const RemoveModal: React.FC<Props> = ({ text, closeModal, onRemove }) => 
 
     return (
         <Modal
-            title="Редактирование автора"
+            title={title}
             onClose={closeModal}
             bottomPanel={
                 <>

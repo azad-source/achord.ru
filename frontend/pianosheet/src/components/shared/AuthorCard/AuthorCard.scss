@@ -51,11 +51,14 @@
   background-color: rgba(255, 255, 255, 0.8);
   color: #000;
   font-size: 16px;
-  padding: 7px 5px;
+  padding: 7px 7px 14px;
   height: 55px;
   transform: translateY(0);
   transition: 0.3s;
   font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .index {
@@ -120,6 +123,12 @@
 }
 
 @media screen and (max-width: 480px) {
+  .authorName {
+    font-size: 12px;
+    padding: 5px 5px 10px;
+    line-height: 1.5;
+  }
+
   .authorAddButton {
     width: 150px;
     height: 150px;

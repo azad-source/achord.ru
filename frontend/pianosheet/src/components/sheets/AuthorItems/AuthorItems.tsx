@@ -44,13 +44,13 @@ export const AuthorItems: React.FC<Props> = ({
     };
 
     return (
-        <div className={styles.root}>
-            <div className={styles.items}>
+        <>
+            <div className={styles.authors}>
                 {authors.results.map((author) => (
                     <AuthorCard
                         key={author.id}
                         author={author}
-                        className={styles.item}
+                        className={styles.authors_item}
                         editable={logged}
                         editAuthor={editAuthor}
                     />
@@ -65,6 +65,6 @@ export const AuthorItems: React.FC<Props> = ({
                 />
             )}
             {showModal && <AuthorAddModal closeModal={closeModal} addAuthor={addAuthorHandler} />}
-        </div>
+        </>
     );
 };

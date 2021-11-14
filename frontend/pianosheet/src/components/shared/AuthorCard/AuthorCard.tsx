@@ -79,7 +79,12 @@ export const AuthorCard: React.FC<Props> = ({
                     </span>
                 )}
                 {index && <div className={styles.index}>{index}</div>}
-                <div className={styles.authorName}>{name}</div>
+                <div
+                    className={styles.authorName}
+                    style={{ fontSize: 35 / Math.pow(name.length, 0.3) }}
+                >
+                    {name}
+                </div>
             </div>
 
             {showEditModal && (

@@ -47,7 +47,7 @@ const TopAuthorsFC: React.FC<Props> = ({ editAuthor }) => {
     };
 
     return (
-        <div className={styles.root}>
+        <>
             <h1 className={defaultStyles.title}>Топ 10</h1>
             <ol className={styles.topSheets}>
                 {topSheets.results.map((sheet, index) => {
@@ -55,7 +55,7 @@ const TopAuthorsFC: React.FC<Props> = ({ editAuthor }) => {
                         return (
                             <li
                                 key={index}
-                                className={styles.topSheetItem}
+                                className={styles.topSheets_item}
                                 onClick={() => openDownloadPage(sheet)}
                             >
                                 {sheet.name}
@@ -64,14 +64,14 @@ const TopAuthorsFC: React.FC<Props> = ({ editAuthor }) => {
                     }
                 })}
             </ol>
-            <ol className={styles.topAuthors}>
+            <div className={styles.topAuthors}>
                 {topAuthors.results.map((author, index) => {
                     if (index < 10) {
                         return (
                             <AuthorCard
                                 key={author.id}
                                 author={author}
-                                className={styles.topAuthorItem}
+                                className={styles.topAuthors_item}
                                 firstAuthorletter={author.name.charAt(0)}
                                 index={index + 1}
                                 editable={logged}
@@ -80,8 +80,8 @@ const TopAuthorsFC: React.FC<Props> = ({ editAuthor }) => {
                         );
                     }
                 })}
-            </ol>
-        </div>
+            </div>
+        </>
     );
 };
 

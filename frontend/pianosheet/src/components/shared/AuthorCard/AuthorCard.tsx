@@ -4,12 +4,13 @@ import cn from 'classnames';
 import { useHistory, useParams } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
 import defaultImg from 'images/default.png';
-import { EditIcon } from '../icons/EditIcon';
 import {
     AuthorEditModal,
     authorEditModel,
 } from 'components/sheets/AuthorEditModal/AuthorEditModal';
 import { AuthorItemJsModel } from 'domain/api/JsModels';
+import { MenuButtonIcon } from '../icons/MenuButtonIcon';
+import { RemoveModal } from '../RemoveModal/RemoveModal';
 
 interface Props {
     className?: string;
@@ -31,6 +32,8 @@ export const AuthorCard: React.FC<Props> = ({
     const { letter, composerName } = useParams<{ letter: string; composerName: string }>();
 
     const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
+    const [showRemoveModal, setShowRemoveModal] = React.useState<boolean>(false);
+    const [showEditMenu, setShowEditMenu] = React.useState<boolean>(false);
 
     const history = useHistory();
 
@@ -42,12 +45,33 @@ export const AuthorCard: React.FC<Props> = ({
 
     const path = alias ? Paths.getAuthorPath(curLetter, alias) : '';
 
+    const openEditMenu = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setShowEditMenu((prev) => !prev);
+
+        setTimeout(() => {
+            if (!showEditMenu) setShowEditMenu(false);
+        }, 4000);
+    };
+
     const openEditModal = (e: React.MouseEvent<HTMLSpanElement>) => {
         e.stopPropagation();
         setShowEditModal(true);
+        setShowEditMenu(false);
+    };
+
+    const openRemoveModal = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setShowRemoveModal(true);
+        setShowEditMenu(false);
     };
 
     const closeEditModal = () => setShowEditModal(false);
+    const closeRemoveModal = () => setShowRemoveModal(false);
+    const closeEditMenu = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setShowEditMenu(false);
+    };
 
     const goToAuthorPage = () => history.push(path);
 
@@ -66,21 +90,51 @@ export const AuthorCard: React.FC<Props> = ({
         closeEditModal();
     };
 
+    const handleRemove = () => {
+        console.log('удаление автора');
+    };
+
     return (
         <>
-            <div
-                className={cn(styles.root, className)}
-                style={{ backgroundImage: backgroundImage }}
-                onClick={goToAuthorPage}
-            >
-                {editable && (
-                    <span className={styles.edit} onClick={openEditModal}>
-                        <EditIcon />
-                    </span>
-                )}
-                {index && <div className={styles.index}>{index}</div>}
+            <div className={cn(styles.root, className)} onClick={goToAuthorPage}>
+                <div className={styles.top}>
+                    {index && <div className={styles.top_index}>{index}</div>}
+                    {editable && (
+                        <>
+                            <span className={styles.top_edit} onClick={openEditMenu}>
+                                <MenuButtonIcon className={styles.top_edit_icon} />
+                            </span>
+                            {showEditMenu && (
+                                <div className={styles.top_editMenu}>
+                                    <div
+                                        className={styles.top_editMenu_item}
+                                        onClick={openEditModal}
+                                    >
+                                        Изменить
+                                    </div>
+                                    <div
+                                        className={cn(
+                                            styles.top_editMenu_item,
+                                            styles.top_editMenu_item__remove,
+                                        )}
+                                        onClick={openRemoveModal}
+                                    >
+                                        Удалить
+                                    </div>
+                                    <div
+                                        className={styles.top_editMenu_item}
+                                        onClick={closeEditMenu}
+                                    >
+                                        Отмена
+                                    </div>
+                                </div>
+                            )}
+                        </>
+                    )}
+                </div>
+                <div className={styles.middle} style={{ backgroundImage: backgroundImage }}></div>
                 <div
-                    className={styles.authorName}
+                    className={styles.bottom}
                     style={{ fontSize: 35 / Math.pow(name.length, 0.3) }}
                 >
                     {name}
@@ -94,6 +148,13 @@ export const AuthorCard: React.FC<Props> = ({
                     author={author}
                 />
             )}
+            {showRemoveModal && (
+                <RemoveModal
+                    closeModal={closeRemoveModal}
+                    onRemove={handleRemove}
+                    text={`Вы уверены, что хотите удалить ${author.name}?`}
+                />
+            )}
         </>
     );
 };
@@ -103,5 +164,5 @@ interface AddProps {
 }
 
 export const AuthorCardAdd: React.FC<AddProps> = ({ onClick }) => {
-    return <div className={styles.authorAddButton} onClick={onClick}></div>;
+    return <div className={cn(styles.root, styles.root_add)} onClick={onClick}></div>;
 };

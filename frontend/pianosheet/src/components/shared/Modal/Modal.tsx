@@ -2,11 +2,13 @@ import { QueryStatus } from 'domain/QueryStatus';
 import * as React from 'react';
 import { Loader } from '../layout/Loader/Loader';
 import styles from './Modal.scss';
+import cn from 'classnames';
 
 interface Props {
     title: string;
     loadStatus?: QueryStatus;
     bottomPanel?: React.ReactNode;
+    className?: string;
     onClose: () => void;
 }
 
@@ -15,12 +17,13 @@ export const Modal: React.FC<Props> = ({
     children,
     loadStatus = QueryStatus.success(),
     bottomPanel,
+    className,
     onClose,
 }) => {
     return (
         <div className={styles.root}>
             <div className={styles.overlay}></div>
-            <div className={styles.modal}>
+            <div className={cn(styles.modal, className)}>
                 <div className={styles.scrollWrapper}>
                     <div className={styles.modal_title}>
                         {title}

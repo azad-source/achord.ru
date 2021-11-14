@@ -54,7 +54,7 @@ export const MenuMobile: React.FC<Props> = ({ items, logged, logout }) => {
 
     const swipeMenu = {
         start: { x: 0, y: 0 },
-        dist: { x: 0, y: 0, xMax: 100, yMin: -150 },
+        dist: { x: 0, y: 0, xMax: 100, yMin: -100 },
         time: { start: 0, elapsed: 0, allowed: 500 },
     };
 
@@ -79,19 +79,18 @@ export const MenuMobile: React.FC<Props> = ({ items, logged, logout }) => {
     };
 
     return (
-        <div className={styles.root}>
+        <div
+            className={styles.root}
+            onTouchStart={handleMenuTouchStart}
+            onTouchEnd={handleMenuTouchEnd}
+        >
             <div className={styles.burgerMenu} onClick={openMenu} style={menu.burger}>
                 <span className={styles.burgerMenu_line}></span>
                 <span className={styles.burgerMenu_line}></span>
                 <span className={styles.burgerMenu_line}></span>
             </div>
             <div className={styles.overlay} style={menu.overlay} onClick={closeMenu}></div>
-            <div
-                className={styles.menuWrapper}
-                style={menu.main}
-                onTouchStart={handleMenuTouchStart}
-                onTouchEnd={handleMenuTouchEnd}
-            >
+            <div className={styles.menuWrapper} style={menu.main}>
                 <div className={styles.closeMenu} onClick={closeMenu}></div>
                 <div className={styles.menuitems}>
                     {items.length > 0 &&

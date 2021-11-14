@@ -3,9 +3,10 @@
 
 .root {
   display: block;
-  border-bottom: 1px solid #ccc;
+  // border-top: 1px solid #aaa;
   padding: 15px $sideSpace;
   margin-bottom: 10px;
+  background-color: $defaultBg;
 
   &_isMenu {
     padding: 15px 0;
@@ -27,7 +28,7 @@
   justify-content: center;
   align-items: center;
   text-decoration: none;
-  color: $mainText;
+  color: #fff;
   font-size: 16px;
   text-transform: uppercase;
   border-radius: 50%;

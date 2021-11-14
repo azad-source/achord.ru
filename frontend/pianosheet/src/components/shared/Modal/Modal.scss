@@ -90,8 +90,8 @@
       background-color: $defaultBg;
       transition: 0.25s;
 
-      &.modalClose::after,
-      &.modalClose::before {
+      &::after,
+      &::before {
         background-color: #fff;
         transition: 0.25s;
       }

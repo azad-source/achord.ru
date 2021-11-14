@@ -9,7 +9,7 @@ from rest_framework.exceptions import ErrorDetail, ValidationError
 User = get_user_model()
 
 
-class GenreSerializer(serializers.ModelSerializer):
+class GenreListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         read_only_fields = ('id', 'alias')
@@ -24,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class AuthorSerializer(serializers.ModelSerializer):
     owner = UserSerializer(read_only=True)
-    genres = GenreSerializer(many=True, required=False)
+    genres = GenreListSerializer(many=True, required=False)
 
     class Meta:
         model = Author
@@ -69,3 +69,10 @@ class NoteSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'savedate', 'rate', 'owner')
         fields = (*read_only_fields, 'name', 'filename', 'author', 'content_list')
 
+
+class GenreDetailSerializer(serializers.ModelSerializer):
+    authors = AuthorSerializer(many=True)
+    class Meta:
+        model = Genre
+        read_only_fields = ('id', 'alias', 'authors')
+        fields = ('name', *read_only_fields)

@@ -1,13 +1,14 @@
-
-
-from rest_framework import viewsets
-from .models import Author, Genre, Note
-from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
-from .serializers import AuthorSerializer, NoteSerializer, GenreSerializer
-from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from core.permissions import IsOwnerOrReadOnly
 from django.core.exceptions import FieldError
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
+from rest_framework import viewsets
+from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
+from .models import Author, Genre, Note
+from .serializers import AuthorSerializer, NoteSerializer, GenreListSerializer, GenreDetailSerializer
 User = get_user_model()
 
 
@@ -19,6 +20,17 @@ class CustomModelViewSet(ModelViewSet):
         except KeyError:
             return [permission() for permission in self.permission_classes]
     
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        pk = self.kwargs['pk']
+        try:
+            filter_kwargs = {'pk': int(pk)}
+        except ValueError:
+            filter_kwargs = {'alias': pk}
+        obj = get_object_or_404(queryset, **filter_kwargs)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
@@ -30,10 +42,10 @@ class CustomModelViewSet(ModelViewSet):
             except FieldError:
                 pass
         return queryset
-    
+
     def get_object(self):
         return self.up_rate(super().get_object())
-    
+
     def up_rate(self, instance):
         instance.rate = instance.rate + 1
         instance.save()
@@ -45,16 +57,33 @@ class CustomModelViewSet(ModelViewSet):
 
 
 class GenreViewSet(viewsets.ModelViewSet):
-    serializer_class = GenreSerializer
+    serializer_class = GenreListSerializer
     queryset = Genre.objects.all()
     permission_classes = (IsAdminUser,)
+    lookup_fields = ('pk', 'alias',)
     permission_dict = {
         'list': (AllowAny, ),
         'retrieve': (AllowAny, ),
-        'update': (IsAdminUser, ),
+        'update': (IsAdminUser, ), 
         'create': (IsAdminUser, ),
         'destroy': (IsAdminUser, ),
     }
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return GenreDetailSerializer
+        return super().get_serializer_class()
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        pk = self.kwargs['pk']
+        try:
+            filter_kwargs = {'pk': int(pk)}
+        except ValueError:
+            filter_kwargs = {'alias': pk}
+        obj = get_object_or_404(queryset, **filter_kwargs)
+        self.check_object_permissions(self.request, obj)
+        return obj
 
     def get_permissions(self):
         try:
@@ -69,11 +98,24 @@ class AuthorViewSet(CustomModelViewSet):
     permission_classes = (IsAdminUser,)
     permission_dict = {
         'list': (AllowAny, ),
+        'random': (AllowAny, ),
         'retrieve': (AllowAny, ),
         'update': (IsAdminUser, ),
         'create': (IsAdminUser, ),
         'destroy': (IsAdminUser, ),
     }
+    
+    @action(detail=False, methods=['get'])
+    def random(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset().order_by('?'))
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -92,12 +134,24 @@ class NoteViewSet(CustomModelViewSet):
     permission_classes = (IsAdminUser,)
     permission_dict = {
         'list': (AllowAny, ),
+        'random': (AllowAny, ),
         'retrieve': (AllowAny, ),
         'update': (IsOwnerOrReadOnly, ),
         'create': (IsAuthenticated, ),
         'destroy': (IsOwnerOrReadOnly, ),
     }
-    
+
+    @action(detail=False, methods=['get'])
+    def random(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset().order_by('?'))
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     def get_queryset(self):
         queryset = Note.objects.select_related("author")

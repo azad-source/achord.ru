@@ -52,30 +52,28 @@ export const MenuMobile: React.FC<Props> = ({ items, logged, logout }) => {
         setNavLang((prev) => (prev === 'en' ? 'ru' : 'en'));
     };
 
-    let startX = 0;
-    let startY = 0;
-    let distX = 0;
-    let distY = 0;
-    let startTime = 0;
-    let elapsedTime = 0;
-    const allowedTime = 500;
-    const distXmax = 100;
-    const distYmin = 150;
+    const swipeMenu = {
+        start: { x: 0, y: 0 },
+        dist: { x: 0, y: 0, xMax: 100, yMin: -150 },
+        time: { start: 0, elapsed: 0, allowed: 500 },
+    };
 
     const handleMenuTouchStart = (e: React.TouchEvent) => {
-        let touchObj = e.changedTouches[0];
-        startX = touchObj.pageX;
-        startY = touchObj.pageY;
-        startTime = new Date().getTime();
+        const { start, time } = swipeMenu;
+        const touchObj = e.changedTouches[0];
+        start.x = touchObj.pageX;
+        start.y = touchObj.pageY;
+        time.start = new Date().getTime();
     };
 
     const handleMenuTouchEnd = (e: React.TouchEvent) => {
-        let touchObj = e.changedTouches[0];
-        distX = touchObj.pageX - startX;
-        distY = touchObj.pageY - startY;
-        elapsedTime = new Date().getTime() - startTime;
+        const { start, dist, time } = swipeMenu;
+        const touchObj = e.changedTouches[0];
+        dist.x = touchObj.pageX - start.x;
+        dist.y = touchObj.pageY - start.y;
+        time.elapsed = new Date().getTime() - time.start;
 
-        if (elapsedTime <= allowedTime && Math.abs(distX) <= distXmax && distY < distYmin) {
+        if (time.elapsed <= time.allowed && Math.abs(dist.x) <= dist.xMax && dist.y < dist.yMin) {
             closeMenu();
         }
     };

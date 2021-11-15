@@ -19,6 +19,7 @@ interface Props {
     index?: number;
     editable?: boolean;
     editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
+    removeAuthor: (authorId: number) => void;
 }
 
 export const AuthorCard: React.FC<Props> = ({
@@ -28,6 +29,7 @@ export const AuthorCard: React.FC<Props> = ({
     index,
     editable = false,
     editAuthor,
+    removeAuthor,
 }) => {
     const { letter, composerName } = useParams<{ letter: string; composerName: string }>();
 
@@ -91,7 +93,7 @@ export const AuthorCard: React.FC<Props> = ({
     };
 
     const handleRemove = () => {
-        console.log('удаление автора');
+        removeAuthor(author.id);
     };
 
     return (

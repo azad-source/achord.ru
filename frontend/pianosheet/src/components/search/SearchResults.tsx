@@ -19,6 +19,7 @@ interface Props {
     searchSheets: (query: string, page: number) => void;
     searchAuthors: (query: string, page: number) => void;
     editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
+    removeAuthor: (authorId: number) => void;
 }
 
 export const SearchResults: React.FC<Props> = ({
@@ -27,6 +28,7 @@ export const SearchResults: React.FC<Props> = ({
     searchSheets,
     searchAuthors,
     editAuthor,
+    removeAuthor,
 }) => {
     let output: React.ReactNode;
     const [pageNumberSheet, setPageNumberSheet] = React.useState<number>(1);
@@ -113,6 +115,7 @@ export const SearchResults: React.FC<Props> = ({
                                     firstAuthorletter={author.name.charAt(0)}
                                     editable={logged}
                                     editAuthor={editAuthor}
+                                    removeAuthor={removeAuthor}
                                 />
                             ))}
                         </div>

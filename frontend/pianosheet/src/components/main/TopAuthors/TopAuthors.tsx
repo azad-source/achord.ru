@@ -18,21 +18,27 @@ import { useAuth } from 'api/UsersClient';
 import { sheetsAction } from 'store/sheetsActions';
 
 interface Props {
+    authors: AuthorJsModel;
+    sheets: SheetJsModel;
     editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
+    removeAuthor: (authorId: number) => void;
+    getTopAuthors: () => void;
+    getTopSheets: () => void;
 }
 
-const TopAuthorsFC: React.FC<Props> = ({ editAuthor }) => {
-    const [topSheets, setTopSheets] = React.useState<SheetJsModel>(defaultSheet);
-    const [topAuthors, setTopAuthors] = React.useState<AuthorJsModel>(defaultAuthor);
+const TopAuthorsFC: React.FC<Props> = ({
+    authors,
+    sheets,
+    editAuthor,
+    removeAuthor,
+    getTopAuthors,
+    getTopSheets,
+}) => {
     const [logged] = useAuth();
 
     React.useEffect(() => {
-        SheetsClient.getTopSheets().then((res) => {
-            setTopSheets(res);
-        });
-        SheetsClient.getTopAuthors().then((res) => {
-            setTopAuthors(res);
-        });
+        getTopAuthors();
+        getTopSheets();
     }, []);
 
     const openDownloadPage = (sheet: SheetItemJsModel) => {
@@ -50,7 +56,7 @@ const TopAuthorsFC: React.FC<Props> = ({ editAuthor }) => {
         <>
             <h1 className={defaultStyles.title}>Топ 10</h1>
             <ol className={styles.topSheets}>
-                {topSheets.results.map((sheet, index) => {
+                {sheets.results.map((sheet, index) => {
                     if (index < 10) {
                         return (
                             <li
@@ -65,7 +71,7 @@ const TopAuthorsFC: React.FC<Props> = ({ editAuthor }) => {
                 })}
             </ol>
             <div className={styles.topAuthors}>
-                {topAuthors.results.map((author, index) => {
+                {authors.results.map((author, index) => {
                     if (index < 10) {
                         return (
                             <AuthorCard
@@ -76,6 +82,7 @@ const TopAuthorsFC: React.FC<Props> = ({ editAuthor }) => {
                                 index={index + 1}
                                 editable={logged}
                                 editAuthor={editAuthor}
+                                removeAuthor={removeAuthor}
                             />
                         );
                     }
@@ -85,12 +92,18 @@ const TopAuthorsFC: React.FC<Props> = ({ editAuthor }) => {
     );
 };
 
-const mapStateToProps = (state: RootState) => ({});
+const mapStateToProps = ({ sheets: { authors, sheets } }: RootState) => ({
+    authors,
+    sheets,
+});
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return bindActionCreators(
         {
             editAuthor: sheetsAction.editAuthor,
+            removeAuthor: sheetsAction.removeAuthor,
+            getTopAuthors: sheetsAction.getTopAuthors,
+            getTopSheets: sheetsAction.getTopSheets,
         },
         dispatch,
     );

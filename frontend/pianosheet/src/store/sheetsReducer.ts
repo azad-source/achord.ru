@@ -129,6 +129,11 @@ const {
     EDIT_AUTHOR_FAILED,
     editAuthorComplete,
     editAuthorFailed,
+    REMOVE_AUTHOR_STARTED,
+    REMOVE_AUTHOR_COMPLETE,
+    REMOVE_AUTHOR_FAILED,
+    removeAuthorComplete,
+    removeAuthorFailed,
 } = sheetsActionTypes;
 
 export function sheetsReducer(
@@ -342,6 +347,27 @@ export function sheetsReducer(
         case CLEAR_WARNING: {
             return produce(state, (draft) => {
                 draft.warning = '';
+            });
+        }
+
+        case REMOVE_AUTHOR_STARTED: {
+            return produce(state, (draft) => {
+                draft.status = QueryStatus.request();
+            });
+        }
+
+        case REMOVE_AUTHOR_COMPLETE: {
+            const { payload: authorId } = action as ReturnType<typeof removeAuthorComplete>;
+            return produce(state, ({ authors }) => {
+                authors.results = authors.results.filter((item) => item.id !== authorId);
+            });
+        }
+        case REMOVE_AUTHOR_FAILED: {
+            const {
+                payload: { reason, message, error },
+            } = action as ReturnType<typeof removeAuthorFailed>;
+            return produce(state, (draft) => {
+                draft.status = QueryStatus.error(reason, message, error);
             });
         }
 

@@ -78,4 +78,9 @@ export class SheetsClient {
     public static getGenres(): Promise<GenreJsModel> {
         return api.get(`${apiPath}/genre/`).then(retrieveData);
     }
+
+    /** Удаление автора */
+    public static removeAuthorById(id: number): Promise<AuthorItemJsModel> {
+        return api.delete(`${apiPath}/author/${id}/`).then(retrieveData);
+    }
 }

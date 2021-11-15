@@ -24,6 +24,7 @@ interface Props {
     searchSheets: (query: string, page: number) => void;
     searchAuthors: (query: string, page: number) => void;
     editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
+    removeAuthor: (authorId: number) => void;
 }
 
 const PageFC: React.FC<Props> = ({
@@ -37,6 +38,7 @@ const PageFC: React.FC<Props> = ({
     searchSheets,
     searchAuthors,
     editAuthor,
+    removeAuthor,
 }) => {
     const [showContent, setShowContent] = React.useState<boolean>(false);
 
@@ -56,6 +58,7 @@ const PageFC: React.FC<Props> = ({
                 searchSheets={searchSheets}
                 searchAuthors={searchAuthors}
                 editAuthor={editAuthor}
+                removeAuthor={removeAuthor}
             />
         );
     } else {
@@ -94,6 +97,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
             searchSheets: sheetsAction.searchSheetsByPage,
             searchAuthors: sheetsAction.searchAuthorsByPage,
             editAuthor: sheetsAction.editAuthor,
+            removeAuthor: sheetsAction.removeAuthor,
         },
         dispatch,
     );

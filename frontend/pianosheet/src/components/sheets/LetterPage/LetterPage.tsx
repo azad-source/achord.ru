@@ -19,9 +19,17 @@ interface Props {
     getAuthors: (letter?: string, page?: number) => void;
     addAuthor: (author: FormData) => Promise<AuthorItemJsModel | false>;
     editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
+    removeAuthor: (authorId: number) => void;
 }
 
-const LetterPageFC: React.FC<Props> = ({ authors, status, getAuthors, addAuthor, editAuthor }) => {
+const LetterPageFC: React.FC<Props> = ({
+    authors,
+    status,
+    getAuthors,
+    addAuthor,
+    editAuthor,
+    removeAuthor,
+}) => {
     const { letter } = useParams<{ letter: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const location = useLocation();
@@ -62,6 +70,7 @@ const LetterPageFC: React.FC<Props> = ({ authors, status, getAuthors, addAuthor,
                     getAuthorsByPage={getAuthorsByPage}
                     editAuthor={editAuthor}
                     pageNumber={pageNumber}
+                    removeAuthor={removeAuthor}
                 />
             </div>
         </Page>
@@ -79,6 +88,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
             getAuthors: sheetsAction.getAuthors,
             addAuthor: sheetsAction.addAuthor,
             editAuthor: sheetsAction.editAuthor,
+            removeAuthor: sheetsAction.removeAuthor,
         },
         dispatch,
     );

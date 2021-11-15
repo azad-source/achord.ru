@@ -348,38 +348,46 @@ function errorHandler(e: AxiosError): GeneralThunkAction<void> {
     };
 }
 
-const REMOVE_AUTHOR_STARTED = 'SHEETS/REMOVE_AUTHOR_STARTED';
 const REMOVE_AUTHOR_COMPLETE = 'SHEETS/REMOVE_AUTHOR_COMPLETE';
-const REMOVE_AUTHOR_FAILED = 'SHEETS/REMOVE_AUTHOR_FAILED';
-function removeAuthorStarted(): Action {
-    return { type: REMOVE_AUTHOR_STARTED };
-}
+
 function removeAuthorComplete(authorId: number): PayloadedAction<number> {
     return { type: REMOVE_AUTHOR_COMPLETE, payload: authorId };
-}
-function removeAuthorFailed(
-    reason: string,
-    message: string,
-    error: Error,
-): PayloadedAction<{ reason: string; message: string; error: Error }> {
-    return {
-        type: REMOVE_AUTHOR_FAILED,
-        payload: { reason, message, error },
-    };
 }
 
 function removeAuthor(authorId: number): GeneralThunkAction<void> {
     return (dispatch) => {
-        dispatch(removeAuthorStarted());
-
         SheetsClient.removeAuthorById(authorId)
             .then((res) => {
                 console.log('res', res);
                 dispatch(removeAuthorComplete(authorId));
             })
             .catch((error) => {
-                dispatch(removeAuthorFailed('', '', error));
                 dispatch(errorHandler(error));
+            });
+    };
+}
+
+function getTopAuthors(): GeneralThunkAction<void> {
+    return (dispatch) => {
+        dispatch(getAuthorsStarted());
+        SheetsClient.getTopAuthors()
+            .then((authors) => {
+                dispatch(getAuthorsComplete(authors));
+            })
+            .catch((error) => {
+                dispatch(getAuthorsFailed('', '', error));
+            });
+    };
+}
+
+function getTopSheets(): GeneralThunkAction<void> {
+    return (dispatch) => {
+        SheetsClient.getTopSheets()
+            .then((sheets) => {
+                dispatch(getSheetsComplete(sheets));
+            })
+            .catch((error) => {
+                dispatch(getSheetsFailed('', '', error));
             });
     };
 }
@@ -396,6 +404,8 @@ export const sheetsAction = {
     searchAuthorsByPage,
     dropSearch,
     removeAuthor,
+    getTopAuthors,
+    getTopSheets,
 };
 
 export const sheetsActionTypes = {
@@ -450,9 +460,6 @@ export const sheetsActionTypes = {
     editAuthorStarted,
     editAuthorComplete,
     editAuthorFailed,
-    REMOVE_AUTHOR_STARTED,
     REMOVE_AUTHOR_COMPLETE,
-    REMOVE_AUTHOR_FAILED,
     removeAuthorComplete,
-    removeAuthorFailed,
 };

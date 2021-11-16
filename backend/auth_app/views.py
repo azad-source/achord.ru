@@ -22,6 +22,7 @@ class SocialLinks(View):
     VK_URI = "/oauth/vk/"
     OK_URI = "/oauth/ok/"
     FB_URI = "/oauth/fb/"
+    GOOGLE_URI = "/oauth/google/"
 
     def get(self, request):
         data = [
@@ -36,6 +37,10 @@ class SocialLinks(View):
             {
                 "link": f"https://www.facebook.com/v11.0/dialog/oauth?client_id={LoginFB.ID}&redirect_uri={self.host}{self.FB_URI}&response_type=token&scope=email",
                 "provider": "facebook.com",
+            },
+            {
+                "link": f"https://accounts.google.com/o/oauth2/auth?client_id={LoginGoogle.ID}&redirect_uri={self.host}{self.GOOGLE_URI}&response_type=token&scope=https://www.googleapis.com/auth/userinfo.email",
+                "provider": "google.com",
             },
         ]
         return JsonResponse(data, safe=False)
@@ -163,5 +168,81 @@ class LoginOK(LoginBaseView):
         self.first_name = data.get("first_name")
         self.last_name = data.get("last_name")
         self.avatar = data.get("pic_3")
+        self.email = data.get("email")
+
+
+class LoginFB(LoginBaseView):
+    """
+    Авторизация через Facebook (Обработка redirect_uri)
+    """
+    ID = settings.SOCIAL_AUTH_FACEBOOK_OAUTH2_KEY
+    SECRET = settings.SOCIAL_AUTH_FACEBOOK_OAUTH2_SECRET
+
+    def get_credentials(self, access_token):
+        path = f"https://graph.facebook.com/v11.0/me?client_id={self.ID}&client_secret={self.SECRET}&access_token={access_token}&fields=id,email,first_name,last_name"
+        credentials = requests.get(path).json()
+        self.parse_user_data(credentials)
+        return credentials
+
+    def parse_user_data(self, data):
+        self.social_id = data.get("id")
+        self.first_name = data.get("first_name")
+        self.last_name = data.get("last_name")
+        self.avatar = data.get("photo_big")
+        self.email = data.get("email")
+
+
+class LoginGoogle(LoginBaseView):
+    '''
+        Авторизация через одноклассники (Обработка redirect_uri)
+    '''
+    ID = settings.SOCIAL_AUTH_GOOGLE_OAUTH2_ID
+    SECRET = settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
+    raw_data = {}
+    email = None
+
+    def post(self, request):
+        access_token = self.request.POST.get('access_token')
+        if access_token:
+            self.get_credentials(access_token)
+            return self.create_user()
+        return JsonResponse({'detail': 'error'})
+
+    def create_user(self):
+        if self.email:
+            user = User.objects.get_or_create(email=self.email)[0]
+            user = self.update_user(user)
+            return create_jwt_token(user, self.raw_data)
+        else:
+            response = JsonResponse({
+                'detail': f'Не удалось получить данные для авторизации',
+                'raw_data': self.raw_data,
+            })
+            response.status_code = 401
+            return response
+
+    def update_user(self, user):
+        # user.save()
+        return user
+
+    def get_credentials(self, access_token):
+        path = f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={access_token}"
+        credentials = requests.get(path).json()
+        self.parse_user_data(credentials)
+        return credentials
+
+    def parse_user_data(self, data):
+        # JSON EXAMPLE
+        # {
+        #     "issued_to": "",
+        #     "audience": "",
+        #     "user_id": "",
+        #     "scope": "https://www.googleapis.com/auth/userinfo.email openid",
+        #     "expires_in": 3445,
+        #     "email": "email@gmail.com",
+        #     "verified_email": true,
+        #     "access_type": "online"
+        # }
+        self.raw_data = data
         self.email = data.get("email")
 

@@ -1,11 +1,8 @@
-from django.db.models import fields
-from django.http import request
-from rest_framework import serializers
-from .models import Author, Note, Genre
-from django.contrib.auth import get_user_model
 import json
-from django.core.exceptions import ValidationError as DjangoValidationError
-from rest_framework.exceptions import ErrorDetail, ValidationError
+from django.contrib.auth import get_user_model
+from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+from .models import Author, Note, Genre
 User = get_user_model()
 
 
@@ -45,7 +42,7 @@ class AuthorSerializer(serializers.ModelSerializer):
                 setattr(instance, item, validated_data[item])
         instance.save()
         return instance
-        
+    
     def set_genres(self, instance):
         ids = self.context['request'].POST.get('genres')
         if not ids:
@@ -66,7 +63,7 @@ class NoteSerializer(serializers.ModelSerializer):
     owner = UserSerializer(read_only=True)
     class Meta:
         model = Note
-        read_only_fields = ('id', 'savedate', 'rate', 'owner')
+        read_only_fields = ('id', 'rate', 'owner')
         fields = (*read_only_fields, 'name', 'filename', 'author', 'content_list')
 
 

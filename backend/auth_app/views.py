@@ -1,15 +1,11 @@
-from django.core.exceptions import MultipleObjectsReturned
 from django.conf import settings
-from django.contrib.auth import login, get_user_model
-from django.http import JsonResponse, HttpResponseRedirect
+from django.contrib.auth import get_user_model
+from django.http import JsonResponse
 from django.views import View
 from hashlib import md5
-import requests
 from rest_framework_simplejwt.tokens import RefreshToken
-
-
+import requests
 User = get_user_model()
-from rest_framework.authtoken.models import Token
 
 
 def create_jwt_token(user, raw_data=""):
@@ -21,27 +17,24 @@ def create_jwt_token(user, raw_data=""):
     })
 
 
-
-VK_URI = "/oauth/vk/"
-OK_URI = "/oauth/ok/"
-FB_URI = "/oauth/fb/"
-
-
 class SocialLinks(View):
+    host = 'https://achord.ru'
+    VK_URI = "/oauth/vk/"
+    OK_URI = "/oauth/ok/"
+    FB_URI = "/oauth/fb/"
+
     def get(self, request):
-        host = 'https://achord.ru'
-        # HTTP_HOST = request.META.get("HTTP_HOST")
         data = [
             {
-                "link": f"https://oauth.vk.com/authorize?client_id={LoginVK.ID}&redirect_uri={host}{VK_URI}&response_type=token&scope=email&v=5.131",
+                "link": f"https://oauth.vk.com/authorize?client_id={LoginVK.ID}&redirect_uri={self.host}{self.VK_URI}&response_type=token&scope=email&v=5.131",
                 "provider": "vk.com",
             },
             {
-                "link": f"https://connect.ok.ru/oauth/authorize?client_id={LoginOK.ID}&redirect_uri={host}{OK_URI}&response_type=token&scope=VALUABLE_ACCESS,GET_EMAIL&layout=w&state=1",
+                "link": f"https://connect.ok.ru/oauth/authorize?client_id={LoginOK.ID}&redirect_uri={self.host}{self.OK_URI}&response_type=token&scope=VALUABLE_ACCESS,GET_EMAIL&layout=w&state=1",
                 "provider": "ok.ru",
             },
             {
-                "link": f"https://www.facebook.com/v11.0/dialog/oauth?client_id={LoginFB.ID}&redirect_uri={host}{FB_URI}&response_type=token&scope=email",
+                "link": f"https://www.facebook.com/v11.0/dialog/oauth?client_id={LoginFB.ID}&redirect_uri={self.host}{self.FB_URI}&response_type=token&scope=email",
                 "provider": "facebook.com",
             },
         ]

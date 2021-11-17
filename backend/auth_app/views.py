@@ -5,6 +5,7 @@ from django.views import View
 from hashlib import md5
 from rest_framework_simplejwt.tokens import RefreshToken
 import requests
+from .oauth import Oauth2Google, Oauth2Vk, Oauth2Odnoklassniki, Oauth2Facebook
 User = get_user_model()
 
 
@@ -13,37 +14,20 @@ def create_jwt_token(user, raw_data=""):
     return JsonResponse({
         'refresh': str(refresh),
         'access': str(refresh.access_token),
-        'raw_data': raw_data
+        'raw_data': raw_data,
     })
 
 
 class SocialLinks(View):
-    host = 'https://achord.ru'
-    VK_URI = "/oauth/vk/"
-    OK_URI = "/oauth/ok/"
-    FB_URI = "/oauth/fb/"
-    GOOGLE_URI = "/oauth/google/"
 
     def get(self, request):
-        data = [
-            {
-                "link": f"https://oauth.vk.com/authorize?client_id={LoginVK.ID}&redirect_uri={self.host}{self.VK_URI}&response_type=token&scope=email&v=5.131",
-                "provider": "vk.com",
-            },
-            {
-                "link": f"https://connect.ok.ru/oauth/authorize?client_id={LoginOK.ID}&redirect_uri={self.host}{self.OK_URI}&response_type=token&scope=VALUABLE_ACCESS,GET_EMAIL&layout=w&state=1",
-                "provider": "ok.ru",
-            },
-            {
-                "link": f"https://www.facebook.com/v11.0/dialog/oauth?client_id={LoginFB.ID}&redirect_uri={self.host}{self.FB_URI}&response_type=token&scope=email",
-                "provider": "facebook.com",
-            },
-            {
-                "link": f"https://accounts.google.com/o/oauth2/auth?client_id={LoginGoogle.ID}&redirect_uri={self.host}{self.GOOGLE_URI}&response_type=token&scope=https://www.googleapis.com/auth/userinfo.email",
-                "provider": "google.com",
-            },
-        ]
-        return JsonResponse(data, safe=False)
+        links = {
+            'google': Oauth2Google().link,
+            'facebook':     Oauth2Facebook().link,
+            'vk':     Oauth2Vk().link,
+            'odnoklassniki':     Oauth2Odnoklassniki().link,
+        }
+        return JsonResponse(links)
 
 
 class LoginBaseView(View):

@@ -48,7 +48,7 @@
   margin-left: 20px;
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: $siteWidthMobile) {
   .root {
     position: sticky;
     top: 0;

@@ -7,6 +7,7 @@ import {
     AuthorItemJsModel,
     SheetJsModel,
     SheetItemJsModel,
+    GenreJsModel,
 } from 'domain/api/JsModels';
 
 export interface SearchApiResults {
@@ -38,15 +39,6 @@ export const defaultAuthorItem: AuthorItemJsModel = {
     owner: 0,
 };
 
-export const defaultAuthor: AuthorJsModel = {
-    count: 0,
-    page_count: 0,
-    page_size: 20,
-    next: '',
-    previous: '',
-    results: [],
-};
-
 export const defaultSheetItem: SheetItemJsModel = {
     id: 0,
     name: '',
@@ -56,7 +48,7 @@ export const defaultSheetItem: SheetItemJsModel = {
     rate: 0,
 };
 
-export const defaultSheet: SheetJsModel = {
+export const defaultPaged = {
     count: 0,
     page_count: 0,
     page_size: 20,
@@ -66,8 +58,9 @@ export const defaultSheet: SheetJsModel = {
 };
 
 const sheetsDefaultState: SheetsState = {
-    sheets: defaultSheet,
-    authors: defaultAuthor,
+    sheets: defaultPaged,
+    authors: defaultPaged,
+    genres: defaultPaged,
     viewAuthor: defaultAuthorItem,
     total: 0,
     status: QueryStatus.initial(),
@@ -78,6 +71,7 @@ const sheetsDefaultState: SheetsState = {
 export interface SheetsState {
     sheets: SheetJsModel;
     authors: AuthorJsModel;
+    genres: GenreJsModel;
     viewAuthor: AuthorItemJsModel;
     total: number;
     status: QueryStatus;
@@ -131,6 +125,11 @@ const {
     editAuthorFailed,
     REMOVE_AUTHOR_COMPLETE,
     removeAuthorComplete,
+    GET_GENRES_STARTED,
+    GET_GENRES_COMPLETE,
+    GET_GENRES_FAILED,
+    getGenresComplete,
+    getGenresFailed,
 } = sheetsActionTypes;
 
 export function sheetsReducer(
@@ -351,6 +350,27 @@ export function sheetsReducer(
             const { payload: authorId } = action as ReturnType<typeof removeAuthorComplete>;
             return produce(state, ({ authors, status }) => {
                 authors.results = authors.results.filter((item) => item.id !== authorId);
+            });
+        }
+
+        case GET_GENRES_STARTED: {
+            return produce(state, (draft) => {
+                draft.status = QueryStatus.request();
+            });
+        }
+        case GET_GENRES_COMPLETE: {
+            const { payload: genres } = action as ReturnType<typeof getGenresComplete>;
+            return produce(state, (draft) => {
+                draft.genres = genres;
+                draft.status = QueryStatus.success();
+            });
+        }
+        case GET_GENRES_FAILED: {
+            const {
+                payload: { reason, message, error },
+            } = action as ReturnType<typeof getGenresFailed>;
+            return produce(state, (draft) => {
+                draft.status = QueryStatus.error(reason, message, error);
             });
         }
 

@@ -48,7 +48,7 @@
   }
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: $siteWidthMobile) {
   .root {
     display: none;
     padding: 15px $sideSpace_480;

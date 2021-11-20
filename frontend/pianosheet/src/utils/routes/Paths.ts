@@ -41,7 +41,7 @@ export class Paths {
     public static readonly changePasswordPage = '/password/reset/confirm/:uid/:token';
 
     /** Раздел жанра */
-    public static readonly genrePage = '/genre';
+    public static readonly genrePage = '/genres';
 
-    public static getGenrePage = (genreId: string) => `${Paths.genrePage}/${genreId}`;
+    public static getGenrePage = (genreAlias: string) => `${Paths.genrePage}/${genreAlias}`;
 }

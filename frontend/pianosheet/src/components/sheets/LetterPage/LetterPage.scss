@@ -1,3 +1,5 @@
+@import 'styles/default.scss';
+
 .root {
   display: block;
 }
@@ -9,7 +11,7 @@
   font-family: 'Courier';
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: $siteWidthMobile) {
   .title {
     font-size: 32px;
     margin-bottom: 18px;

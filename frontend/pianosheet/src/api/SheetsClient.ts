@@ -83,4 +83,14 @@ export class SheetsClient {
     public static removeAuthorById(id: number): Promise<AuthorItemJsModel> {
         return api.delete(`${apiPath}/author/${id}/`).then(retrieveData);
     }
+
+    /** Получение авторов по id жанра */
+    public static getAuthorByGenreId(id: number): Promise<AuthorJsModel> {
+        return api.get(`${apiPath}/genre/${id}/`).then(retrieveData);
+    }
+
+    /** Получение авторов по alias-у жанра */
+    public static getAuthorByGenreAlias(alias: string): Promise<AuthorJsModel> {
+        return api.get(`${apiPath}/genre/${alias}/`).then(retrieveData);
+    }
 }

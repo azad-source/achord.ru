@@ -6,7 +6,7 @@ export class Paths {
     public static readonly mainPage = '/';
 
     /** Раздел ноты */
-    public static readonly sheetPage = '/sheets';
+    public static readonly sheetsPage = '/sheets';
 
     /** Страница виртуального пианино */
     public static readonly virtPianoPage = '/virtual-piano';
@@ -15,21 +15,21 @@ export class Paths {
     public static readonly authPage = '/sign-in';
 
     /** Страница для выбранно буквы алфавита */
-    public static readonly letterPage = `${Paths.sheetPage}/:letter`;
+    public static readonly letterPage = `${Paths.sheetsPage}/:letter`;
 
-    public static getLetterPath = (letter: string) => `${Paths.sheetPage}/${letter}`;
+    public static getLetterPath = (letter: string) => `${Paths.sheetsPage}/${letter}`;
 
     /** Страница детального просмотра автора */
     public static readonly authorPage = `${Paths.letterPage}/:authorAlias`;
 
     public static getAuthorPath = (letter: string, authorAlias: string) =>
-        `${Paths.sheetPage}/${letter.toLowerCase()}/${authorAlias.toLowerCase()}`;
+        `${Paths.sheetsPage}/${letter.toLowerCase()}/${authorAlias.toLowerCase()}`;
 
     /** Страница просмотра нот */
     public static readonly sheetDownloadPage = `${Paths.authorPage}/:sheetId`;
 
     public static getSheetDownloadPath = (letter: string, authorAlias: string, sheetId: string) =>
-        `${Paths.sheetPage}/${letter.toLowerCase()}/${authorAlias.toLowerCase()}/${sheetId}`;
+        `${Paths.sheetsPage}/${letter.toLowerCase()}/${authorAlias.toLowerCase()}/${sheetId}`;
 
     /** Страница авторизации в VK */
     public static readonly authVKPage = '/login/check';
@@ -40,8 +40,11 @@ export class Paths {
     /** Страница смены пароля */
     public static readonly changePasswordPage = '/password/reset/confirm/:uid/:token';
 
-    /** Раздел жанра */
-    public static readonly genrePage = '/genre';
+    /** Раздел жанров */
+    public static readonly genresPage = '/genres';
 
-    public static getGenrePage = (genreId: string) => `${Paths.genrePage}/${genreId}`;
+    /** Страница жанра */
+    public static readonly genrePage = `${Paths.genresPage}/:genreAlias`;
+
+    public static getGenrePage = (genreAlias: string) => `${Paths.genresPage}/${genreAlias}`;
 }

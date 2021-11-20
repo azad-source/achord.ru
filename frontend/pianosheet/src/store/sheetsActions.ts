@@ -5,6 +5,7 @@ import {
     AuthorItemJsModel,
     SheetJsModel,
     SheetItemJsModel,
+    GenreJsModel,
 } from 'domain/api/JsModels';
 import { Action } from 'redux';
 import { arrToString } from 'utils/arrayTransform';
@@ -18,8 +19,8 @@ const ADD_SHEET_FAILED = 'SHEETS/ADD_SHEET_FAILED';
 function addSheetStarted(): Action {
     return { type: ADD_SHEET_STARTED };
 }
-function addSheetComplete(sheet: SheetItemJsModel): PayloadedAction<{ sheet: SheetItemJsModel }> {
-    return { type: ADD_SHEET_COMPLETE, payload: { sheet } };
+function addSheetComplete(sheet: SheetItemJsModel): PayloadedAction<SheetItemJsModel> {
+    return { type: ADD_SHEET_COMPLETE, payload: sheet };
 }
 function addSheetFailed(
     reason: string,
@@ -49,10 +50,8 @@ const ADD_AUTHOR_FAILED = 'SHEETS/ADD_AUTHOR_FAILED';
 function addAuthorStarted(): Action {
     return { type: ADD_AUTHOR_STARTED };
 }
-function addAuthorComplete(
-    author: AuthorItemJsModel,
-): PayloadedAction<{ author: AuthorItemJsModel }> {
-    return { type: ADD_AUTHOR_COMPLETE, payload: { author } };
+function addAuthorComplete(author: AuthorItemJsModel): PayloadedAction<AuthorItemJsModel> {
+    return { type: ADD_AUTHOR_COMPLETE, payload: author };
 }
 function addAuthorFailed(
     reason: string,
@@ -88,8 +87,8 @@ const GET_SHEETS_FAILED = 'SHEETS/GET_SHEETS_FAILED';
 function getSheetsStarted(): Action {
     return { type: GET_SHEETS_STARTED };
 }
-function getSheetsComplete(sheets: SheetJsModel): PayloadedAction<{ sheets: SheetJsModel }> {
-    return { type: GET_SHEETS_COMPLETE, payload: { sheets } };
+function getSheetsComplete(sheets: SheetJsModel): PayloadedAction<SheetJsModel> {
+    return { type: GET_SHEETS_COMPLETE, payload: sheets };
 }
 function getSheetsFailed(
     reason: string,
@@ -117,8 +116,8 @@ const GET_AUTHORS_FAILED = 'SHEETS/GET_AUTHORS_FAILED';
 function getAuthorsStarted(): Action {
     return { type: GET_AUTHORS_STARTED };
 }
-function getAuthorsComplete(authors: AuthorJsModel): PayloadedAction<{ authors: AuthorJsModel }> {
-    return { type: GET_AUTHORS_COMPLETE, payload: { authors } };
+function getAuthorsComplete(authors: AuthorJsModel): PayloadedAction<AuthorJsModel> {
+    return { type: GET_AUTHORS_COMPLETE, payload: authors };
 }
 function getAuthorsFailed(
     reason: string,
@@ -148,10 +147,8 @@ const GET_AUTHOR_BY_ALIAS_FAILED = 'SHEETS/GET_AUTHOR_BY_ALIAS_FAILED';
 function getAuthorsByAliasStarted(): Action {
     return { type: GET_AUTHOR_BY_ALIAS_STARTED };
 }
-function getAuthorsByAliasComplete(
-    author: AuthorJsModel,
-): PayloadedAction<{ author: AuthorJsModel }> {
-    return { type: GET_AUTHOR_BY_ALIAS_COMPLETE, payload: { author } };
+function getAuthorsByAliasComplete(author: AuthorJsModel): PayloadedAction<AuthorJsModel> {
+    return { type: GET_AUTHOR_BY_ALIAS_COMPLETE, payload: author };
 }
 function getAuthorsByAliasFailed(
     reason: string,
@@ -392,6 +389,62 @@ function getTopSheets(): GeneralThunkAction<void> {
     };
 }
 
+function getAuthorsByGenreId(genreId: number): GeneralThunkAction<void> {
+    return (dispatch) => {
+        dispatch(getAuthorsStarted());
+        SheetsClient.getAuthorByGenreId(genreId)
+            .then((authors) => {
+                dispatch(getAuthorsComplete(authors));
+            })
+            .catch((error) => {
+                dispatch(getAuthorsFailed('', '', error));
+            });
+    };
+}
+
+function getAuthorsByGenreAlias(genreAlias: string): GeneralThunkAction<void> {
+    return (dispatch) => {
+        dispatch(getAuthorsStarted());
+        SheetsClient.getAuthorByGenreAlias(genreAlias)
+            .then((authors) => {
+                dispatch(getAuthorsComplete(authors));
+            })
+            .catch((error) => {
+                dispatch(getAuthorsFailed('', '', error));
+            });
+    };
+}
+
+const GET_GENRES_STARTED = 'SHEETS/GET_GENRES_STARTED';
+const GET_GENRES_COMPLETE = 'SHEETS/GET_GENRES_COMPLETE';
+const GET_GENRES_FAILED = 'SHEETS/GET_GENRES_FAILED';
+function getGenresStarted(): Action {
+    return { type: GET_GENRES_STARTED };
+}
+function getGenresComplete(genres: GenreJsModel): PayloadedAction<GenreJsModel> {
+    return { type: GET_GENRES_COMPLETE, payload: genres };
+}
+function getGenresFailed(
+    reason: string,
+    message: string,
+    error: Error,
+): PayloadedAction<{ reason: string; message: string; error: Error }> {
+    return { type: GET_GENRES_FAILED, payload: { reason, message, error } };
+}
+
+function getGenres(): GeneralThunkAction<void> {
+    return (dispatch) => {
+        dispatch(getGenresStarted());
+        SheetsClient.getGenres()
+            .then((genres) => {
+                dispatch(getGenresComplete(genres));
+            })
+            .catch((error) => {
+                dispatch(getGenresFailed('', '', error));
+            });
+    };
+}
+
 export const sheetsAction = {
     getSheets,
     getAuthors,
@@ -406,6 +459,9 @@ export const sheetsAction = {
     removeAuthor,
     getTopAuthors,
     getTopSheets,
+    getAuthorsByGenreId,
+    getAuthorsByGenreAlias,
+    getGenres,
 };
 
 export const sheetsActionTypes = {
@@ -462,4 +518,9 @@ export const sheetsActionTypes = {
     editAuthorFailed,
     REMOVE_AUTHOR_COMPLETE,
     removeAuthorComplete,
+    GET_GENRES_STARTED,
+    GET_GENRES_COMPLETE,
+    GET_GENRES_FAILED,
+    getGenresComplete,
+    getGenresFailed,
 };

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Page } from 'components/shared/layout/Page/Page';
 import { useLocation, useParams } from 'react-router-dom';
-import styles from './LetterPage.scss';
+import styles from './GenrePage.scss';
 import { connect } from 'react-redux';
 import { RootState } from 'store/rootReducer';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -16,13 +16,13 @@ import { Paths } from 'utils/routes/Paths';
 interface Props {
     authors: AuthorJsModel;
     status: QueryStatus;
-    getAuthors: (letter?: string, page?: number) => void;
+    getAuthors: (genreAlias: string) => void;
     addAuthor: (author: FormData) => Promise<AuthorItemJsModel | false>;
     editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
     removeAuthor: (authorId: number) => void;
 }
 
-const LetterPageFC: React.FC<Props> = ({
+const GenrePageFC: React.FC<Props> = ({
     authors,
     status,
     getAuthors,
@@ -30,21 +30,21 @@ const LetterPageFC: React.FC<Props> = ({
     editAuthor,
     removeAuthor,
 }) => {
-    const { letter } = useParams<{ letter: string }>();
+    const { genreAlias } = useParams<{ genreAlias: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const location = useLocation();
 
     React.useEffect(() => {
-        document.title = `${SiteName} - ${letter.toUpperCase()}`;
+        document.title = `${SiteName} - ${genreAlias}`;
     }, []);
 
     React.useEffect(() => {
-        getAuthors(letter);
+        getAuthors(genreAlias);
         setPageNumber(1);
-    }, [letter, location]);
+    }, [genreAlias, location]);
 
     const getAuthorsByPage = (page: number) => {
-        getAuthors(letter, page);
+        getAuthors(genreAlias);
         setPageNumber(page);
         window.scroll({ top: 0, behavior: 'smooth' });
     };
@@ -55,7 +55,7 @@ const LetterPageFC: React.FC<Props> = ({
             link: Paths.sheetsPage,
         },
         {
-            caption: letter.toUpperCase(),
+            caption: genreAlias.toUpperCase(),
         },
     ];
 
@@ -63,7 +63,7 @@ const LetterPageFC: React.FC<Props> = ({
         <Page loadStatus={status}>
             <Breadcrumbs items={breadcrumbs} />
             <div className={styles.root}>
-                <div className={styles.title}>{letter.toUpperCase()}</div>
+                <div className={styles.title}>{genreAlias.toUpperCase()}</div>
                 <AuthorItems
                     authors={authors}
                     addAuthor={addAuthor}
@@ -85,7 +85,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return bindActionCreators(
         {
-            getAuthors: sheetsAction.getAuthors,
+            getAuthors: sheetsAction.getAuthorsByGenreAlias,
             addAuthor: sheetsAction.addAuthor,
             editAuthor: sheetsAction.editAuthor,
             removeAuthor: sheetsAction.removeAuthor,
@@ -94,4 +94,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     );
 };
 
-export const LetterPage = connect(mapStateToProps, mapDispatchToProps)(LetterPageFC);
+export const GenrePage = connect(mapStateToProps, mapDispatchToProps)(GenrePageFC);

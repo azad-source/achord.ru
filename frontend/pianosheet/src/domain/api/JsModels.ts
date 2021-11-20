@@ -3,6 +3,27 @@ export type TokenJsModel = {
     refreshToken: string;
 };
 
+export type UserJsModel = {
+    uid?: string;
+    email?: string;
+    activate?: boolean;
+    token?: string;
+};
+
+export type SocialLinkJsModel = {
+    link: string;
+    provider: string;
+};
+
+export type PagedJsModel<T> = {
+    count: number;
+    page_count: number;
+    page_size: number;
+    next: string;
+    previous: string;
+    results: T[];
+};
+
 export type AuthorItemJsModel = {
     id: number;
     name: string;
@@ -16,15 +37,6 @@ export type AuthorItemJsModel = {
     owner: number;
 };
 
-export type AuthorJsModel = {
-    count: number;
-    page_count: number;
-    page_size: number;
-    next: string;
-    previous: string;
-    results: AuthorItemJsModel[];
-};
-
 export type SheetItemJsModel = {
     id: number;
     name: string;
@@ -34,38 +46,14 @@ export type SheetItemJsModel = {
     rate: number;
 };
 
-export type SheetJsModel = {
-    count: number;
-    page_count: number;
-    page_size: number;
-    next: string;
-    previous: string;
-    results: SheetItemJsModel[];
-};
-
-export type SocialLinkJsModel = {
-    link: string;
-    provider: string;
-};
-
-export type UserJsModel = {
-    uid?: string;
-    email?: string;
-    activate?: boolean;
-    token?: string;
-};
-
-export type GenreJsModel = {
-    count: number;
-    page_count: number;
-    page_size: number;
-    next: string;
-    previous: string;
-    results: GenreResultJsModel[];
-};
-
 export type GenreResultJsModel = {
     id: number;
     name: string;
     alias: string;
 };
+
+export type AuthorJsModel = PagedJsModel<AuthorItemJsModel>;
+
+export type SheetJsModel = PagedJsModel<SheetItemJsModel>;
+
+export type GenreJsModel = PagedJsModel<GenreResultJsModel>;

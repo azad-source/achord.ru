@@ -49,7 +49,7 @@ export const SheetDownloadPage: React.FC<Props> = ({ className }) => {
     const breadcrumbs: { caption: string; link?: string }[] = [
         {
             caption: 'Ноты',
-            link: Paths.sheetPage,
+            link: Paths.sheetsPage,
         },
         {
             caption: letter.toUpperCase(),

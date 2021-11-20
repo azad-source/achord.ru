@@ -16,6 +16,7 @@ import { AuthPageVk } from 'components/auth/AuthPageVk';
 import { SuccessRegistrationPage } from 'components/auth/SuccessRegistrationPage';
 import { ChangePasswordPage } from 'components/auth/ChangePasswordPage';
 import { PlayOnlinePage } from 'components/virtualPiano/PlayOnlinePage';
+import { GenrePage } from 'components/sheets/GenrePage/GenrePage';
 
 const AppRouter = () => (
     <div className={styles.root}>
@@ -23,7 +24,8 @@ const AppRouter = () => (
             <BrowserRouter>
                 <Header />
                 <Switch>
-                    <Route path={Paths.sheetPage} component={SheetsPage} exact />
+                    <Route path={Paths.sheetsPage} component={SheetsPage} exact />
+                    <Route path={Paths.genrePage} component={GenrePage} exact />
                     <Route path={Paths.letterPage} component={LetterPage} exact />
                     <Route path={Paths.authorPage} component={AuthorPage} exact />
                     <Route path={Paths.sheetDownloadPage} component={SheetDownloadPage} exact />

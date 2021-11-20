@@ -25,7 +25,7 @@ export const Header = () => {
         },
         {
             caption: 'Ноты',
-            link: Paths.sheetPage,
+            link: Paths.sheetsPage,
         },
         {
             caption: 'Piano',

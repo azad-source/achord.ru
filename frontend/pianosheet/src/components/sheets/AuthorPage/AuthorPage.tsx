@@ -68,7 +68,7 @@ const AuthorPageFC: React.FC<Props> = ({
     const breadcrumbs: { caption: string; link?: string }[] = [
         {
             caption: 'Ноты',
-            link: Paths.sheetPage,
+            link: Paths.sheetsPage,
         },
         {
             caption: letter.toUpperCase(),
@@ -79,8 +79,8 @@ const AuthorPageFC: React.FC<Props> = ({
         },
     ];
 
-    const goToGenre = (genreId: number) => {
-        history.push(Paths.getGenrePage(genreId.toString()));
+    const goToGenre = (genreAlias: string) => {
+        history.push(Paths.getGenrePage(genreAlias));
     };
 
     return (
@@ -99,11 +99,11 @@ const AuthorPageFC: React.FC<Props> = ({
                                 />
                             </div>
                             <div className={styles.genres}>
-                                {viewAuthor.genres.map(({ name, id }) => (
+                                {viewAuthor.genres.map(({ name, id, alias }) => (
                                     <div
                                         key={id}
                                         className={styles.genres_item}
-                                        onClick={() => goToGenre(id)}
+                                        onClick={() => goToGenre(alias)}
                                     >
                                         {name}
                                     </div>

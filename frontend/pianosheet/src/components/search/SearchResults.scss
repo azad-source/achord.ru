@@ -1,4 +1,5 @@
 @import 'styles/colors.scss';
+@import 'styles/default.scss';
 
 .searchItems {
   margin-left: 20px;
@@ -78,7 +79,7 @@
   margin-bottom: 40px !important;
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: $siteWidthMobile) {
   .searchItems {
     margin-left: 0;
   }

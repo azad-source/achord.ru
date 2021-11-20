@@ -1,3 +1,5 @@
+@import 'styles/default.scss';
+
 .textarea {
   width: 100%;
   display: block;
@@ -18,7 +20,7 @@
   }
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: $siteWidthMobile) {
   .textarea {
     font-size: 14px;
     letter-spacing: unset;

@@ -1,4 +1,5 @@
 @import 'styles/colors.scss';
+@import 'styles/default.scss';
 
 .root {
   display: flex;
@@ -50,7 +51,7 @@
   margin: 0;
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: $siteWidthMobile) {
   .sadSmile {
     display: none;
   }

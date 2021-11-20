@@ -9,7 +9,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootState } from 'store/rootReducer';
-import { defaultAuthor, defaultSheet } from 'store/sheetsReducer';
 import styles from './TopAuthors.scss';
 import defaultStyles from 'styles/app.scss';
 import { Paths } from 'utils/routes/Paths';

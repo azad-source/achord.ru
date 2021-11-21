@@ -8,7 +8,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from .models import Author, Genre, Note
-from .serializers import AuthorSerializer, NoteSerializer, GenreListSerializer, GenreDetailSerializer
+from .serializers import AuthorSerializer, NoteSerializer, GenreListSerializer
 User = get_user_model()
 
 
@@ -69,11 +69,6 @@ class GenreViewSet(viewsets.ModelViewSet):
         'destroy': (IsAdminUser, ),
     }
 
-    def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return GenreDetailSerializer
-        return super().get_serializer_class()
-
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
         pk = self.kwargs['pk']
@@ -121,10 +116,14 @@ class AuthorViewSet(CustomModelViewSet):
         queryset = super().get_queryset()
         letter = self.request.GET.get("letter")
         alias = self.request.GET.get("alias")
+        genre_alias = self.request.GET.get("genre_alias")
+
         if letter:
             queryset = queryset.filter(name__istartswith=letter)
         elif alias:
             queryset = queryset.filter(alias=alias)
+        elif genre_alias:
+            queryset = queryset.filter(genres__alias=genre_alias)
             self.up_rate_list(queryset)
         return self.make_ordering(queryset)
 

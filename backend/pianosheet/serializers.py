@@ -65,11 +65,3 @@ class NoteSerializer(serializers.ModelSerializer):
         model = Note
         read_only_fields = ('id', 'rate', 'owner')
         fields = (*read_only_fields, 'name', 'filename', 'author', 'content_list')
-
-
-class GenreDetailSerializer(serializers.ModelSerializer):
-    authors = AuthorSerializer(many=True)
-    class Meta:
-        model = Genre
-        read_only_fields = ('id', 'alias', 'authors')
-        fields = ('name', *read_only_fields)

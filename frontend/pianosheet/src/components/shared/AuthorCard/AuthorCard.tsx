@@ -15,7 +15,6 @@ import { RemoveModal } from '../RemoveModal/RemoveModal';
 interface Props {
     className?: string;
     author: AuthorItemJsModel;
-    firstAuthorletter?: string;
     index?: number;
     editable?: boolean;
     editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
@@ -25,7 +24,6 @@ interface Props {
 export const AuthorCard: React.FC<Props> = ({
     className,
     author,
-    firstAuthorletter,
     index,
     editable = false,
     editAuthor,
@@ -39,13 +37,11 @@ export const AuthorCard: React.FC<Props> = ({
 
     const history = useHistory();
 
-    const curLetter = firstAuthorletter ? firstAuthorletter : letter;
-
     const { id, preview, alias, name } = author;
 
     const backgroundImage = preview ? 'url(' + preview + ')' : 'url(' + defaultImg + ')';
 
-    const path = alias ? Paths.getAuthorPath(curLetter, alias) : '';
+    const path = alias ? Paths.getAuthorPath(author.name.charAt(0), alias) : '';
 
     const openEditMenu = (e: React.MouseEvent) => {
         e.stopPropagation();

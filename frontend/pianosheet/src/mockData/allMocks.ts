@@ -3,7 +3,7 @@ import {
     AuthorItemJsModel,
     SheetItemJsModel,
     GenreJsModel,
-    GenreResultJsModel,
+    GenreItemJsModel,
 } from 'domain/api/JsModels';
 import authorImage from './img200x200.jpg';
 
@@ -108,7 +108,7 @@ export const AuthorsMock: AuthorJsModel = {
     results: AuthorList,
 };
 
-export const GenresMock: GenreResultJsModel[] = [
+export const GenresMock: GenreItemJsModel[] = [
     { id: 1, name: 'Рок', alias: 'rok' },
     { id: 2, name: 'Металл', alias: 'metall' },
     { id: 3, name: 'Классика', alias: 'klassika' },

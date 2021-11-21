@@ -5,7 +5,7 @@ import { Modal } from 'components/shared/Modal/Modal';
 import { Input } from 'components/shared/Input/Input';
 import { Textarea } from 'components/shared/Textarea/Textarea';
 import { maxAuthorDescriptionLength, maxUploadImageSize } from 'domain/SiteInfo';
-import { AuthorItemJsModel, GenreResultJsModel } from 'domain/api/JsModels';
+import { AuthorItemJsModel, GenreItemJsModel } from 'domain/api/JsModels';
 import cn from 'classnames';
 import { useToast } from 'components/shared/Toast/Toast';
 import { SheetsClient } from 'api/SheetsClient';
@@ -14,7 +14,7 @@ export type authorEditModel = {
     name: string;
     info: string;
     preview: any;
-    genres: GenreResultJsModel[];
+    genres: GenreItemJsModel[];
 };
 
 interface Props {
@@ -32,7 +32,7 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
     });
 
     const [selectedImage, setSelectedImage] = React.useState<string | ArrayBuffer | null>('');
-    const [allGenres, setAllGenres] = React.useState<GenreResultJsModel[]>([]);
+    const [allGenres, setAllGenres] = React.useState<GenreItemJsModel[]>([]);
 
     const { push } = useToast();
 
@@ -81,10 +81,10 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
         editAuthor(form);
     };
 
-    const isGenreSelected = (genre: GenreResultJsModel) =>
+    const isGenreSelected = (genre: GenreItemJsModel) =>
         form.genres.some(({ id }) => id === genre.id);
 
-    const handleSelectGenre = (genre: GenreResultJsModel) => {
+    const handleSelectGenre = (genre: GenreItemJsModel) => {
         if (isGenreSelected(genre)) {
             setForm((prev) => ({
                 ...prev,

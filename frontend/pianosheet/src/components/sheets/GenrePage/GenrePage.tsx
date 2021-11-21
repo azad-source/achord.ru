@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { RootState } from 'store/rootReducer';
 import { bindActionCreators, Dispatch } from 'redux';
 import { sheetsAction } from 'store/sheetsActions';
-import { AuthorItemJsModel, AuthorJsModel } from 'domain/api/JsModels';
+import { AuthorItemJsModel, AuthorJsModel, GenreItemJsModel } from 'domain/api/JsModels';
 import { AuthorItems } from '../AuthorItems/AuthorItems';
 import { QueryStatus } from 'domain/QueryStatus';
 import { SiteName } from 'domain/SiteInfo';
@@ -14,18 +14,22 @@ import { Breadcrumbs } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { Paths } from 'utils/routes/Paths';
 
 interface Props {
+    genre: GenreItemJsModel;
     authors: AuthorJsModel;
     status: QueryStatus;
-    getAuthors: (genreAlias: string) => void;
+    getGenreByAlias: (genreAlias: string) => void;
+    getAuthorsByGenreAlias: (genreAlias: string, page?: number) => void;
     addAuthor: (author: FormData) => Promise<AuthorItemJsModel | false>;
     editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
     removeAuthor: (authorId: number) => void;
 }
 
 const GenrePageFC: React.FC<Props> = ({
+    genre,
     authors,
     status,
-    getAuthors,
+    getGenreByAlias,
+    getAuthorsByGenreAlias,
     addAuthor,
     editAuthor,
     removeAuthor,
@@ -35,16 +39,20 @@ const GenrePageFC: React.FC<Props> = ({
     const location = useLocation();
 
     React.useEffect(() => {
-        document.title = `${SiteName} - ${genreAlias}`;
+        getGenreByAlias(genreAlias);
     }, []);
 
     React.useEffect(() => {
-        getAuthors(genreAlias);
+        if (genre) document.title = `${SiteName} - ${genre.name}`;
+    }, [genre]);
+
+    React.useEffect(() => {
+        getAuthorsByGenreAlias(genreAlias);
         setPageNumber(1);
     }, [genreAlias, location]);
 
     const getAuthorsByPage = (page: number) => {
-        getAuthors(genreAlias);
+        // getAuthorsByGenreAlias(genreAlias, page);
         setPageNumber(page);
         window.scroll({ top: 0, behavior: 'smooth' });
     };
@@ -55,7 +63,7 @@ const GenrePageFC: React.FC<Props> = ({
             link: Paths.sheetsPage,
         },
         {
-            caption: genreAlias.toUpperCase(),
+            caption: genre.name.toUpperCase(),
         },
     ];
 
@@ -63,7 +71,7 @@ const GenrePageFC: React.FC<Props> = ({
         <Page loadStatus={status}>
             <Breadcrumbs items={breadcrumbs} />
             <div className={styles.root}>
-                <div className={styles.title}>{genreAlias.toUpperCase()}</div>
+                <div className={styles.title}>{genre.name.toUpperCase()}</div>
                 <AuthorItems
                     authors={authors}
                     addAuthor={addAuthor}
@@ -78,6 +86,7 @@ const GenrePageFC: React.FC<Props> = ({
 };
 
 const mapStateToProps = (state: RootState) => ({
+    genre: state.sheets.genre,
     authors: state.sheets.authors,
     status: state.sheets.status,
 });
@@ -85,7 +94,8 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return bindActionCreators(
         {
-            getAuthors: sheetsAction.getAuthorsByGenreAlias,
+            getGenreByAlias: sheetsAction.getGenreByAlias,
+            getAuthorsByGenreAlias: sheetsAction.getAuthorsByGenreAlias,
             addAuthor: sheetsAction.addAuthor,
             editAuthor: sheetsAction.editAuthor,
             removeAuthor: sheetsAction.removeAuthor,

@@ -18,7 +18,7 @@ import { SheetAddModal, sheetAddModel } from '../SheetAddModal/SheetAddModal';
 
 interface Props {
     className?: string;
-    viewAuthor: AuthorItemJsModel;
+    author: AuthorItemJsModel;
     sheets: SheetJsModel;
     status: QueryStatus;
     getAuthor: (alias: string) => void;
@@ -28,7 +28,7 @@ interface Props {
 
 const AuthorPageFC: React.FC<Props> = ({
     className,
-    viewAuthor,
+    author,
     sheets,
     status,
     getAuthor,
@@ -55,7 +55,7 @@ const AuthorPageFC: React.FC<Props> = ({
         let formData = new FormData();
         formData.append('filename', options.filename);
         formData.append('name', options.sheetname);
-        formData.append('author', viewAuthor.id.toString());
+        formData.append('author', author.id.toString());
         addSheet(formData);
         closeModal();
     };
@@ -75,7 +75,7 @@ const AuthorPageFC: React.FC<Props> = ({
             link: Paths.getLetterPath(letter),
         },
         {
-            caption: viewAuthor.name,
+            caption: author.name,
         },
     ];
 
@@ -87,19 +87,19 @@ const AuthorPageFC: React.FC<Props> = ({
         <Page loadStatus={status}>
             <Breadcrumbs items={breadcrumbs} />
             <div className={cn(styles.root, className)}>
-                <div className={styles.title}>{viewAuthor.name}</div>
+                <div className={styles.title}>{author.name}</div>
                 <div className={styles.content}>
                     <div className={styles.description}>
                         <div>
                             <div className={styles.photo}>
                                 <img
-                                    src={viewAuthor.preview}
-                                    alt={viewAuthor.name}
+                                    src={author.preview}
+                                    alt={author.name}
                                     className={styles.image}
                                 />
                             </div>
                             <div className={styles.genres}>
-                                {viewAuthor.genres.map(({ name, id, alias }) => (
+                                {author.genres.map(({ name, id, alias }) => (
                                     <div
                                         key={id}
                                         className={styles.genres_item}
@@ -110,7 +110,7 @@ const AuthorPageFC: React.FC<Props> = ({
                                 ))}
                             </div>
                         </div>
-                        <div className={styles.authorInfo}>{viewAuthor.info}</div>
+                        <div className={styles.authorInfo}>{author.info}</div>
                     </div>
                     <div className={styles.sheetTitle}>НОТЫ</div>
                     {sheets.page_count > 1 && (
@@ -166,7 +166,7 @@ const AuthorPageFC: React.FC<Props> = ({
 };
 
 const mapStateToProps = (state: RootState) => ({
-    viewAuthor: state.sheets.viewAuthor,
+    author: state.sheets.author,
     sheets: state.sheets.sheets,
     status: state.sheets.status,
 });

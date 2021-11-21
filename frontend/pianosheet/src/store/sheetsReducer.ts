@@ -8,6 +8,7 @@ import {
     SheetJsModel,
     SheetItemJsModel,
     GenreJsModel,
+    GenreItemJsModel,
 } from 'domain/api/JsModels';
 
 export interface SearchApiResults {
@@ -48,6 +49,12 @@ export const defaultSheetItem: SheetItemJsModel = {
     rate: 0,
 };
 
+export const defaultGenreItem: GenreItemJsModel = {
+    id: 0,
+    name: '',
+    alias: '',
+};
+
 export const defaultPaged = {
     count: 0,
     page_count: 0,
@@ -61,7 +68,8 @@ const sheetsDefaultState: SheetsState = {
     sheets: defaultPaged,
     authors: defaultPaged,
     genres: defaultPaged,
-    viewAuthor: defaultAuthorItem,
+    genre: defaultGenreItem,
+    author: defaultAuthorItem,
     total: 0,
     status: QueryStatus.initial(),
     search: { ...defaultSearch },
@@ -71,8 +79,9 @@ const sheetsDefaultState: SheetsState = {
 export interface SheetsState {
     sheets: SheetJsModel;
     authors: AuthorJsModel;
+    author: AuthorItemJsModel;
     genres: GenreJsModel;
-    viewAuthor: AuthorItemJsModel;
+    genre: GenreItemJsModel;
     total: number;
     status: QueryStatus;
     search: SearchApiResults;
@@ -130,6 +139,11 @@ const {
     GET_GENRES_FAILED,
     getGenresComplete,
     getGenresFailed,
+    GET_GENRE_STARTED,
+    GET_GENRE_COMPLETE,
+    GET_GENRE_FAILED,
+    getGenreComplete,
+    getGenreFailed,
 } = sheetsActionTypes;
 
 export function sheetsReducer(
@@ -220,14 +234,14 @@ export function sheetsReducer(
         case GET_AUTHOR_BY_ALIAS_STARTED: {
             return produce(state, (draft) => {
                 draft.status = QueryStatus.request();
-                draft.viewAuthor = defaultAuthorItem;
+                draft.author = defaultAuthorItem;
             });
         }
         case GET_AUTHOR_BY_ALIAS_COMPLETE: {
             const { payload: author } = action as ReturnType<typeof getAuthorsByAliasComplete>;
             return produce(state, (draft) => {
                 draft.status = QueryStatus.success();
-                draft.viewAuthor = author.results[0];
+                draft.author = author.results[0];
             });
         }
         case GET_AUTHOR_BY_ALIAS_FAILED: {
@@ -236,7 +250,7 @@ export function sheetsReducer(
             } = action as ReturnType<typeof getAuthorsByAliasFailed>;
             return produce(state, (draft) => {
                 draft.status = QueryStatus.error(reason, message, error);
-                draft.viewAuthor = defaultAuthorItem;
+                draft.author = defaultAuthorItem;
             });
         }
 
@@ -359,6 +373,27 @@ export function sheetsReducer(
             const {
                 payload: { reason, message, error },
             } = action as ReturnType<typeof getGenresFailed>;
+            return produce(state, (draft) => {
+                draft.status = QueryStatus.error(reason, message, error);
+            });
+        }
+
+        case GET_GENRE_STARTED: {
+            return produce(state, (draft) => {
+                draft.status = QueryStatus.request();
+            });
+        }
+        case GET_GENRE_COMPLETE: {
+            const { payload: genre } = action as ReturnType<typeof getGenreComplete>;
+            return produce(state, (draft) => {
+                draft.genre = genre;
+                draft.status = QueryStatus.success();
+            });
+        }
+        case GET_GENRE_FAILED: {
+            const {
+                payload: { reason, message, error },
+            } = action as ReturnType<typeof getGenreFailed>;
             return produce(state, (draft) => {
                 draft.status = QueryStatus.error(reason, message, error);
             });

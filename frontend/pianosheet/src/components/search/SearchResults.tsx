@@ -112,7 +112,6 @@ export const SearchResults: React.FC<Props> = ({
                                     key={author.id}
                                     author={author}
                                     className={styles.searchAuthor}
-                                    firstAuthorletter={author.name.charAt(0)}
                                     editable={logged}
                                     editAuthor={editAuthor}
                                     removeAuthor={removeAuthor}

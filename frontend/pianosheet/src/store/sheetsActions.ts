@@ -6,6 +6,7 @@ import {
     SheetJsModel,
     SheetItemJsModel,
     GenreJsModel,
+    GenreItemJsModel,
 } from 'domain/api/JsModels';
 import { Action } from 'redux';
 import { arrToString } from 'utils/arrayTransform';
@@ -389,23 +390,10 @@ function getTopSheets(): GeneralThunkAction<void> {
     };
 }
 
-function getAuthorsByGenreId(genreId: number): GeneralThunkAction<void> {
+function getAuthorsByGenreAlias(genreAlias: string, page?: number): GeneralThunkAction<void> {
     return (dispatch) => {
         dispatch(getAuthorsStarted());
-        SheetsClient.getAuthorByGenreId(genreId)
-            .then((authors) => {
-                dispatch(getAuthorsComplete(authors));
-            })
-            .catch((error) => {
-                dispatch(getAuthorsFailed('', '', error));
-            });
-    };
-}
-
-function getAuthorsByGenreAlias(genreAlias: string): GeneralThunkAction<void> {
-    return (dispatch) => {
-        dispatch(getAuthorsStarted());
-        SheetsClient.getAuthorByGenreAlias(genreAlias)
+        SheetsClient.getAuthorByGenreAlias(genreAlias, page)
             .then((authors) => {
                 dispatch(getAuthorsComplete(authors));
             })
@@ -445,6 +433,36 @@ function getGenres(): GeneralThunkAction<void> {
     };
 }
 
+const GET_GENRE_STARTED = 'SHEETS/GET_GENRE_STARTED';
+const GET_GENRE_COMPLETE = 'SHEETS/GET_GENRE_COMPLETE';
+const GET_GENRE_FAILED = 'SHEETS/GET_GENRE_FAILED';
+function getGenreStarted(): Action {
+    return { type: GET_GENRE_STARTED };
+}
+function getGenreComplete(genre: GenreItemJsModel): PayloadedAction<GenreItemJsModel> {
+    return { type: GET_GENRE_COMPLETE, payload: genre };
+}
+function getGenreFailed(
+    reason: string,
+    message: string,
+    error: Error,
+): PayloadedAction<{ reason: string; message: string; error: Error }> {
+    return { type: GET_GENRE_FAILED, payload: { reason, message, error } };
+}
+
+function getGenreByAlias(genreAlias: string): GeneralThunkAction<void> {
+    return (dispatch) => {
+        dispatch(getGenreStarted());
+        SheetsClient.getGenreByAlias(genreAlias)
+            .then((genre) => {
+                dispatch(getGenreComplete(genre));
+            })
+            .catch((error) => {
+                dispatch(getGenreFailed('', '', error));
+            });
+    };
+}
+
 export const sheetsAction = {
     getSheets,
     getAuthors,
@@ -459,9 +477,9 @@ export const sheetsAction = {
     removeAuthor,
     getTopAuthors,
     getTopSheets,
-    getAuthorsByGenreId,
     getAuthorsByGenreAlias,
     getGenres,
+    getGenreByAlias,
 };
 
 export const sheetsActionTypes = {
@@ -523,4 +541,9 @@ export const sheetsActionTypes = {
     GET_GENRES_FAILED,
     getGenresComplete,
     getGenresFailed,
+    GET_GENRE_STARTED,
+    GET_GENRE_COMPLETE,
+    GET_GENRE_FAILED,
+    getGenreComplete,
+    getGenreFailed,
 };

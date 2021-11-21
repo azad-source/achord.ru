@@ -4,6 +4,7 @@ import {
     SheetJsModel,
     SheetItemJsModel,
     GenreJsModel,
+    GenreItemJsModel,
 } from 'domain/api/JsModels';
 import { api, retrieveData } from './apiConfig';
 
@@ -25,6 +26,34 @@ export class SheetsClient {
         return api.get(`${apiPath}/author/`, { params: { id } }).then(retrieveData);
     }
 
+    /** Получение авторов по alias-у жанра */
+    public static getAuthorByGenreAlias(
+        genre_alias: string,
+        page?: number,
+    ): Promise<AuthorJsModel> {
+        return api.get(`${apiPath}/author/`, { params: { genre_alias, page } }).then(retrieveData);
+    }
+
+    /** Получение топ авторов */
+    public static getTopAuthors(): Promise<AuthorJsModel> {
+        return api.get(`${apiPath}/author/`, { params: { order_by: '-rate' } }).then(retrieveData);
+    }
+
+    /** Добавление автора */
+    public static addAuthor(author: FormData): Promise<AuthorItemJsModel> {
+        return api.post(`${apiPath}/author/`, author).then(retrieveData);
+    }
+
+    /** Редактирование автора по id */
+    public static editAuthorById(id: number, author: FormData): Promise<AuthorItemJsModel> {
+        return api.patch(`${apiPath}/author/${id}/`, author).then(retrieveData);
+    }
+
+    /** Удаление автора */
+    public static removeAuthorById(id: number): Promise<AuthorItemJsModel> {
+        return api.delete(`${apiPath}/author/${id}/`).then(retrieveData);
+    }
+
     /** Получение всех нот */
     public static getSheets(author_alias?: string, page?: number): Promise<SheetJsModel> {
         return api
@@ -39,19 +68,19 @@ export class SheetsClient {
         return api.get(`${apiPath}/note/`, { params: { noteId } }).then(retrieveData);
     }
 
-    /** Добавление автора */
-    public static addAuthor(author: FormData): Promise<AuthorItemJsModel> {
-        return api.post(`${apiPath}/author/`, author).then(retrieveData);
+    /** Получение нот по alias-у жанра */
+    public static getSheetsByGenreAlias(genre_alias: string, page?: number): Promise<SheetJsModel> {
+        return api.get(`${apiPath}/note/`, { params: { genre_alias, page } }).then(retrieveData);
+    }
+
+    /** Получние топ нот */
+    public static getTopSheets(): Promise<SheetJsModel> {
+        return api.get(`${apiPath}/note/`, { params: { order_by: '-rate' } }).then(retrieveData);
     }
 
     /** Добавление нот */
     public static addSheet(sheet: FormData): Promise<SheetItemJsModel> {
         return api.post(`${apiPath}/note/`, sheet).then(retrieveData);
-    }
-
-    /** Редактирование автора по id */
-    public static editAuthorById(id: number, author: FormData): Promise<AuthorItemJsModel> {
-        return api.patch(`${apiPath}/author/${id}/`, author).then(retrieveData);
     }
 
     /** Поиск нот */
@@ -64,33 +93,13 @@ export class SheetsClient {
         return api.get(`${apiPath}/search/author/`, { params: { query, page } }).then(retrieveData);
     }
 
-    /** Топ авторов */
-    public static getTopAuthors(): Promise<AuthorJsModel> {
-        return api.get(`${apiPath}/author/`, { params: { order_by: '-rate' } }).then(retrieveData);
-    }
-
-    /** Топ нот */
-    public static getTopSheets(): Promise<SheetJsModel> {
-        return api.get(`${apiPath}/note/`, { params: { order_by: '-rate' } }).then(retrieveData);
-    }
-
     /** Получение списка жанров */
     public static getGenres(): Promise<GenreJsModel> {
         return api.get(`${apiPath}/genre/`).then(retrieveData);
     }
 
-    /** Удаление автора */
-    public static removeAuthorById(id: number): Promise<AuthorItemJsModel> {
-        return api.delete(`${apiPath}/author/${id}/`).then(retrieveData);
-    }
-
-    /** Получение авторов по id жанра */
-    public static getAuthorByGenreId(id: number, page?: number): Promise<AuthorJsModel> {
-        return api.get(`${apiPath}/genre/`, { params: { id, page } }).then(retrieveData);
-    }
-
-    /** Получение авторов по alias-у жанра */
-    public static getAuthorByGenreAlias(alias: string, page?: number): Promise<AuthorJsModel> {
-        return api.get(`${apiPath}/genre/`, { params: { alias, page } }).then(retrieveData);
+    /** Получение жанра по alias */
+    public static getGenreByAlias(alias: string): Promise<GenreItemJsModel> {
+        return api.get(`${apiPath}/genre/${alias}/`).then(retrieveData);
     }
 }

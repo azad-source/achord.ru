@@ -33,7 +33,7 @@ export type AuthorItemJsModel = {
     preview_xs?: string;
     alias: string;
     rate: number;
-    genres: GenreResultJsModel[];
+    genres: GenreItemJsModel[];
     owner: number;
 };
 
@@ -46,7 +46,7 @@ export type SheetItemJsModel = {
     rate: number;
 };
 
-export type GenreResultJsModel = {
+export type GenreItemJsModel = {
     id: number;
     name: string;
     alias: string;
@@ -56,4 +56,4 @@ export type AuthorJsModel = PagedJsModel<AuthorItemJsModel>;
 
 export type SheetJsModel = PagedJsModel<SheetItemJsModel>;
 
-export type GenreJsModel = PagedJsModel<GenreResultJsModel>;
+export type GenreJsModel = PagedJsModel<GenreItemJsModel>;

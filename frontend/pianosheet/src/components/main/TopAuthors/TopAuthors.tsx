@@ -77,7 +77,6 @@ const TopAuthorsFC: React.FC<Props> = ({
                                 key={author.id}
                                 author={author}
                                 className={styles.topAuthors_item}
-                                firstAuthorletter={author.name.charAt(0)}
                                 index={index + 1}
                                 editable={logged}
                                 editAuthor={editAuthor}

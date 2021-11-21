@@ -15,6 +15,7 @@ export class SheetsClient {
         return api.get(`${apiPath}/author/`, { params: { letter, page } }).then(retrieveData);
     }
 
+    
     /** Получение автора по алиасу */
     public static getAuthorByAlias(alias?: string): Promise<AuthorJsModel> {
         return api.get(`${apiPath}/author/`, { params: { alias } }).then(retrieveData);

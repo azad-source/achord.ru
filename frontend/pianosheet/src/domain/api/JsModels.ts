@@ -11,8 +11,10 @@ export type UserJsModel = {
 };
 
 export type SocialLinkJsModel = {
-    link: string;
-    provider: string;
+    google: string;
+    facebook: string;
+    odnoklassniki: string;
+    vk: string;
 };
 
 export type PagedJsModel<T> = {

@@ -11,11 +11,13 @@ import { FacebookLogo } from 'components/shared/icons/FacebookLogo';
 import { Modal } from 'components/shared/Modal/Modal';
 import { QueryStatus } from 'domain/QueryStatus';
 import cn from 'classnames';
+import { GoogleLogo } from 'components/shared/icons/GoogleLogo';
 
 const SocialIcons: Record<string, React.ReactNode> = {
-    'vk.com': <VkLogo className={styles.socialIcon} />,
-    'ok.ru': <OKLogo className={styles.socialIcon} />,
-    'facebook.com': <FacebookLogo className={styles.socialIcon} />,
+    google: <GoogleLogo className={styles.socialIcon} />,
+    vk: <VkLogo className={styles.socialIcon} />,
+    odnoklassniki: <OKLogo className={styles.socialIcon} />,
+    facebook: <FacebookLogo className={styles.socialIcon} />,
 };
 
 interface Props {
@@ -38,7 +40,7 @@ export const Authorization: React.FC<Props> = ({
         resetPass: string;
     }>({ auth: '', resetPass: '' });
     const [password, setPassword] = React.useState<string>('');
-    const [socialAuth, setSocialAuth] = React.useState<SocialLinkJsModel[]>([]);
+    const [socialAuth, setSocialAuth] = React.useState<SocialLinkJsModel>();
     const [openModalResetPassword, setOpenModalResetPassword] = React.useState<boolean>(false);
 
     React.useEffect(() => {
@@ -98,15 +100,15 @@ export const Authorization: React.FC<Props> = ({
                     Забыли пароль?
                 </Button>
             </div>
-            {/* <div className={styles.socialItems}>
-                {socialAuth.map((item) => (
-                    <div className={styles.socialItem} key={item.provider}>
-                        <a href={item.link} title={item.provider}>
-                            {SocialIcons[item.provider]}
+            <div className={styles.socialItems}>
+                {socialAuth && (
+                    <div className={styles.socialItem}>
+                        <a href={socialAuth.google} title="google">
+                            {SocialIcons.google}
                         </a>
                     </div>
-                ))}
-            </div> */}
+                )}
+            </div>
             {!!errorMessage && <div className={styles.errorsMsg}>{errorMessage}</div>}
             {openModalResetPassword && (
                 <Modal

@@ -56,7 +56,7 @@ export class UsersClient {
     }
 
     /** Получение ссылок авторизации в соц сетях */
-    public static getSocialLinksAuth(): Promise<SocialLinkJsModel[]> {
+    public static getSocialLinksAuth(): Promise<SocialLinkJsModel> {
         return api.get(`${apiPath}/social/links/`).then(retrieveData);
     }
 

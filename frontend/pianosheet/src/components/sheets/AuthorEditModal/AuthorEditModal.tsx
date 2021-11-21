@@ -5,32 +5,24 @@ import { Modal } from 'components/shared/Modal/Modal';
 import { Input } from 'components/shared/Input/Input';
 import { Textarea } from 'components/shared/Textarea/Textarea';
 import { maxAuthorDescriptionLength, maxUploadImageSize } from 'domain/SiteInfo';
-import { AuthorItemJsModel, GenreItemJsModel } from 'domain/api/JsModels';
+import {
+    AuthorItemJsModel,
+    AuthorRequestModel,
+    defaultAuthorRequestModel,
+    GenreItemJsModel,
+} from 'domain/api/JsModels';
 import cn from 'classnames';
 import { useToast } from 'components/shared/Toast/Toast';
 import { SheetsClient } from 'api/SheetsClient';
 
-export type authorEditModel = {
-    name: string;
-    info: string;
-    preview: any;
-    genres: GenreItemJsModel[];
-};
-
 interface Props {
     author: AuthorItemJsModel;
     closeModal: () => void;
-    editAuthor: (options: authorEditModel) => void;
+    editAuthor: (options: AuthorRequestModel) => void;
 }
 
 export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAuthor }) => {
-    const [form, setForm] = React.useState<authorEditModel>({
-        name: '',
-        info: '',
-        preview: '',
-        genres: [],
-    });
-
+    const [form, setForm] = React.useState<AuthorRequestModel>(defaultAuthorRequestModel);
     const [selectedImage, setSelectedImage] = React.useState<string | ArrayBuffer | null>('');
     const [allGenres, setAllGenres] = React.useState<GenreItemJsModel[]>([]);
 
@@ -120,20 +112,18 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
             </div>
             <div className={cn(styles.formItem, styles.genres)}>
                 {allGenres.length > 0 &&
-                    allGenres.map((genre) => {
-                        return (
-                            <div
-                                key={genre.id}
-                                className={cn(
-                                    styles.genres_item,
-                                    isGenreSelected(genre) && styles.genres_item__selected,
-                                )}
-                                onClick={() => handleSelectGenre(genre)}
-                            >
-                                {genre.name}
-                            </div>
-                        );
-                    })}
+                    allGenres.map((genre) => (
+                        <div
+                            key={genre.id}
+                            className={cn(
+                                styles.genres_item,
+                                isGenreSelected(genre) && styles.genres_item__selected,
+                            )}
+                            onClick={() => handleSelectGenre(genre)}
+                        >
+                            {genre.name}
+                        </div>
+                    ))}
             </div>
             <div className={styles.formItem}>
                 <img className={styles.image} src={selectedImage || form.preview} />

@@ -4,11 +4,8 @@ import cn from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
 import defaultImg from 'images/default.png';
-import {
-    AuthorEditModal,
-    authorEditModel,
-} from 'components/sheets/AuthorEditModal/AuthorEditModal';
-import { AuthorItemJsModel } from 'domain/api/JsModels';
+import { AuthorEditModal } from 'components/sheets/AuthorEditModal/AuthorEditModal';
+import { AuthorItemJsModel, AuthorRequestModel } from 'domain/api/JsModels';
 import { MenuButtonIcon } from '../icons/MenuButtonIcon';
 import { RemoveModal } from '../RemoveModal/RemoveModal';
 import { connect } from 'react-redux';
@@ -32,9 +29,7 @@ const AuthorCardFC: React.FC<Props> = ({ className, author, index, editAuthor, r
     const [showEditMenu, setShowEditMenu] = React.useState<boolean>(false);
 
     const { id, preview, alias, name } = author;
-
     const backgroundImage = preview ? 'url(' + preview + ')' : 'url(' + defaultImg + ')';
-
     const path = alias ? Paths.getAuthorPath(author.name.charAt(0), alias) : '';
 
     const openEditMenu = (e: React.MouseEvent) => {
@@ -67,7 +62,7 @@ const AuthorCardFC: React.FC<Props> = ({ className, author, index, editAuthor, r
 
     const goToAuthorPage = () => history.push(path);
 
-    const handleSave = (options: authorEditModel) => {
+    const editAuthorHandler = (options: AuthorRequestModel) => {
         let formData = new FormData();
         if (options.preview !== author.preview) formData.append('preview', options.preview);
         if (options.name !== author.name) formData.append('name', options.name);
@@ -76,7 +71,7 @@ const AuthorCardFC: React.FC<Props> = ({ className, author, index, editAuthor, r
             formData.append('genres', JSON.stringify(options.genres.map(({ id }) => id)));
         editAuthor(id, formData).then((res) => {
             if (res) {
-                history.push(Paths.getAuthorPath(res.alias.charAt(0), res.alias));
+                history.push(Paths.getAuthorPath(res.name.charAt(0), res.alias));
             }
         });
         closeEditModal();
@@ -136,7 +131,7 @@ const AuthorCardFC: React.FC<Props> = ({ className, author, index, editAuthor, r
             {showEditModal && (
                 <AuthorEditModal
                     closeModal={closeEditModal}
-                    editAuthor={handleSave}
+                    editAuthor={editAuthorHandler}
                     author={author}
                 />
             )}

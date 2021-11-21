@@ -1,7 +1,7 @@
-import { AuthorItemJsModel, AuthorJsModel } from 'domain/api/JsModels';
+import { AuthorItemJsModel, AuthorJsModel, AuthorRequestModel } from 'domain/api/JsModels';
 import * as React from 'react';
 import { AuthorCard, AuthorCardAdd } from 'components/shared/AuthorCard/AuthorCard';
-import { AuthorAddModal, authorAddModel } from 'components/sheets/AuthorAddModal/AuthorAddModal';
+import { AuthorAddModal } from 'components/sheets/AuthorAddModal/AuthorAddModal';
 import styles from './AuthorItems.scss';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { useAuth } from 'api/UsersClient';
@@ -28,14 +28,15 @@ export const AuthorItems: React.FC<Props> = ({
     const closeModal = () => setShowModal(false);
     const openModal = () => setShowModal(true);
 
-    const addAuthorHandler = (options: authorAddModel) => {
+    const addAuthorHandler = (options: AuthorRequestModel) => {
         let formData = new FormData();
-        formData.append('preview', options.file);
-        formData.append('name', options.author);
+        formData.append('preview', options.preview);
+        formData.append('name', options.name);
         formData.append('info', options.info);
+        formData.append('genres', JSON.stringify(options.genres.map(({ id }) => id)));
         addAuthor(formData).then((res) => {
             if (res) {
-                history.push(Paths.getAuthorPath(res.alias.charAt(0), res.alias));
+                history.push(Paths.getAuthorPath(res.name.charAt(0), res.alias));
             }
         });
         closeModal();

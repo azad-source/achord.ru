@@ -145,13 +145,13 @@ function getAuthors(letter?: string, page?: number): GeneralThunkAction<void, Sh
 const GET_AUTHOR_BY_ALIAS_STARTED = 'SHEETS/GET_AUTHOR_BY_ALIAS_STARTED';
 const GET_AUTHOR_BY_ALIAS_COMPLETE = 'SHEETS/GET_AUTHOR_BY_ALIAS_COMPLETE';
 const GET_AUTHOR_BY_ALIAS_FAILED = 'SHEETS/GET_AUTHOR_BY_ALIAS_FAILED';
-function getAuthorsByAliasStarted(): Action {
+function getAuthorByAliasStarted(): Action {
     return { type: GET_AUTHOR_BY_ALIAS_STARTED };
 }
-function getAuthorsByAliasComplete(author: AuthorJsModel): PayloadedAction<AuthorJsModel> {
+function getAuthorByAliasComplete(author: AuthorJsModel): PayloadedAction<AuthorJsModel> {
     return { type: GET_AUTHOR_BY_ALIAS_COMPLETE, payload: author };
 }
-function getAuthorsByAliasFailed(
+function getAuthorByAliasFailed(
     reason: string,
     message: string,
     error: Error,
@@ -164,14 +164,14 @@ function getAuthorsByAliasFailed(
 
 function getAuthor(alias: string): GeneralThunkAction<void, SheetsState> {
     return (dispatch) => {
-        dispatch(getAuthorsByAliasStarted());
+        dispatch(getAuthorByAliasStarted());
         SheetsClient.getAuthorByAlias(alias)
             .then((res) => {
-                dispatch(getAuthorsByAliasComplete(res));
+                dispatch(getAuthorByAliasComplete(res));
                 dispatch(getSheets(res.results[0].alias));
             })
             .catch((error) => {
-                dispatch(getAuthorsByAliasFailed('', '', error));
+                dispatch(getAuthorByAliasFailed('', '', error));
             });
     };
 }
@@ -510,9 +510,9 @@ export const sheetsActionTypes = {
     GET_AUTHOR_BY_ALIAS_STARTED,
     GET_AUTHOR_BY_ALIAS_COMPLETE,
     GET_AUTHOR_BY_ALIAS_FAILED,
-    getAuthorsByAliasStarted,
-    getAuthorsByAliasComplete,
-    getAuthorsByAliasFailed,
+    getAuthorByAliasStarted,
+    getAuthorByAliasComplete,
+    getAuthorByAliasFailed,
     APPLY_SEARCH_STARTED,
     APPLY_SEARCH_COMPLETE,
     APPLY_SEARCH_FAILED,

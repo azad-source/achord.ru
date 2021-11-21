@@ -5,7 +5,7 @@ import styles from './GenrePage.scss';
 import { connect } from 'react-redux';
 import { RootState } from 'store/rootReducer';
 import { bindActionCreators, Dispatch } from 'redux';
-import { sheetsAction } from 'store/sheetsActions';
+import { sheetsAction, sheetsActionTypes } from 'store/sheetsActions';
 import { AuthorItemJsModel, AuthorJsModel, GenreItemJsModel } from 'domain/api/JsModels';
 import { AuthorItems } from '../AuthorItems/AuthorItems';
 import { QueryStatus } from 'domain/QueryStatus';
@@ -20,8 +20,6 @@ interface Props {
     getGenreByAlias: (genreAlias: string) => void;
     getAuthorsByGenreAlias: (genreAlias: string, page?: number) => void;
     addAuthor: (author: FormData) => Promise<AuthorItemJsModel | false>;
-    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
-    removeAuthor: (authorId: number) => void;
 }
 
 const GenrePageFC: React.FC<Props> = ({
@@ -31,8 +29,6 @@ const GenrePageFC: React.FC<Props> = ({
     getGenreByAlias,
     getAuthorsByGenreAlias,
     addAuthor,
-    editAuthor,
-    removeAuthor,
 }) => {
     const { genreAlias } = useParams<{ genreAlias: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
@@ -52,7 +48,7 @@ const GenrePageFC: React.FC<Props> = ({
     }, [genreAlias, location]);
 
     const getAuthorsByPage = (page: number) => {
-        // getAuthorsByGenreAlias(genreAlias, page);
+        getAuthorsByGenreAlias(genreAlias, page);
         setPageNumber(page);
         window.scroll({ top: 0, behavior: 'smooth' });
     };
@@ -76,9 +72,7 @@ const GenrePageFC: React.FC<Props> = ({
                     authors={authors}
                     addAuthor={addAuthor}
                     getAuthorsByPage={getAuthorsByPage}
-                    editAuthor={editAuthor}
                     pageNumber={pageNumber}
-                    removeAuthor={removeAuthor}
                 />
             </div>
         </Page>
@@ -97,8 +91,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
             getGenreByAlias: sheetsAction.getGenreByAlias,
             getAuthorsByGenreAlias: sheetsAction.getAuthorsByGenreAlias,
             addAuthor: sheetsAction.addAuthor,
-            editAuthor: sheetsAction.editAuthor,
-            removeAuthor: sheetsAction.removeAuthor,
         },
         dispatch,
     );

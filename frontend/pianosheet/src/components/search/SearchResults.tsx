@@ -8,18 +8,15 @@ import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { useLocation } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
-import { AuthorItemJsModel, SheetItemJsModel } from 'domain/api/JsModels';
+import { SheetItemJsModel } from 'domain/api/JsModels';
 import { SheetsClient } from 'api/SheetsClient';
 import { SiteName } from 'domain/SiteInfo';
-import { useAuth } from 'api/UsersClient';
 
 interface Props {
     search: SearchApiResults;
     skipSearch: () => void;
     searchSheets: (query: string, page: number) => void;
     searchAuthors: (query: string, page: number) => void;
-    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
-    removeAuthor: (authorId: number) => void;
 }
 
 export const SearchResults: React.FC<Props> = ({
@@ -27,14 +24,11 @@ export const SearchResults: React.FC<Props> = ({
     skipSearch,
     searchSheets,
     searchAuthors,
-    editAuthor,
-    removeAuthor,
 }) => {
     let output: React.ReactNode;
     const [pageNumberSheet, setPageNumberSheet] = React.useState<number>(1);
     const [pageNumberAuthor, setPageNumberAuthor] = React.useState<number>(1);
     const location = useLocation();
-    const [logged] = useAuth();
 
     const getSheetsByPage = (page: number) => {
         searchSheets(search.query, page);
@@ -112,9 +106,6 @@ export const SearchResults: React.FC<Props> = ({
                                     key={author.id}
                                     author={author}
                                     className={styles.searchAuthor}
-                                    editable={logged}
-                                    editAuthor={editAuthor}
-                                    removeAuthor={removeAuthor}
                                 />
                             ))}
                         </div>

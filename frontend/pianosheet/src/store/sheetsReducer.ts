@@ -112,8 +112,8 @@ const {
     GET_AUTHOR_BY_ALIAS_STARTED,
     GET_AUTHOR_BY_ALIAS_COMPLETE,
     GET_AUTHOR_BY_ALIAS_FAILED,
-    getAuthorsByAliasComplete,
-    getAuthorsByAliasFailed,
+    getAuthorByAliasComplete,
+    getAuthorByAliasFailed,
     APPLY_SEARCH_STARTED,
     APPLY_SEARCH_COMPLETE,
     APPLY_SEARCH_FAILED,
@@ -194,6 +194,7 @@ export function sheetsReducer(
         case GET_SHEETS_STARTED: {
             return produce(state, (draft) => {
                 draft.status = QueryStatus.request();
+                draft.sheets = defaultPaged;
             });
         }
         case GET_SHEETS_COMPLETE: {
@@ -214,6 +215,7 @@ export function sheetsReducer(
         case GET_AUTHORS_STARTED: {
             return produce(state, (draft) => {
                 draft.status = QueryStatus.request();
+                draft.authors = defaultPaged;
             });
         }
         case GET_AUTHORS_COMPLETE: {
@@ -238,7 +240,7 @@ export function sheetsReducer(
             });
         }
         case GET_AUTHOR_BY_ALIAS_COMPLETE: {
-            const { payload: author } = action as ReturnType<typeof getAuthorsByAliasComplete>;
+            const { payload: author } = action as ReturnType<typeof getAuthorByAliasComplete>;
             return produce(state, (draft) => {
                 draft.status = QueryStatus.success();
                 draft.author = author.results[0];
@@ -247,7 +249,7 @@ export function sheetsReducer(
         case GET_AUTHOR_BY_ALIAS_FAILED: {
             const {
                 payload: { reason, message, error },
-            } = action as ReturnType<typeof getAuthorsByAliasFailed>;
+            } = action as ReturnType<typeof getAuthorByAliasFailed>;
             return produce(state, (draft) => {
                 draft.status = QueryStatus.error(reason, message, error);
                 draft.author = defaultAuthorItem;
@@ -360,6 +362,7 @@ export function sheetsReducer(
         case GET_GENRES_STARTED: {
             return produce(state, (draft) => {
                 draft.status = QueryStatus.request();
+                draft.genres = defaultPaged;
             });
         }
         case GET_GENRES_COMPLETE: {
@@ -381,6 +384,7 @@ export function sheetsReducer(
         case GET_GENRE_STARTED: {
             return produce(state, (draft) => {
                 draft.status = QueryStatus.request();
+                draft.genre = defaultGenreItem;
             });
         }
         case GET_GENRE_COMPLETE: {

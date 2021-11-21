@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './AuthorCard.scss';
 import cn from 'classnames';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
 import defaultImg from 'images/default.png';
 import {
@@ -11,31 +11,25 @@ import {
 import { AuthorItemJsModel } from 'domain/api/JsModels';
 import { MenuButtonIcon } from '../icons/MenuButtonIcon';
 import { RemoveModal } from '../RemoveModal/RemoveModal';
+import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+import { sheetsAction } from 'store/sheetsActions';
+import { useAuth } from 'api/UsersClient';
 
 interface Props {
     className?: string;
     author: AuthorItemJsModel;
     index?: number;
-    editable?: boolean;
     editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
     removeAuthor: (authorId: number) => void;
 }
 
-export const AuthorCard: React.FC<Props> = ({
-    className,
-    author,
-    index,
-    editable = false,
-    editAuthor,
-    removeAuthor,
-}) => {
-    const { letter, composerName } = useParams<{ letter: string; composerName: string }>();
-
+const AuthorCardFC: React.FC<Props> = ({ className, author, index, editAuthor, removeAuthor }) => {
+    const [logged] = useAuth();
+    const history = useHistory();
     const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
     const [showRemoveModal, setShowRemoveModal] = React.useState<boolean>(false);
     const [showEditMenu, setShowEditMenu] = React.useState<boolean>(false);
-
-    const history = useHistory();
 
     const { id, preview, alias, name } = author;
 
@@ -97,7 +91,7 @@ export const AuthorCard: React.FC<Props> = ({
             <div className={cn(styles.root, className)} onClick={goToAuthorPage}>
                 <div className={styles.top}>
                     {index && <div className={styles.top_index}>{index}</div>}
-                    {editable && (
+                    {logged && (
                         <>
                             <span className={styles.top_edit} onClick={openEditMenu}>
                                 <MenuButtonIcon className={styles.top_edit_icon} />
@@ -157,6 +151,18 @@ export const AuthorCard: React.FC<Props> = ({
         </>
     );
 };
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+    return bindActionCreators(
+        {
+            editAuthor: sheetsAction.editAuthor,
+            removeAuthor: sheetsAction.removeAuthor,
+        },
+        dispatch,
+    );
+};
+
+export const AuthorCard = connect(null, mapDispatchToProps)(AuthorCardFC);
 
 interface AddProps {
     onClick: () => void;

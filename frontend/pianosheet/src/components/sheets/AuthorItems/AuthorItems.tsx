@@ -13,8 +13,6 @@ interface Props {
     pageNumber: number;
     addAuthor: (author: FormData) => Promise<AuthorItemJsModel | false>;
     getAuthorsByPage: (page: number) => void;
-    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
-    removeAuthor: (authorId: number) => void;
 }
 
 export const AuthorItems: React.FC<Props> = ({
@@ -22,8 +20,6 @@ export const AuthorItems: React.FC<Props> = ({
     pageNumber,
     addAuthor,
     getAuthorsByPage,
-    editAuthor,
-    removeAuthor,
 }) => {
     const [logged] = useAuth();
     const [showModal, setShowModal] = React.useState<boolean>(false);
@@ -49,14 +45,7 @@ export const AuthorItems: React.FC<Props> = ({
         <>
             <div className={styles.authors}>
                 {authors.results.map((author) => (
-                    <AuthorCard
-                        key={author.id}
-                        author={author}
-                        className={styles.authors_item}
-                        editable={logged}
-                        editAuthor={editAuthor}
-                        removeAuthor={removeAuthor}
-                    />
+                    <AuthorCard key={author.id} author={author} className={styles.authors_item} />
                 ))}
                 {logged && <AuthorCardAdd onClick={openModal} />}
             </div>

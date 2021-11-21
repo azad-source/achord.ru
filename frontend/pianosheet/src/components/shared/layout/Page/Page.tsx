@@ -11,7 +11,6 @@ import { SheetsNav } from '../SheetsNav/SheetsNav';
 import { SearchApiResults } from 'store/sheetsReducer';
 import { SearchResults } from 'components/search/SearchResults';
 import { useToast } from 'components/shared/Toast/Toast';
-import { AuthorItemJsModel } from 'domain/api/JsModels';
 
 interface Props {
     className?: string;
@@ -23,8 +22,6 @@ interface Props {
     dropSearch: () => void;
     searchSheets: (query: string, page: number) => void;
     searchAuthors: (query: string, page: number) => void;
-    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
-    removeAuthor: (authorId: number) => void;
 }
 
 const PageFC: React.FC<Props> = ({
@@ -37,8 +34,6 @@ const PageFC: React.FC<Props> = ({
     dropSearch,
     searchSheets,
     searchAuthors,
-    editAuthor,
-    removeAuthor,
 }) => {
     const [showContent, setShowContent] = React.useState<boolean>(false);
 
@@ -57,8 +52,6 @@ const PageFC: React.FC<Props> = ({
                 skipSearch={dropSearch}
                 searchSheets={searchSheets}
                 searchAuthors={searchAuthors}
-                editAuthor={editAuthor}
-                removeAuthor={removeAuthor}
             />
         );
     } else {
@@ -82,12 +75,12 @@ const PageFC: React.FC<Props> = ({
 
 type OwnProps = Pick<Props, 'className' | 'loadStatus' | 'children'>;
 
-const mapStateToProps = (state: RootState, { className, loadStatus, children }: OwnProps) => ({
+const mapStateToProps = ({ sheets }: RootState, { className, loadStatus, children }: OwnProps) => ({
     className,
     loadStatus,
     children,
-    search: state.sheets.search,
-    warning: state.sheets.warning,
+    search: sheets.search,
+    warning: sheets.warning,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
@@ -96,8 +89,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
             dropSearch: sheetsAction.dropSearch,
             searchSheets: sheetsAction.searchSheetsByPage,
             searchAuthors: sheetsAction.searchAuthorsByPage,
-            editAuthor: sheetsAction.editAuthor,
-            removeAuthor: sheetsAction.removeAuthor,
         },
         dispatch,
     );

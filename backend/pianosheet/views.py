@@ -156,10 +156,13 @@ class NoteViewSet(CustomModelViewSet):
         queryset = Note.objects.select_related("author")
         author_id = self.request.GET.get("author_id")
         author_alias = self.request.GET.get("author_alias")
+        genre_alias = self.request.GET.get("genre_alias")
         if author_id:
             queryset = queryset.filter(author__id=author_id)
         elif author_alias:
             queryset = queryset.filter(author__alias=author_alias)
+        elif genre_alias:
+            queryset = queryset.filter(author__genres__alias=genre_alias)
         return self.make_ordering(queryset)
 
 

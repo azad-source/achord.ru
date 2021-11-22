@@ -3,7 +3,7 @@ import { Authorization } from 'components/shared/layout/Auth/Authorization';
 import { Page } from 'components/shared/layout/Page/Page';
 import styles from './AuthPage.scss';
 import { Registration } from 'components/shared/layout/Auth/Registration';
-import { logout, useAuth, UsersClient } from 'api/UsersClient';
+import { login, logout, useAuth, UsersClient } from 'api/UsersClient';
 import { Button } from 'components/shared/Button/Button';
 import { SiteName } from 'domain/SiteInfo';
 import { connect } from 'react-redux';
@@ -74,14 +74,12 @@ const AuthPageFC: React.FC<Props> = ({
     const responseType = 'token';
 
     const onSuccess = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-        console.log(response);
         if ('accessToken' in response) {
             const formData = new FormData();
-            // formData.append('email', response.profileObj.email);
-            // formData.append('password', response.profileObj.);
             formData.append('access_token', response.accessToken);
-            UsersClient.loginViaGoogle(formData).then(res => {
+            UsersClient.loginViaGoogle(formData).then((res) => {
                 console.log('res', res);
+                login(res);
             });
         }
     };

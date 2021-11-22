@@ -6,6 +6,14 @@ import styles from './Authorization.module.scss';
 import { Modal } from 'components/shared/Modal/Modal';
 import { QueryStatus } from 'domain/QueryStatus';
 import cn from 'classnames';
+import { GoogleLogo } from 'components/shared/icons/GoogleLogo';
+import {
+    GoogleLoginResponse,
+    GoogleLoginResponseOffline,
+    useGoogleLogin,
+} from 'react-google-login';
+import { login, UsersClient } from 'api/UsersClient';
+import { googleAuth } from 'api/apiConfig';
 
 interface Props {
     status: QueryStatus;
@@ -35,6 +43,27 @@ export const Authorization: React.FC<Props> = ({
             setOpenModalResetPassword(false);
         });
     };
+
+    const onSuccess = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+        console.log('accessToken', response);
+        if ('accessToken' in response) {
+            const formData = new FormData();
+            formData.append('access_token', response.accessToken);
+            UsersClient.loginViaGoogle(formData).then((res) => {
+                console.log('res', res);
+                login(res);
+            });
+        }
+    };
+
+    const { signIn } = useGoogleLogin({
+        onSuccess,
+        clientId: googleAuth.clientId,
+        isSignedIn: googleAuth.isSignedIn,
+        redirectUri: googleAuth.redirectUri,
+        scope: googleAuth.scope,
+        responseType: googleAuth.responseType,
+    });
 
     return (
         <div className={styles.root}>
@@ -71,15 +100,21 @@ export const Authorization: React.FC<Props> = ({
                     </Button>
                 </div>
             </form>
-            <div className={styles.forgotPassword}>
-                <Button
-                    use="link"
-                    onClick={() => setOpenModalResetPassword(true)}
-                    className={styles.forgotPassword__button}
-                >
-                    Забыли пароль?
-                </Button>
+            <div className={styles.bottomPanel}>
+                <div className={styles.forgotPassword}>
+                    <Button
+                        use="link"
+                        onClick={() => setOpenModalResetPassword(true)}
+                        className={styles.forgotPassword__button}
+                    >
+                        Забыли пароль?
+                    </Button>
+                </div>
+                <button className={styles.googleAuth__btn} onClick={signIn} title="google">
+                    <GoogleLogo />
+                </button>
             </div>
+
             {!!errorMessage && <div className={styles.errorsMsg}>{errorMessage}</div>}
             {openModalResetPassword && (
                 <Modal

@@ -47,11 +47,7 @@ export const Header = () => {
             </NavLink>
             <SearchField className={styles.search} />
             <Menu items={menuItems} logged={logged} logout={logoutHandler} />
-            <MenuMobile
-                items={menuItems}
-                logged={logged}
-                logout={logoutHandler}
-            />
+            <MenuMobile items={menuItems} logged={logged} logout={logoutHandler} />
         </header>
     );
 };

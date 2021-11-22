@@ -5,6 +5,14 @@ import { headers } from './UsersClient';
 
 const baseURL = 'https://achord.ru';
 
+export const googleAuth = {
+    clientId: '844071563925-p3pqgvpvf37tf9dvi96saahu98k7s6c1.apps.googleusercontent.com',
+    redirectUri: 'https://achord.ru/oauth/google/',
+    scope: 'https://www.googleapis.com/auth/userinfo.email',
+    responseType: 'token',
+    isSignedIn: true,
+};
+
 const api = axios.create({
     baseURL,
     paramsSerializer: buildSearchString,

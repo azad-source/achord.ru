@@ -44,6 +44,11 @@ export class UsersClient {
         return api.post(`${apiPath}/jwt/create/`, params).then(retrieveData);
     }
 
+    /** Авторизация через гугл */
+    public static loginViaGoogle(params: FormData): Promise<TokenJsModel> {
+        return api.post(`${apiPath}/jwt/create/google/`, params).then(retrieveData);
+    }
+
     /** Выход с сайта */
     public static logout(): Promise<string> {
         localStorage.removeItem('Token');

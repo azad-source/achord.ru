@@ -34,6 +34,9 @@ export class Paths {
     /** Страница авторизации в VK */
     public static readonly authVKPage = '/login/check';
 
+    /** Страница авторизации в Google */
+    public static readonly authGooglePage = '/oauth/google/:access_token';
+
     /** Страница успешного подтверждении почты */
     public static readonly successConfirmEmailPage = '/activate/:uid/:token';
 

@@ -3,22 +3,9 @@ import { Button } from 'components/shared/Button/Button';
 import { Input } from 'components/shared/Input/Input';
 import { SiteName } from 'domain/SiteInfo';
 import styles from './Authorization.module.scss';
-import { UsersClient } from 'api/UsersClient';
-import { SocialLinkJsModel } from 'domain/api/JsModels';
-import { VkLogo } from 'components/shared/icons/VkLogo';
-import { OKLogo } from 'components/shared/icons/OKLogo';
-import { FacebookLogo } from 'components/shared/icons/FacebookLogo';
 import { Modal } from 'components/shared/Modal/Modal';
 import { QueryStatus } from 'domain/QueryStatus';
 import cn from 'classnames';
-import { GoogleLogo } from 'components/shared/icons/GoogleLogo';
-
-const SocialIcons: Record<string, React.ReactNode> = {
-    google: <GoogleLogo className={styles.socialIcon} />,
-    vk: <VkLogo className={styles.socialIcon} />,
-    odnoklassniki: <OKLogo className={styles.socialIcon} />,
-    facebook: <FacebookLogo className={styles.socialIcon} />,
-};
 
 interface Props {
     status: QueryStatus;
@@ -40,14 +27,7 @@ export const Authorization: React.FC<Props> = ({
         resetPass: string;
     }>({ auth: '', resetPass: '' });
     const [password, setPassword] = React.useState<string>('');
-    const [socialAuth, setSocialAuth] = React.useState<SocialLinkJsModel>();
     const [openModalResetPassword, setOpenModalResetPassword] = React.useState<boolean>(false);
-
-    React.useEffect(() => {
-        UsersClient.getSocialLinksAuth().then((res) => {
-            setSocialAuth(res);
-        });
-    }, []);
 
     const handleResetPassword = () => {
         resetPassword(email.resetPass).then(() => {
@@ -99,15 +79,6 @@ export const Authorization: React.FC<Props> = ({
                 >
                     Забыли пароль?
                 </Button>
-            </div>
-            <div className={styles.socialItems}>
-                {socialAuth && (
-                    <div className={styles.socialItem}>
-                        <a href={socialAuth.google} title="google">
-                            {SocialIcons.google}
-                        </a>
-                    </div>
-                )}
             </div>
             {!!errorMessage && <div className={styles.errorsMsg}>{errorMessage}</div>}
             {openModalResetPassword && (

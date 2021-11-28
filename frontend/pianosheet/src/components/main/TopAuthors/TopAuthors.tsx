@@ -60,7 +60,6 @@ const TopAuthorsFC: React.FC<Props> = ({ authors, sheets, getTopAuthors, getTopS
                                 key={author.id}
                                 author={author}
                                 className={styles.topAuthors_item}
-                                index={index + 1}
                             />
                         );
                     }

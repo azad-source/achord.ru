@@ -6,7 +6,6 @@ import { Paths } from 'utils/routes/Paths';
 import defaultImg from 'images/default.png';
 import { AuthorEditModal } from 'components/sheets/AuthorEditModal/AuthorEditModal';
 import { AuthorItemJsModel, AuthorRequestModel } from 'domain/api/JsModels';
-import { MenuButtonIcon } from '../icons/MenuButtonIcon';
 import { RemoveModal } from '../RemoveModal/RemoveModal';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -29,7 +28,7 @@ const AuthorCardFC: React.FC<Props> = ({ className, author, index, editAuthor, r
     const [showEditMenu, setShowEditMenu] = React.useState<boolean>(false);
 
     const { id, preview, alias, name } = author;
-    const backgroundImage = preview ? 'url(' + preview + ')' : 'url(' + defaultImg + ')';
+    const authorImage = preview || defaultImg;
     const path = alias ? Paths.getAuthorPath(author.name.charAt(0), alias) : '';
 
     const openEditMenu = (e: React.MouseEvent) => {
@@ -84,46 +83,52 @@ const AuthorCardFC: React.FC<Props> = ({ className, author, index, editAuthor, r
     return (
         <>
             <div className={cn(styles.root, className)} onClick={goToAuthorPage}>
-                <div className={styles.top}>
-                    {index && <div className={styles.top_index}>{index}</div>}
-                    {logged && (
-                        <>
-                            <span className={styles.top_edit} onClick={openEditMenu}>
-                                <MenuButtonIcon className={styles.top_edit_icon} />
-                            </span>
-                            {showEditMenu && (
-                                <div className={styles.top_editMenu}>
-                                    <div
-                                        className={styles.top_editMenu_item}
-                                        onClick={openEditModal}
-                                    >
-                                        Изменить
-                                    </div>
-                                    <div
-                                        className={cn(
-                                            styles.top_editMenu_item,
-                                            styles.top_editMenu_item__remove,
-                                        )}
-                                        onClick={openRemoveModal}
-                                    >
-                                        Удалить
-                                    </div>
-                                    <div
-                                        className={styles.top_editMenu_item}
-                                        onClick={closeEditMenu}
-                                    >
-                                        Отмена
-                                    </div>
+                {logged && (
+                    <>
+                        <span className={styles.edit} onClick={openEditMenu}>
+                            <div className={styles.edit_icon}>
+                                {[...Array(3)].map((i) => (
+                                    <span key={i} className={styles.edit_icon_dot} />
+                                ))}
+                            </div>
+                        </span>
+                        {showEditMenu && (
+                            <div className={styles.editMenu}>
+                                <div className={styles.editMenu_item} onClick={openEditModal}>
+                                    Изменить
                                 </div>
-                            )}
-                        </>
+                                <div
+                                    className={cn(
+                                        styles.editMenu_item,
+                                        styles.editMenu_item__remove,
+                                    )}
+                                    onClick={openRemoveModal}
+                                >
+                                    Удалить
+                                </div>
+                                <div className={styles.editMenu_item} onClick={closeEditMenu}>
+                                    Отмена
+                                </div>
+                            </div>
+                        )}
+                    </>
+                )}
+
+                <div className={styles.img}>
+                    <div
+                        className={cn(styles.img_bg, !preview && styles.img_bg__default)}
+                        style={{ backgroundImage: 'url(' + authorImage + ')' }}
+                    ></div>
+                    {!!preview && (
+                        <img
+                            src={authorImage}
+                            alt={author.name}
+                            title={author.name}
+                            className={styles.img_main}
+                        />
                     )}
                 </div>
-                <div className={styles.middle} style={{ backgroundImage: backgroundImage }}></div>
-                <div
-                    className={styles.bottom}
-                    style={{ fontSize: 35 / Math.pow(name.length, 0.3) }}
-                >
+                <div className={styles.name} style={{ fontSize: 35 / Math.pow(name.length, 0.22) }}>
                     {name}
                 </div>
             </div>

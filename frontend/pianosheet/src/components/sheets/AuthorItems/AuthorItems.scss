@@ -3,7 +3,7 @@
 .authors {
   display: grid;
   grid-template-columns: repeat($authorGridColCount, 1fr);
-  grid-row-gap: 20px;
+  grid-row-gap: 30px;
   margin-bottom: 20px;
 }
 

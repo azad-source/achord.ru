@@ -10,11 +10,15 @@ export type UserJsModel = {
     token?: string;
 };
 
-export type SocialLinkJsModel = {
-    google: string;
-    facebook: string;
-    odnoklassniki: string;
-    vk: string;
+export type SocialLinksJsModel = {
+    google: SocialAuthParams;
+};
+
+export type SocialAuthParams = {
+    clientId: string;
+    redirectUri: string;
+    responseType: string;
+    scope: string;
 };
 
 export type PagedJsModel<T> = {

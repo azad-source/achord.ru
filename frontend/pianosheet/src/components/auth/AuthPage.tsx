@@ -3,7 +3,7 @@ import { Authorization } from 'components/shared/layout/Auth/Authorization';
 import { Page } from 'components/shared/layout/Page/Page';
 import styles from './AuthPage.scss';
 import { Registration } from 'components/shared/layout/Auth/Registration';
-import { logout, useAuth } from 'api/UsersClient';
+import { logout, useAuth, UsersClient } from 'api/UsersClient';
 import { Button } from 'components/shared/Button/Button';
 import { SiteName } from 'domain/SiteInfo';
 import { connect } from 'react-redux';
@@ -11,6 +11,7 @@ import { RootState } from 'store/rootReducer';
 import { bindActionCreators, Dispatch } from 'redux';
 import { usersAction } from 'store/usersActions';
 import { QueryStatus } from 'domain/QueryStatus';
+import { SocialAuthParams } from 'domain/api/JsModels';
 
 interface Props {
     status: QueryStatus;
@@ -34,6 +35,17 @@ const AuthPageFC: React.FC<Props> = ({
         email?: string;
     }>({ isSuccessRegistration: false });
 
+    React.useEffect(() => {
+        document.title = `${SiteName} - ${isRegForm ? 'Регистрация' : 'Авторизация'}`;
+        dropError();
+    }, [isRegForm]);
+
+    const [googleAuth, setGoogleAuth] = React.useState<SocialAuthParams>();
+
+    React.useEffect(() => {
+        UsersClient.getSocialLinksAuth().then((res) => setGoogleAuth(res.google));
+    }, []);
+
     const loginHandler = (email: string, password: string, event: React.FormEvent) => {
         event.preventDefault();
         authorization(email, password);
@@ -53,10 +65,6 @@ const AuthPageFC: React.FC<Props> = ({
         window.location.href = '/sign-in';
     };
 
-    React.useEffect(() => {
-        document.title = `${SiteName} - ${isRegForm ? 'Регистрация' : 'Авторизация'}`;
-        dropError();
-    }, [isRegForm]);
 
     const handleRegConfirm = (isSuccessRegistration: boolean, email: string) => {
         setRegEvent({ isSuccessRegistration, email });
@@ -95,6 +103,7 @@ const AuthPageFC: React.FC<Props> = ({
                         errorMessage={status?.errorMessage}
                         resetPassword={resetPassword}
                         status={status}
+                        googleAuth={googleAuth}
                     />
                 )}
             </div>

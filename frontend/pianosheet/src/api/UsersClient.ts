@@ -1,4 +1,4 @@
-import { SocialLinkJsModel, TokenJsModel } from 'domain/api/JsModels';
+import { SocialLinksJsModel, TokenJsModel } from 'domain/api/JsModels';
 import { api, retrieveData } from './apiConfig';
 import { createAuthProvider } from 'react-token-auth';
 import { AxiosResponse } from 'axios';
@@ -61,7 +61,7 @@ export class UsersClient {
     }
 
     /** Получение ссылок авторизации в соц сетях */
-    public static getSocialLinksAuth(): Promise<SocialLinkJsModel> {
+    public static getSocialLinksAuth(): Promise<SocialLinksJsModel> {
         return api.get(`${apiPath}/social/links/`).then(retrieveData);
     }
 

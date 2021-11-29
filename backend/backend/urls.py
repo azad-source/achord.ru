@@ -24,7 +24,7 @@ urlpatterns = [
     path('google0ca94841f746284e.html', TemplateView.as_view(template_name="google0ca94841f746284e.html")), # для верификации google oauth2
     path('api/pianosheet/', include('pianosheet.urls')),
     path('', include('seo.urls')),
-    path('', include('auth_app.urls')),
+    path('auth/', include('auth_app.urls')),
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),

@@ -15,16 +15,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 
 
-def create_jwt_token(user, raw_data="", raw_data2=""):
-    refresh = RefreshToken.for_user(user)
-    return JsonResponse({
-        'refresh': str(refresh),
-        'access': str(refresh.access_token),
-        'raw_data': raw_data,
-        'raw_data2': raw_data2,
-    })
-
-
 class SocialLinks(View):
     def get(self, request):
         links = {'google': Oauth2Google().link}
@@ -36,12 +26,22 @@ class LoginGoogle(View):
         Авторизация через одноклассники (Обработка redirect_uri)
     '''
     raw_data = {}
-    raw_data2 = {}
+    user_kwargs = {}
     email = None
     ID = settings.SOCIAL_AUTH_GOOGLE_OAUTH2_ID
     SECRET = settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
+    
+    def create_jwt_token(self, user):
+        refresh = RefreshToken.for_user(user)
+        return JsonResponse({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+            'raw_data': self.raw_data,
+        })
 
     def post(self, request):
+        self.user_kwargs = {}
+        self.raw_data = {}
         access_token = self.request.POST.get('access_token')
         if access_token:
             self.get_credentials(access_token)
@@ -50,36 +50,32 @@ class LoginGoogle(View):
 
     def create_user(self):
         if self.email:
-            user = User.objects.get_or_create(email=self.email)[0]
-            user = self.update_user(user)
-            return create_jwt_token(user, self.raw_data, self.raw_data2)
+            user = User.objects.update_or_create(
+                email=self.email,
+                defaults=self.user_kwargs)[0]
+            return self.create_jwt_token(user)
         else:
             response = JsonResponse({
                 'detail': f'Не удалось получить данные для авторизации',
                 'raw_data': self.raw_data,
-                'raw_data2': self.raw_data2,
             })
             response.status_code = 401
             return response
 
-    def update_user(self, user):
-        return user
-
     def get_credentials(self, access_token):
-        path = f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={access_token}"
-        credentials = requests.get(path).json()
-        self.parse_user_data(credentials)
         path = f"https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token={access_token}"
         credentials = requests.get(path).json()
-        self.parse_user_data2(credentials)
+        self.raw_data = credentials
+        self.parse_user_data()
         
     def parse_user_data(self, data):
-        self.raw_data = data
         self.email = data.get("email")
+        self.user_kwargs = {
+            'first_name': self.raw_data.get("given_name"),
+            'last_name': self.raw_data.get("family_name"),
+            'avatar': self.raw_data.get("picture"),
+        }
 
-    def parse_user_data2(self, data):
-        self.raw_data2 = data
-        
 
 class UserViewset(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.UserSerializer

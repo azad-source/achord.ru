@@ -68,8 +68,8 @@ class LoginGoogle(View):
         self.raw_data = credentials
         self.parse_user_data()
         
-    def parse_user_data(self, data):
-        self.email = data.get("email")
+    def parse_user_data(self):
+        self.email = self.raw_data.get("email")
         self.user_kwargs = {
             'first_name': self.raw_data.get("given_name"),
             'last_name': self.raw_data.get("family_name"),

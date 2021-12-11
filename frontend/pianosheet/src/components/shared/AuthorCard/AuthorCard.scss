@@ -152,13 +152,12 @@
   text-align: center;
   background-color: $defaultBg;
   color: #fff;
-  padding: 0 5px;
+  padding: 0 5px 2px;
   display: flex;
   justify-content: center;
   align-items: center;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   line-height: 1.2;
-  font-family: 'Gabriola', sans-serif;
 }
 
 @media screen and (max-width: $siteWidthTab) {

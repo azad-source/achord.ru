@@ -128,7 +128,7 @@ const AuthorCardFC: React.FC<Props> = ({ className, author, index, editAuthor, r
                         />
                     )}
                 </div>
-                <div className={styles.name} style={{ fontSize: 35 / Math.pow(name.length, 0.22) }}>
+                <div className={styles.name} style={{ fontSize: 35 / Math.pow(name.length, 0.32) }}>
                     {name}
                 </div>
             </div>

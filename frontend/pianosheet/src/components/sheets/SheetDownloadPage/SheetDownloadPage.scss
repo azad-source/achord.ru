@@ -1,3 +1,5 @@
+@import 'styles/default.scss';
+
 .root {
   display: flex;
   flex-direction: column;
@@ -26,10 +28,32 @@
 
 .downloadInfo {
   font-size: 18px;
-  padding: 20px 0;
+  padding: 20px;
+  text-align: center;
+  line-height: 1.5;
 }
 
 .downloadButton {
   font-size: 28px;
   padding: 16px 28px 20px;
+}
+
+@media screen and (max-width: $siteWidthMobile) {
+  .fileName, .notFound {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .downloadButton {
+    font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .fileName, .notFound {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .downloadButton {
+    font-size: 16px;
+  }
 }

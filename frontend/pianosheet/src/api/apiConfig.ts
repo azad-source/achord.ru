@@ -78,7 +78,7 @@ function ieCachePreventInterceptor(config: AxiosRequestConfig): AxiosRequestConf
     }
 
     if (process.env.NODE_ENV === 'development') {
-        console.info('✉️ ', config);
+        // console.info('✉️ ', config);
     }
 
     return config;

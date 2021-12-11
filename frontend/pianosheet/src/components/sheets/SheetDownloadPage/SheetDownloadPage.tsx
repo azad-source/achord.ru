@@ -23,7 +23,12 @@ export const SheetDownloadPage: React.FC<Props> = ({ className }) => {
 
     const [author, setAuthor] = React.useState<AuthorItemJsModel>(defaultAuthorItem);
 
-    const [disabled, setDisabled] = React.useState<boolean>(false);
+    const [downloadState, setDownloadState] = React.useState<{ counter: number; started: boolean }>(
+        {
+            counter: 15,
+            started: false,
+        },
+    );
 
     React.useEffect(() => {
         SheetsClient.getSheetById(sheetId).then((res) => {
@@ -34,16 +39,11 @@ export const SheetDownloadPage: React.FC<Props> = ({ className }) => {
     }, []);
 
     const download = () => {
-        setDisabled(true);
-        const timeout = setTimeout(() => {
-            const file = sheet.filename;
-            let link = document.createElement('a');
-            link.setAttribute('href', file);
-            link.setAttribute('download', file);
-            link.click();
-            setDisabled(false);
-            clearInterval(timeout);
-        }, 1000);
+        const file = sheet.filename;
+        let link = document.createElement('a');
+        link.setAttribute('href', file);
+        link.setAttribute('download', file);
+        link.click();
     };
 
     const breadcrumbs: { caption: string; link?: string }[] = [
@@ -61,20 +61,34 @@ export const SheetDownloadPage: React.FC<Props> = ({ className }) => {
         },
     ];
 
+    const startCounter = () => {
+        setDownloadState((prev) => ({ ...prev, started: true }));
+        const timeout = setInterval(() => {
+            setDownloadState((prev) => ({ started: true, counter: prev.counter - 1 }));
+            if (downloadState.counter < 0) clearInterval(timeout);
+        }, 1000);
+    };
+
     return (
         <Page>
             <Breadcrumbs items={breadcrumbs} />
-            <div className={cn(styles.oot, className)}>
+            <div className={cn(styles.root, className)}>
                 <div className={styles.fileName}>{sheet.name}</div>
                 {sheet.filename ? (
                     <div className={styles.download}>
-                        <Button
-                            disabled={disabled}
-                            onClick={download}
-                            className={styles.downloadButton}
-                        >
-                            Download
-                        </Button>
+                        {downloadState.counter < 1 ? (
+                            <Button onClick={download} className={styles.downloadButton} use="link">
+                                Ссылка на скачивание
+                            </Button>
+                        ) : downloadState.started ? (
+                            <div className={styles.downloadInfo}>
+                                Через {downloadState.counter} секунд появится ссылка на скачивание
+                            </div>
+                        ) : (
+                            <Button onClick={startCounter} className={styles.downloadButton}>
+                                Скачать
+                            </Button>
+                        )}
                     </div>
                 ) : (
                     <div className={styles.notFound}>...</div>

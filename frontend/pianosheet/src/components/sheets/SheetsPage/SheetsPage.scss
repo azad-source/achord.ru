@@ -18,8 +18,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #333;
-    font-size: 28px;
+    color: #444;
+    font-size: 22px;
+    letter-spacing: 2px;
     font-weight: bold;
     font-family: 'Comic Sans MS', 'Comic Sans', cursive;
     text-transform: uppercase;
@@ -27,7 +28,7 @@
     cursor: pointer;
     user-select: none;
     text-decoration: none;
-    background: linear-gradient(0deg, #84a1ff 0%, #b3b3ff 15%, #c6e6ff 75%, #4553ff 100%);
+    border: 1px solid #c3c3c3;
   }
 }
 

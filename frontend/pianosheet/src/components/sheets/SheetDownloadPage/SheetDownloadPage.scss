@@ -10,12 +10,14 @@
   height: 250px;
 }
 
-.fileName, .notFound {
+.fileName,
+.notFound {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   font-size: 24px;
+  font-weight: bold;
 }
 
 .download {
@@ -39,20 +41,16 @@
 }
 
 @media screen and (max-width: $siteWidthMobile) {
-  .fileName, .notFound {
-    font-size: 20px;
-    font-weight: bold;
-  }
+  .fileName,
+  .notFound,
   .downloadButton {
     font-size: 20px;
   }
 }
 
 @media screen and (max-width: 320px) {
-  .fileName, .notFound {
-    font-size: 16px;
-    font-weight: bold;
-  }
+  .fileName,
+  .notFound,
   .downloadButton {
     font-size: 16px;
   }

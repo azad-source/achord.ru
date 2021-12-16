@@ -8,14 +8,22 @@ import { SiteName } from 'domain/SiteInfo';
 import { Menu } from 'components/shared/layout/Menu/Menu';
 import { MenuMobile } from '../Menu/MenuMobile';
 import { Paths } from 'utils/routes/Paths';
+import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+import { usersAction } from 'store/usersActions';
 
-export const Header = () => {
+interface Props {
+    getUser: () => void;
+}
+
+const HeaderFC: React.FC<Props> = ({ getUser }) => {
     const [logged] = useAuth();
 
     const location = useLocation();
 
     React.useEffect(() => {
         document.title = SiteName;
+        getUser();
     }, [location]);
 
     const menuItems: { caption: string; link: string }[] = [
@@ -27,10 +35,10 @@ export const Header = () => {
             caption: 'Ноты',
             link: Paths.sheetsPage,
         },
-        {
-            caption: 'Piano',
-            link: Paths.virtPianoPage,
-        },
+        // {
+        //     caption: 'Piano',
+        //     link: Paths.virtPianoPage,
+        // },
     ];
 
     const logoutHandler = () => {
@@ -51,3 +59,14 @@ export const Header = () => {
         </header>
     );
 };
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+    return bindActionCreators(
+        {
+            getUser: usersAction.getCurrentUser,
+        },
+        dispatch,
+    );
+};
+
+export const Header = connect(null, mapDispatchToProps)(HeaderFC);

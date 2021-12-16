@@ -1,4 +1,4 @@
-import { SocialLinksJsModel, TokenJsModel } from 'domain/api/JsModels';
+import { SocialLinksJsModel, TokenJsModel, UserJsModel } from 'domain/api/JsModels';
 import { api, retrieveData } from './apiConfig';
 import { createAuthProvider } from 'react-token-auth';
 import { AxiosResponse } from 'axios';
@@ -6,9 +6,7 @@ import { AxiosResponse } from 'axios';
 const apiPath = `/auth`;
 
 export const headers = () => {
-    const token: { access: string; refresh: string } = localStorage.getItem(
-        'REACT_TOKEN_AUTH_KEY',
-    )
+    const token: { access: string; refresh: string } = localStorage.getItem('REACT_TOKEN_AUTH_KEY')
         ? JSON.parse(localStorage.getItem('REACT_TOKEN_AUTH_KEY') || '') || null
         : '';
 
@@ -56,7 +54,7 @@ export class UsersClient {
     }
 
     /** Получение данных пользователя */
-    public static getUserData(): Promise<string> {
+    public static getUserData(): Promise<UserJsModel> {
         return api.get(`${apiPath}/users/me/`).then(retrieveData);
     }
 

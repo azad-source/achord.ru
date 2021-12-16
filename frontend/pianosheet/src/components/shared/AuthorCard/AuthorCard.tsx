@@ -10,18 +10,23 @@ import { RemoveModal } from '../RemoveModal/RemoveModal';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { sheetsAction } from 'store/sheetsActions';
-import { useAuth } from 'api/UsersClient';
+import { RootState } from 'store/rootReducer';
 
 interface Props {
     className?: string;
     author: AuthorItemJsModel;
-    index?: number;
+    isSuperUser?: boolean;
     editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
     removeAuthor: (authorId: number) => void;
 }
 
-const AuthorCardFC: React.FC<Props> = ({ className, author, index, editAuthor, removeAuthor }) => {
-    const [logged] = useAuth();
+const AuthorCardFC: React.FC<Props> = ({
+    className,
+    author,
+    isSuperUser = false,
+    editAuthor,
+    removeAuthor,
+}) => {
     const history = useHistory();
     const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
     const [showRemoveModal, setShowRemoveModal] = React.useState<boolean>(false);
@@ -83,13 +88,13 @@ const AuthorCardFC: React.FC<Props> = ({ className, author, index, editAuthor, r
     return (
         <>
             <div className={cn(styles.root, className)} onClick={goToAuthorPage}>
-                {logged && (
+                {isSuperUser && (
                     <>
                         <span className={styles.edit} onClick={openEditMenu}>
                             <div className={styles.edit_icon}>
-                                {[...Array(3)].map((i) => (
-                                    <span key={i} className={styles.edit_icon_dot} />
-                                ))}
+                                <span className={styles.edit_icon_dot} />
+                                <span className={styles.edit_icon_dot} />
+                                <span className={styles.edit_icon_dot} />
                             </div>
                         </span>
                         {showEditMenu && (
@@ -152,6 +157,11 @@ const AuthorCardFC: React.FC<Props> = ({ className, author, index, editAuthor, r
     );
 };
 
+const mapStateToProps = (state: RootState) => {
+    return {
+        isSuperUser: state.users.currentUser.is_superuser,
+    };
+};
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return bindActionCreators(
         {
@@ -162,7 +172,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     );
 };
 
-export const AuthorCard = connect(null, mapDispatchToProps)(AuthorCardFC);
+export const AuthorCard = connect(mapStateToProps, mapDispatchToProps)(AuthorCardFC);
 
 interface AddProps {
     onClick: () => void;

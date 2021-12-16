@@ -70,7 +70,7 @@ function spaApiInterceptor(resp: AxiosResponse): Promise<AxiosResponse> {
 }
 
 function ieCachePreventInterceptor(config: AxiosRequestConfig): AxiosRequestConfig {
-    if (config.method !== 'get') {
+    if (config.method !== 'get' || config.url === '/auth/users/me/') {
         config.headers = {
             'Content-Type': 'multipart/form-data',
             ...headers(),

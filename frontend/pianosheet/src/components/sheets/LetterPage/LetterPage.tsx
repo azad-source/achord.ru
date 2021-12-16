@@ -16,11 +16,18 @@ import { Paths } from 'utils/routes/Paths';
 interface Props {
     authors: AuthorJsModel;
     status: QueryStatus;
+    isSuperUser?: boolean;
     getAuthors: (letter?: string, page?: number) => void;
     addAuthor: (author: FormData) => Promise<AuthorItemJsModel | false>;
 }
 
-const LetterPageFC: React.FC<Props> = ({ authors, status, getAuthors, addAuthor }) => {
+const LetterPageFC: React.FC<Props> = ({
+    authors,
+    status,
+    isSuperUser = false,
+    getAuthors,
+    addAuthor,
+}) => {
     const { letter } = useParams<{ letter: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const location = useLocation();
@@ -60,6 +67,7 @@ const LetterPageFC: React.FC<Props> = ({ authors, status, getAuthors, addAuthor 
                     addAuthor={addAuthor}
                     getAuthorsByPage={getAuthorsByPage}
                     pageNumber={pageNumber}
+                    canAddAuthor={isSuperUser}
                 />
             </div>
         </Page>
@@ -69,6 +77,7 @@ const LetterPageFC: React.FC<Props> = ({ authors, status, getAuthors, addAuthor 
 const mapStateToProps = (state: RootState) => ({
     authors: state.sheets.authors,
     status: state.sheets.status,
+    isSuperUser: state.users.currentUser.is_superuser,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {

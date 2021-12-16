@@ -17,6 +17,7 @@ interface Props {
     genre: GenreItemJsModel;
     authors: AuthorJsModel;
     status: QueryStatus;
+    isSuperUser?: boolean;
     getGenreByAlias: (genreAlias: string) => void;
     getAuthorsByGenreAlias: (genreAlias: string, page?: number) => void;
     addAuthor: (author: FormData) => Promise<AuthorItemJsModel | false>;
@@ -26,6 +27,7 @@ const GenrePageFC: React.FC<Props> = ({
     genre,
     authors,
     status,
+    isSuperUser = false,
     getGenreByAlias,
     getAuthorsByGenreAlias,
     addAuthor,
@@ -73,6 +75,7 @@ const GenrePageFC: React.FC<Props> = ({
                     addAuthor={addAuthor}
                     getAuthorsByPage={getAuthorsByPage}
                     pageNumber={pageNumber}
+                    canAddAuthor={isSuperUser}
                 />
             </div>
         </Page>
@@ -83,6 +86,7 @@ const mapStateToProps = (state: RootState) => ({
     genre: state.sheets.genre,
     authors: state.sheets.authors,
     status: state.sheets.status,
+    isSuperUser: state.users.currentUser.is_superuser,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {

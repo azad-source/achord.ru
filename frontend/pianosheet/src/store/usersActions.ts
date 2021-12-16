@@ -23,10 +23,7 @@ function registrationFailed(
     return { type: REGISTRATION_FAILED, payload: { reason, message, error } };
 }
 
-function registration(
-    email: string,
-    password: string,
-): GeneralThunkAction<Promise<void>> {
+function registration(email: string, password: string): GeneralThunkAction<Promise<void>> {
     return (dispatch) => {
         dispatch(registrationStarted());
         localStorage.removeItem('Token');
@@ -36,7 +33,6 @@ function registration(
         formData.append('password', password);
         return UsersClient.register(formData)
             .then((res) => {
-                dispatch(registrationComplete({}));
                 login(res);
             })
             .catch((res) => {
@@ -52,9 +48,7 @@ const AUTHORIZATION_FAILED = 'USERS/AUTHORIZATION_FAILED';
 function authorizationStarted(): Action {
     return { type: AUTHORIZATION_STARTED };
 }
-function authorizationComplete(
-    user: UserJsModel,
-): PayloadedAction<UserJsModel> {
+function authorizationComplete(user: UserJsModel): PayloadedAction<UserJsModel> {
     return { type: AUTHORIZATION_COMPLETE, payload: user };
 }
 function authorizationFailed(
@@ -65,10 +59,7 @@ function authorizationFailed(
     return { type: AUTHORIZATION_FAILED, payload: { reason, message, error } };
 }
 
-function authorization(
-    email: string,
-    password: string,
-): GeneralThunkAction<Promise<void>> {
+function authorization(email: string, password: string): GeneralThunkAction<Promise<void>> {
     return (dispatch) => {
         dispatch(authorizationStarted());
         localStorage.removeItem('Token');
@@ -78,7 +69,6 @@ function authorization(
         formData.append('password', password);
         return UsersClient.login(formData)
             .then((res) => {
-                dispatch(authorizationComplete({}));
                 login(res);
             })
             .catch((res) => {
@@ -111,18 +101,18 @@ export type ConfirmationType = {
 };
 
 function confirmEmail(
-    uid: string,
+    userId: string,
     token: string,
 ): GeneralThunkAction<Promise<ConfirmationType>> {
     return (dispatch) => {
         dispatch(confirmEmailStarted());
         let formData = new FormData();
-        formData.append('uid', uid);
+        formData.append('uid', userId);
         formData.append('token', token);
         return UsersClient.accountActivation(formData)
             .then((result) => {
                 if (result.status === 204) {
-                    dispatch(confirmEmailComplete({ uid, token }));
+                    dispatch(confirmEmailComplete({ id: userId, token }));
                     return { isConfirmed: true };
                 }
                 dispatch(confirmEmailFailed('', '', new Error()));
@@ -137,9 +127,7 @@ function confirmEmail(
                     if (result.data && Object.keys(result.data).length > 0) {
                         message = arrToString(Object.values(result.data));
                     }
-                    dispatch(
-                        confirmEmailFailed(result.statusText, message, error),
-                    );
+                    dispatch(confirmEmailFailed(result.statusText, message, error));
                     return { isConfirmed: false, message };
                 }
 
@@ -240,15 +228,40 @@ function changePassword(
                         message = Object.values(result.data);
                     }
 
-                    dispatch(
-                        changePasswordFailed(
-                            result.statusText,
-                            arrToString(message),
-                            error,
-                        ),
-                    );
+                    dispatch(changePasswordFailed(result.statusText, arrToString(message), error));
                 }
                 return { isChangedPassword: false, message };
+            });
+    };
+}
+
+const GET_CURRENT_USER_STARTED = 'USERS/GET_CURRENT_USER_STARTED';
+const GET_CURRENT_USER_COMPLETE = 'USERS/GET_CURRENT_USER_COMPLETE';
+const GET_CURRENT_USER_FAILED = 'USERS/GET_CURRENT_USER_FAILED';
+function getCurrentUserStarted(): Action {
+    return { type: GET_CURRENT_USER_STARTED };
+}
+function getCurrentUserComplete(user: UserJsModel): PayloadedAction<UserJsModel> {
+    return { type: GET_CURRENT_USER_COMPLETE, payload: user };
+}
+function getCurrentUserFailed(
+    reason: string,
+    message: string,
+    error: Error,
+): PayloadedAction<{ reason: string; message: string; error: Error }> {
+    return { type: GET_CURRENT_USER_FAILED, payload: { reason, message, error } };
+}
+
+function getCurrentUser(): GeneralThunkAction<void> {
+    return (dispatch) => {
+        dispatch(getCurrentUserStarted());
+
+        UsersClient.getUserData()
+            .then((user) => {
+                dispatch(getCurrentUserComplete(user));
+            })
+            .catch((error) => {
+                dispatch(getCurrentUserFailed('', '', error));
             });
     };
 }
@@ -260,6 +273,7 @@ export const usersAction = {
     dropError,
     resetPassword,
     changePassword,
+    getCurrentUser,
 };
 
 export const usersActionTypes = {
@@ -295,4 +309,9 @@ export const usersActionTypes = {
     changePasswordStarted,
     changePasswordComplete,
     changePasswordFailed,
+    GET_CURRENT_USER_STARTED,
+    GET_CURRENT_USER_COMPLETE,
+    GET_CURRENT_USER_FAILED,
+    getCurrentUserComplete,
+    getCurrentUserFailed,
 };

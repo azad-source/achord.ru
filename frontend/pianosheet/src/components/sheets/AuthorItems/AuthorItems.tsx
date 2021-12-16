@@ -4,13 +4,13 @@ import { AuthorCard, AuthorCardAdd } from 'components/shared/AuthorCard/AuthorCa
 import { AuthorAddModal } from 'components/sheets/AuthorAddModal/AuthorAddModal';
 import styles from './AuthorItems.scss';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
-import { useAuth } from 'api/UsersClient';
 import { Paths } from 'utils/routes/Paths';
 import { useHistory } from 'react-router';
 
 interface Props {
     authors: AuthorJsModel;
     pageNumber: number;
+    canAddAuthor: boolean;
     addAuthor: (author: FormData) => Promise<AuthorItemJsModel | false>;
     getAuthorsByPage: (page: number) => void;
 }
@@ -18,10 +18,10 @@ interface Props {
 export const AuthorItems: React.FC<Props> = ({
     authors,
     pageNumber,
+    canAddAuthor,
     addAuthor,
     getAuthorsByPage,
 }) => {
-    const [logged] = useAuth();
     const [showModal, setShowModal] = React.useState<boolean>(false);
     const history = useHistory();
 
@@ -45,10 +45,10 @@ export const AuthorItems: React.FC<Props> = ({
     return (
         <>
             <div className={styles.authors}>
-                {authors.results.map((author) => (
-                    <AuthorCard key={author.id} author={author} className={styles.authors_item} />
+                {canAddAuthor && <AuthorCardAdd onClick={openModal} />}
+                {authors.results.map((author, index) => (
+                    <AuthorCard key={index} author={author} className={styles.authors_item} />
                 ))}
-                {logged && <AuthorCardAdd onClick={openModal} />}
             </div>
             {authors.page_count > 1 && (
                 <Pagination

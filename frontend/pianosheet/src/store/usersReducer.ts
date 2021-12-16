@@ -5,7 +5,7 @@ import { usersActionTypes } from './usersActions';
 import produce from 'immer';
 
 const usersDefaultState: UsersState = {
-    currentUser: {},
+    currentUser: { id: null },
     status: QueryStatus.initial(),
 };
 
@@ -39,12 +39,14 @@ const {
     CHANGE_PASSWORD_COMPLETE,
     CHANGE_PASSWORD_FAILED,
     changePasswordFailed,
+    GET_CURRENT_USER_STARTED,
+    GET_CURRENT_USER_COMPLETE,
+    GET_CURRENT_USER_FAILED,
+    getCurrentUserComplete,
+    getCurrentUserFailed,
 } = usersActionTypes;
 
-export function usersReducer(
-    state: UsersState = usersDefaultState,
-    action: Action,
-): UsersState {
+export function usersReducer(state: UsersState = usersDefaultState, action: Action): UsersState {
     switch (action.type) {
         case REGISTRATION_STARTED: {
             return produce(state, (draft) => {
@@ -148,6 +150,26 @@ export function usersReducer(
             const {
                 payload: { reason, message, error },
             } = action as ReturnType<typeof changePasswordFailed>;
+            return produce(state, (draft) => {
+                draft.status = QueryStatus.error(reason, message, error);
+            });
+        }
+
+        case GET_CURRENT_USER_STARTED: {
+            return produce(state, (draft) => {
+                draft.currentUser = { id: null };
+            });
+        }
+        case GET_CURRENT_USER_COMPLETE: {
+            const { payload: user } = action as ReturnType<typeof getCurrentUserComplete>;
+            return produce(state, (draft) => {
+                draft.currentUser = user;
+            });
+        }
+        case GET_CURRENT_USER_FAILED: {
+            const {
+                payload: { reason, message, error },
+            } = action as ReturnType<typeof getCurrentUserFailed>;
             return produce(state, (draft) => {
                 draft.status = QueryStatus.error(reason, message, error);
             });

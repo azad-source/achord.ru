@@ -1,17 +1,19 @@
 import * as React from 'react';
 import { Page } from 'components/shared/layout/Page/Page';
-import { useLocation, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import styles from './LetterPage.scss';
 import { connect } from 'react-redux';
 import { RootState } from 'store/rootReducer';
 import { bindActionCreators, Dispatch } from 'redux';
 import { sheetsAction } from 'store/sheetsActions';
-import { AuthorItemJsModel, AuthorJsModel } from 'domain/api/JsModels';
+import { AuthorItemJsModel, AuthorJsModel, AuthorRequestModel } from 'domain/api/JsModels';
 import { AuthorItems } from '../AuthorItems/AuthorItems';
 import { QueryStatus } from 'domain/QueryStatus';
 import { SiteName } from 'domain/SiteInfo';
-import { Breadcrumbs } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
+import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { Paths } from 'utils/routes/Paths';
+import { AuthorCardAdd } from 'components/shared/AuthorCard/AuthorCard';
+import { AuthorAddModal } from '../AuthorAddModal/AuthorAddModal';
 
 interface Props {
     authors: AuthorJsModel;
@@ -31,6 +33,8 @@ const LetterPageFC: React.FC<Props> = ({
     const { letter } = useParams<{ letter: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const location = useLocation();
+    const [showModal, setShowModal] = React.useState<boolean>(false);
+    const history = useHistory();
 
     React.useEffect(() => {
         document.title = `${SiteName} - ${letter.toUpperCase()}`;
@@ -47,7 +51,7 @@ const LetterPageFC: React.FC<Props> = ({
         window.scroll({ top: 0, behavior: 'smooth' });
     };
 
-    const breadcrumbs: { caption: string; link?: string }[] = [
+    const breadcrumbs: BreadcrumbProps[] = [
         {
             caption: 'Ноты',
             link: Paths.sheetsPage,
@@ -57,19 +61,37 @@ const LetterPageFC: React.FC<Props> = ({
         },
     ];
 
+    const closeModal = () => setShowModal(false);
+    const openModal = () => setShowModal(true);
+
+    const addAuthorHandler = (options: AuthorRequestModel) => {
+        let formData = new FormData();
+        formData.append('preview', options.preview);
+        formData.append('name', options.name);
+        formData.append('info', options.info);
+        formData.append('genres', JSON.stringify(options.genres.map(({ id }) => id)));
+        addAuthor(formData).then((res) => {
+            if (res) {
+                history.push(Paths.getAuthorPath(res.name.charAt(0), res.alias));
+            }
+        });
+        closeModal();
+    };
+
     return (
-        <Page loadStatus={status}>
-            <Breadcrumbs items={breadcrumbs} />
+        <Page loadStatus={status} breadcrumbs={breadcrumbs}>
             <div className={styles.root}>
-                <div className={styles.title}>{letter.toUpperCase()}</div>
+                <div>
+                    <div className={styles.title}>{letter.toUpperCase()}</div>
+                    {isSuperUser && <AuthorCardAdd onClick={openModal} />}
+                </div>
                 <AuthorItems
                     authors={authors}
-                    addAuthor={addAuthor}
                     getAuthorsByPage={getAuthorsByPage}
                     pageNumber={pageNumber}
-                    canAddAuthor={isSuperUser}
                 />
             </div>
+            {showModal && <AuthorAddModal closeModal={closeModal} addAuthor={addAuthorHandler} />}
         </Page>
     );
 };

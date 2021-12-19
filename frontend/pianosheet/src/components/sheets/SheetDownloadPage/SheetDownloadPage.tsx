@@ -8,7 +8,7 @@ import { SheetsClient } from 'api/SheetsClient';
 import { AuthorItemJsModel, SheetItemJsModel } from 'domain/api/JsModels';
 import { defaultAuthorItem, defaultSheetItem } from 'store/sheetsReducer';
 import { SiteName } from 'domain/SiteInfo';
-import { Breadcrumbs } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
+import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { Paths } from 'utils/routes/Paths';
 
 interface Props {
@@ -46,7 +46,7 @@ export const SheetDownloadPage: React.FC<Props> = ({ className }) => {
         link.click();
     };
 
-    const breadcrumbs: { caption: string; link?: string }[] = [
+    const breadcrumbs: BreadcrumbProps[] = [
         {
             caption: 'Ноты',
             link: Paths.sheetsPage,
@@ -70,8 +70,7 @@ export const SheetDownloadPage: React.FC<Props> = ({ className }) => {
     };
 
     return (
-        <Page>
-            <Breadcrumbs items={breadcrumbs} />
+        <Page breadcrumbs={breadcrumbs}>
             <div className={cn(styles.root, className)}>
                 <div className={styles.fileName}>{sheet.name}</div>
                 {sheet.filename ? (

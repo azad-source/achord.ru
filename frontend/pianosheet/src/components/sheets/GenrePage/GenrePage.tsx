@@ -5,32 +5,28 @@ import styles from './GenrePage.scss';
 import { connect } from 'react-redux';
 import { RootState } from 'store/rootReducer';
 import { bindActionCreators, Dispatch } from 'redux';
-import { sheetsAction, sheetsActionTypes } from 'store/sheetsActions';
-import { AuthorItemJsModel, AuthorJsModel, GenreItemJsModel } from 'domain/api/JsModels';
+import { sheetsAction } from 'store/sheetsActions';
+import { AuthorJsModel, GenreItemJsModel } from 'domain/api/JsModels';
 import { AuthorItems } from '../AuthorItems/AuthorItems';
 import { QueryStatus } from 'domain/QueryStatus';
 import { SiteName } from 'domain/SiteInfo';
-import { Breadcrumbs } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
+import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { Paths } from 'utils/routes/Paths';
 
 interface Props {
     genre: GenreItemJsModel;
     authors: AuthorJsModel;
     status: QueryStatus;
-    isSuperUser?: boolean;
     getGenreByAlias: (genreAlias: string) => void;
     getAuthorsByGenreAlias: (genreAlias: string, page?: number) => void;
-    addAuthor: (author: FormData) => Promise<AuthorItemJsModel | false>;
 }
 
 const GenrePageFC: React.FC<Props> = ({
     genre,
     authors,
     status,
-    isSuperUser = false,
     getGenreByAlias,
     getAuthorsByGenreAlias,
-    addAuthor,
 }) => {
     const { genreAlias } = useParams<{ genreAlias: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
@@ -55,7 +51,7 @@ const GenrePageFC: React.FC<Props> = ({
         window.scroll({ top: 0, behavior: 'smooth' });
     };
 
-    const breadcrumbs: { caption: string; link?: string }[] = [
+    const breadcrumbs: BreadcrumbProps[] = [
         {
             caption: 'Ноты',
             link: Paths.sheetsPage,
@@ -66,16 +62,13 @@ const GenrePageFC: React.FC<Props> = ({
     ];
 
     return (
-        <Page loadStatus={status}>
-            <Breadcrumbs items={breadcrumbs} />
+        <Page loadStatus={status} breadcrumbs={breadcrumbs}>
             <div className={styles.root}>
                 <div className={styles.title}>{genre.name.toUpperCase()}</div>
                 <AuthorItems
                     authors={authors}
-                    addAuthor={addAuthor}
                     getAuthorsByPage={getAuthorsByPage}
                     pageNumber={pageNumber}
-                    canAddAuthor={isSuperUser}
                 />
             </div>
         </Page>
@@ -86,7 +79,6 @@ const mapStateToProps = (state: RootState) => ({
     genre: state.sheets.genre,
     authors: state.sheets.authors,
     status: state.sheets.status,
-    isSuperUser: state.users.currentUser.is_superuser,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
@@ -94,7 +86,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
         {
             getGenreByAlias: sheetsAction.getGenreByAlias,
             getAuthorsByGenreAlias: sheetsAction.getAuthorsByGenreAlias,
-            addAuthor: sheetsAction.addAuthor,
         },
         dispatch,
     );

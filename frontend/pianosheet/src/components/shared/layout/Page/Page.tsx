@@ -11,6 +11,7 @@ import { SheetsNav } from '../SheetsNav/SheetsNav';
 import { SearchApiResults } from 'store/sheetsReducer';
 import { SearchResults } from 'components/search/SearchResults';
 import { useToast } from 'components/shared/Toast/Toast';
+import { BreadcrumbProps, Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 
 interface Props {
     className?: string;
@@ -19,6 +20,7 @@ interface Props {
     search: SearchApiResults;
     hideSheetsNav?: boolean;
     warning?: string;
+    breadcrumbs?: BreadcrumbProps[];
     dropSearch: () => void;
     searchSheets: (query: string, page: number) => void;
     searchAuthors: (query: string, page: number) => void;
@@ -31,6 +33,7 @@ const PageFC: React.FC<Props> = ({
     search,
     hideSheetsNav = false,
     warning,
+    breadcrumbs,
     dropSearch,
     searchSheets,
     searchAuthors,
@@ -67,7 +70,10 @@ const PageFC: React.FC<Props> = ({
     return (
         <>
             {!hideSheetsNav && <SheetsNav />}
-            <div className={cn(styles.root, className)}>{showContent ? output : <Spinner />}</div>
+            <div className={cn(styles.root, className)}>
+                {!!breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
+                {showContent ? output : <Spinner />}
+            </div>
             {toast}
         </>
     );

@@ -13,8 +13,8 @@ import { AddIcon } from 'components/shared/icons/AddIcon';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { Paths } from 'utils/routes/Paths';
 import { useAuth } from 'api/UsersClient';
-import { Breadcrumbs } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { SheetAddModal, sheetAddModel } from '../SheetAddModal/SheetAddModal';
+import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 
 interface Props {
     className?: string;
@@ -65,7 +65,7 @@ const AuthorPageFC: React.FC<Props> = ({
         setPageNumber(page);
     };
 
-    const breadcrumbs: { caption: string; link?: string }[] = [
+    const breadcrumbs: BreadcrumbProps[] = [
         {
             caption: 'Ноты',
             link: Paths.sheetsPage,
@@ -84,8 +84,7 @@ const AuthorPageFC: React.FC<Props> = ({
     };
 
     return (
-        <Page loadStatus={status}>
-            <Breadcrumbs items={breadcrumbs} />
+        <Page loadStatus={status} breadcrumbs={breadcrumbs}>
             <div className={cn(styles.root, className)}>
                 <div className={styles.title}>{author.name}</div>
                 <div className={styles.content}>

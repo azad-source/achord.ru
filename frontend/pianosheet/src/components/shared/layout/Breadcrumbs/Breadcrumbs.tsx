@@ -3,8 +3,13 @@ import { useHistory } from 'react-router';
 import styles from './Breadcrumbs.module.scss';
 import cn from 'classnames';
 
+export interface BreadcrumbProps {
+    caption: string;
+    link?: string;
+}
+
 interface Props {
-    items: { caption: string; link?: string }[];
+    items: BreadcrumbProps[];
 }
 
 export const Breadcrumbs: React.FC<Props> = ({ items }) => {

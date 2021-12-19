@@ -8,9 +8,10 @@ type ButtonUse = 'link' | 'default' | 'transparent';
 interface Props {
     className?: string;
     disabled?: boolean;
-    onClick?: (e: MouseEvent) => void;
     use?: ButtonUse;
     type?: 'button' | 'submit' | 'reset' | undefined;
+    icon?: React.ReactNode;
+    onClick?: (e: MouseEvent) => void;
 }
 
 export const Button: React.FC<Props> = ({
@@ -18,19 +19,16 @@ export const Button: React.FC<Props> = ({
     children,
     use = 'default',
     disabled,
+    icon,
     ...props
 }) => {
     return (
         <button
             disabled={disabled}
-            className={cn(
-                styles.root,
-                styles[use],
-                disabled && styles.disabled,
-                className,
-            )}
+            className={cn(styles.root, styles[use], disabled && styles.disabled, className)}
             {...props}
         >
+            <div className={styles.icon}>{icon}</div>
             {children}
         </button>
     );

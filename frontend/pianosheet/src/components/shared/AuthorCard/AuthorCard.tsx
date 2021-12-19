@@ -36,6 +36,8 @@ const AuthorCardFC: React.FC<Props> = ({
     const authorImage = preview || defaultImg;
     const authorPath = alias ? Paths.getAuthorPath(author.name.charAt(0), alias) : '';
 
+    const hasPreview = preview && !preview.includes('default.png');
+
     const openEditMenu = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
@@ -123,10 +125,10 @@ const AuthorCardFC: React.FC<Props> = ({
 
                 <div className={styles.img}>
                     <div
-                        className={cn(styles.img_bg, !preview && styles.img_bg__default)}
+                        className={cn(styles.img_bg, !hasPreview && styles.img_bg__default)}
                         style={{ backgroundImage: 'url(' + authorImage + ')' }}
                     ></div>
-                    {!!preview && (
+                    {hasPreview && (
                         <img
                             src={authorImage}
                             alt={author.name}

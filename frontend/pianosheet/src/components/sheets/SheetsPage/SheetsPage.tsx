@@ -10,13 +10,16 @@ import { sheetsAction } from 'store/sheetsActions';
 import { GenreJsModel } from 'domain/api/JsModels';
 import { Link } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
+import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 
 interface Props {
     genres: GenreJsModel;
-    getGenres: () => void;
+    getGenres: (page?: number) => void;
 }
 
 const SheetsPageFC: React.FC<Props> = ({ genres, getGenres }) => {
+    const [pageNumber, setPageNumber] = React.useState<number>(1);
+
     React.useEffect(() => {
         document.title = `${SiteName} - Ноты`;
         getGenres();
@@ -27,6 +30,12 @@ const SheetsPageFC: React.FC<Props> = ({ genres, getGenres }) => {
             caption: 'Ноты',
         },
     ];
+
+    const getGenresByPage = (page: number) => {
+        getGenres(page);
+        setPageNumber(page);
+        window.scroll({ top: 0, behavior: 'smooth' });
+    };
 
     return (
         <Page breadcrumbs={breadcrumbs} showAddAuthorBtn>
@@ -42,6 +51,13 @@ const SheetsPageFC: React.FC<Props> = ({ genres, getGenres }) => {
                     </Link>
                 ))}
             </div>
+            {genres.page_count > 1 && (
+                <Pagination
+                    pageCount={genres.page_count}
+                    pageNumber={pageNumber}
+                    switchPage={getGenresByPage}
+                />
+            )}
         </Page>
     );
 };

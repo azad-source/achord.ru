@@ -94,8 +94,8 @@ export class SheetsClient {
     }
 
     /** Получение списка жанров */
-    public static getGenres(): Promise<GenreJsModel> {
-        return api.get(`${apiPath}/genre/`).then(retrieveData);
+    public static getGenres(page?: number): Promise<GenreJsModel> {
+        return api.get(`${apiPath}/genre/`, { params: { page } }).then(retrieveData);
     }
 
     /** Получение жанра по alias */

@@ -420,10 +420,10 @@ function getGenresFailed(
     return { type: GET_GENRES_FAILED, payload: { reason, message, error } };
 }
 
-function getGenres(): GeneralThunkAction<void> {
+function getGenres(page?: number): GeneralThunkAction<void> {
     return (dispatch) => {
         dispatch(getGenresStarted());
-        SheetsClient.getGenres()
+        SheetsClient.getGenres(page)
             .then((genres) => {
                 dispatch(getGenresComplete(genres));
             })

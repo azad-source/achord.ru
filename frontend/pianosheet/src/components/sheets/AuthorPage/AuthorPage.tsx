@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { RootState } from 'store/rootReducer';
 import { bindActionCreators, Dispatch } from 'redux';
 import { sheetsAction } from 'store/sheetsActions';
-import { AuthorItemJsModel, SheetJsModel } from 'domain/api/JsModels';
+import { AuthorItemJsModel, AuthorRequestModel, SheetJsModel } from 'domain/api/JsModels';
 import { QueryStatus } from 'domain/QueryStatus';
 import { AddIcon } from 'components/shared/icons/AddIcon';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
@@ -15,15 +15,20 @@ import { Paths } from 'utils/routes/Paths';
 import { useAuth } from 'api/UsersClient';
 import { SheetAddModal, sheetAddModel } from '../SheetAddModal/SheetAddModal';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
+import { AuthorEditModal } from '../AuthorEditModal/AuthorEditModal';
+import { Button } from 'components/shared/Button/Button';
+import { EditIcon } from 'components/shared/icons/EditIcon';
 
 interface Props {
     className?: string;
     author: AuthorItemJsModel;
     sheets: SheetJsModel;
     status: QueryStatus;
+    isSuperUser?: boolean;
     getAuthor: (alias: string) => void;
     getSheets: (alias: string, page: number) => void;
     addSheet: (sheet: FormData) => void;
+    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
 }
 
 const AuthorPageFC: React.FC<Props> = ({
@@ -31,14 +36,17 @@ const AuthorPageFC: React.FC<Props> = ({
     author,
     sheets,
     status,
+    isSuperUser = false,
     getAuthor,
     getSheets,
     addSheet,
+    editAuthor,
 }) => {
     const [logged] = useAuth();
     const { letter, authorAlias } = useParams<{ letter: string; authorAlias: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
-    const [showModal, setShowModal] = React.useState<boolean>(false);
+    const [showSheetAddModal, setShowSheetAddModal] = React.useState<boolean>(false);
+    const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
 
     const location = useLocation();
     const history = useHistory();
@@ -48,8 +56,10 @@ const AuthorPageFC: React.FC<Props> = ({
         setPageNumber(1);
     }, [location]);
 
-    const openModal = () => setShowModal(true);
-    const closeModal = () => setShowModal(false);
+    const openSheetAddModal = () => setShowSheetAddModal(true);
+    const closeSheetAddModal = () => setShowSheetAddModal(false);
+    const closeEditModal = () => setShowEditModal(false);
+    const openEditModal = () => setShowEditModal(true);
 
     const addSheetHandler = (options: sheetAddModel) => {
         let formData = new FormData();
@@ -57,12 +67,27 @@ const AuthorPageFC: React.FC<Props> = ({
         formData.append('name', options.sheetname);
         formData.append('author', author.id.toString());
         addSheet(formData);
-        closeModal();
+        closeSheetAddModal();
     };
 
     const getSheetsByPage = (page: number) => {
         getSheets(authorAlias, page);
         setPageNumber(page);
+    };
+
+    const editAuthorHandler = (options: AuthorRequestModel) => {
+        let formData = new FormData();
+        if (options.preview !== author.preview) formData.append('preview', options.preview);
+        if (options.name !== author.name) formData.append('name', options.name);
+        if (options.info !== author.info) formData.append('info', options.info);
+        if (options.genres !== author.genres)
+            formData.append('genres', JSON.stringify(options.genres.map(({ id }) => id)));
+        editAuthor(author.id, formData).then((res) => {
+            if (res) {
+                history.push(Paths.getAuthorPath(res.name.charAt(0), res.alias));
+            }
+        });
+        closeEditModal();
     };
 
     const breadcrumbs: BreadcrumbProps[] = [
@@ -86,7 +111,19 @@ const AuthorPageFC: React.FC<Props> = ({
     return (
         <Page loadStatus={status} breadcrumbs={breadcrumbs}>
             <div className={cn(styles.root, className)}>
-                <div className={styles.title}>{author.name}</div>
+                <div className={styles.title}>
+                    <div className={styles.authorName}>{author.name}</div>
+                    {isSuperUser && (
+                        <Button
+                            className={styles.editBtn}
+                            use="link"
+                            onClick={openEditModal}
+                            icon={<EditIcon />}
+                        >
+                            Изменить
+                        </Button>
+                    )}
+                </div>
                 <div className={styles.content}>
                     <div className={styles.description}>
                         <div>
@@ -151,7 +188,7 @@ const AuthorPageFC: React.FC<Props> = ({
                             />
                         )}
                         {logged && (
-                            <div className={cn(styles.sheetItemAdd)} onClick={openModal}>
+                            <div className={cn(styles.sheetItemAdd)} onClick={openSheetAddModal}>
                                 <AddIcon className={styles.addSheetIcon} />
                                 Добавить ноты
                             </div>
@@ -159,15 +196,25 @@ const AuthorPageFC: React.FC<Props> = ({
                     </div>
                 </div>
             </div>
-            {showModal && <SheetAddModal closeModal={closeModal} addSheet={addSheetHandler} />}
+            {showSheetAddModal && (
+                <SheetAddModal closeModal={closeSheetAddModal} addSheet={addSheetHandler} />
+            )}
+            {showEditModal && (
+                <AuthorEditModal
+                    closeModal={closeEditModal}
+                    editAuthor={editAuthorHandler}
+                    author={author}
+                />
+            )}
         </Page>
     );
 };
 
-const mapStateToProps = (state: RootState) => ({
-    author: state.sheets.author,
-    sheets: state.sheets.sheets,
-    status: state.sheets.status,
+const mapStateToProps = ({ sheets: { author, sheets, status }, users }: RootState) => ({
+    author,
+    sheets,
+    status,
+    isSuperUser: users.currentUser.is_superuser,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
@@ -176,6 +223,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
             getAuthor: sheetsAction.getAuthor,
             getSheets: sheetsAction.getSheets,
             addSheet: sheetsAction.addSheet,
+            editAuthor: sheetsAction.editAuthor,
         },
         dispatch,
     );

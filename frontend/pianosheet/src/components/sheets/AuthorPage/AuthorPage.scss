@@ -6,12 +6,16 @@
 }
 
 .title {
+  display: flex;
+}
+
+.authorName {
   font-size: 22px;
   font-weight: bold;
   margin-top: 15px;
   margin-bottom: 15px;
-  width: 100%;
   letter-spacing: 1px;
+  line-height: 1.3;
 }
 
 .content {
@@ -180,6 +184,14 @@
   }
 }
 
+.editBtn {
+  padding: 0;
+  margin: 0;
+  min-width: unset;
+  margin-left: 16px;
+  height: unset;
+}
+
 @media screen and (max-width: $siteWidthTab) {
   .photo {
     height: 300px;
@@ -197,5 +209,9 @@
   .authorInfo {
     margin-top: 20px;
     width: 100%;
+  }
+
+  .editBtn {
+    font-size: 0;
   }
 }

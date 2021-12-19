@@ -2,7 +2,9 @@
 @import 'styles/colors.scss';
 
 .root {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   border: none;
   border-radius: 4px;
@@ -45,4 +47,9 @@
 .transparent:hover {
   background-color: $defaultButtonBg;
   color: #fff;
+}
+
+.icon {
+  height: 15px;
+  margin-right: 6px;
 }

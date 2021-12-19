@@ -12,6 +12,10 @@ import { SearchApiResults } from 'store/sheetsReducer';
 import { SearchResults } from 'components/search/SearchResults';
 import { useToast } from 'components/shared/Toast/Toast';
 import { BreadcrumbProps, Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
+import { useHistory } from 'react-router-dom';
+import { AuthorItemJsModel, AuthorRequestModel } from 'domain/api/JsModels';
+import { Paths } from 'utils/routes/Paths';
+import { AuthorAddModal } from 'components/sheets/AuthorAddModal/AuthorAddModal';
 
 interface Props {
     className?: string;
@@ -21,9 +25,12 @@ interface Props {
     hideSheetsNav?: boolean;
     warning?: string;
     breadcrumbs?: BreadcrumbProps[];
+    isSuperUser?: boolean;
+    showAddAuthorBtn?: boolean;
     dropSearch: () => void;
     searchSheets: (query: string, page: number) => void;
     searchAuthors: (query: string, page: number) => void;
+    addAuthor: (author: FormData) => Promise<AuthorItemJsModel | false>;
 }
 
 const PageFC: React.FC<Props> = ({
@@ -34,11 +41,16 @@ const PageFC: React.FC<Props> = ({
     hideSheetsNav = false,
     warning,
     breadcrumbs,
+    isSuperUser = false,
+    showAddAuthorBtn = false,
     dropSearch,
     searchSheets,
     searchAuthors,
+    addAuthor,
 }) => {
     const [showContent, setShowContent] = React.useState<boolean>(false);
+    const [showAddAuthorModal, setShowAddAuthorModal] = React.useState<boolean>(false);
+    const history = useHistory();
 
     React.useEffect(() => {
         setTimeout(() => {
@@ -67,26 +79,57 @@ const PageFC: React.FC<Props> = ({
         if (warning) push(warning);
     }, [warning]);
 
+    const closeAddAuthorModal = () => setShowAddAuthorModal(false);
+    const openAddAuthorModal = () => setShowAddAuthorModal(true);
+
+    const addAuthorHandler = (options: AuthorRequestModel) => {
+        let formData = new FormData();
+        formData.append('preview', options.preview);
+        formData.append('name', options.name);
+        formData.append('info', options.info);
+        formData.append('genres', JSON.stringify(options.genres.map(({ id }) => id)));
+        addAuthor(formData).then((res) => {
+            if (res) {
+                history.push(Paths.getAuthorPath(res.name.charAt(0), res.alias));
+            }
+        });
+        closeAddAuthorModal();
+    };
+
     return (
         <>
             {!hideSheetsNav && <SheetsNav />}
             <div className={cn(styles.root, className)}>
                 {!!breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
+                {isSuperUser && showAddAuthorBtn && (
+                    <div
+                        onClick={openAddAuthorModal}
+                        className={styles.addAuthor}
+                        title="Добавить автора"
+                    />
+                )}
                 {showContent ? output : <Spinner />}
             </div>
             {toast}
+            {showAddAuthorModal && (
+                <AuthorAddModal closeModal={closeAddAuthorModal} addAuthor={addAuthorHandler} />
+            )}
         </>
     );
 };
 
 type OwnProps = Pick<Props, 'className' | 'loadStatus' | 'children'>;
 
-const mapStateToProps = ({ sheets }: RootState, { className, loadStatus, children }: OwnProps) => ({
+const mapStateToProps = (
+    { sheets, users: { currentUser } }: RootState,
+    { className, loadStatus, children }: OwnProps,
+) => ({
     className,
     loadStatus,
     children,
     search: sheets.search,
     warning: sheets.warning,
+    isSuperUser: currentUser.is_superuser,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
@@ -95,6 +138,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
             dropSearch: sheetsAction.dropSearch,
             searchSheets: sheetsAction.searchSheetsByPage,
             searchAuthors: sheetsAction.searchAuthorsByPage,
+            addAuthor: sheetsAction.addAuthor,
         },
         dispatch,
     );

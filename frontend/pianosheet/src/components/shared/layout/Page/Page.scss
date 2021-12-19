@@ -9,6 +9,51 @@
   position: relative;
 }
 
+.addAuthor {
+  position: absolute;
+  top: 5px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 6px;
+  cursor: pointer;
+  justify-self: center;
+  box-sizing: border-box;
+  transition: 0.1s;
+  width: 40px;
+  height: 40px;
+  border: 1px solid $defaultBg;
+  background-color: #eee;
+  border-radius: 8px;
+  overflow: hidden;
+
+  &:hover {
+    transition: 0.1s;
+    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
+  }
+
+  &::after,
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: $defaultBg;
+    width: 70%;
+    height: 3px;
+    border-radius: 4px;
+  }
+
+  &::after {
+    transform: translate(-50%, -50%);
+  }
+
+  &::before {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+}
+
 @media screen and (max-width: $siteWidthMobile) {
   .root {
     padding: 10px $sideSpace_480;

@@ -62,7 +62,7 @@ const GenrePageFC: React.FC<Props> = ({
     ];
 
     return (
-        <Page loadStatus={status} breadcrumbs={breadcrumbs}>
+        <Page loadStatus={status} breadcrumbs={breadcrumbs} showAddAuthorBtn>
             <div className={styles.root}>
                 <div className={styles.title}>{genre.name.toUpperCase()}</div>
                 <AuthorItems

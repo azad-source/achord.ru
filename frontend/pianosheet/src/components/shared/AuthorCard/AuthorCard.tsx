@@ -177,11 +177,3 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 };
 
 export const AuthorCard = connect(mapStateToProps, mapDispatchToProps)(AuthorCardFC);
-
-interface AddProps {
-    onClick: () => void;
-}
-
-export const AuthorCardAdd: React.FC<AddProps> = ({ onClick }) => {
-    return <div className={cn(styles.root, styles.root_add)} onClick={onClick}></div>;
-};

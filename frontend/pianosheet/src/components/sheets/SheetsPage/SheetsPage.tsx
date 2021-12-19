@@ -29,10 +29,15 @@ const SheetsPageFC: React.FC<Props> = ({ genres, getGenres }) => {
     ];
 
     return (
-        <Page breadcrumbs={breadcrumbs}>
+        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn>
             <div className={styles.genres}>
                 {genres.results.map(({ id, name, alias }) => (
-                    <Link key={id} className={styles.genres__item} to={Paths.getGenrePage(alias)}>
+                    <Link
+                        key={id}
+                        className={styles.genres__item}
+                        to={Paths.getGenrePage(alias)}
+                        style={{ fontSize: 22 / Math.pow(name.length, 0.25) }}
+                    >
                         {name}
                     </Link>
                 ))}

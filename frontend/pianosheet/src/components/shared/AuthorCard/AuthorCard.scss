@@ -20,30 +20,6 @@
     transition: 0.2s;
     box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.5);
   }
-
-  &_add {
-    background-color: #ddd;
-
-    &::after,
-    &::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      background-color: $defaultBg;
-      width: 60%;
-      height: 10px;
-      border-radius: 4px;
-    }
-
-    &::after {
-      transform: translate(-50%, -50%);
-    }
-
-    &::before {
-      transform: translate(-50%, -50%) rotate(90deg);
-    }
-  }
 }
 
 .edit {

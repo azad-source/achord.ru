@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './AuthorCard.scss';
 import cn from 'classnames';
-import { useHistory } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
 import defaultImg from 'images/default.png';
 import { AuthorEditModal } from 'components/sheets/AuthorEditModal/AuthorEditModal';
@@ -34,9 +34,10 @@ const AuthorCardFC: React.FC<Props> = ({
 
     const { id, preview, alias, name } = author;
     const authorImage = preview || defaultImg;
-    const path = alias ? Paths.getAuthorPath(author.name.charAt(0), alias) : '';
+    const authorPath = alias ? Paths.getAuthorPath(author.name.charAt(0), alias) : '';
 
     const openEditMenu = (e: React.MouseEvent) => {
+        e.preventDefault();
         e.stopPropagation();
         setShowEditMenu((prev) => !prev);
 
@@ -46,12 +47,14 @@ const AuthorCardFC: React.FC<Props> = ({
     };
 
     const openEditModal = (e: React.MouseEvent<HTMLSpanElement>) => {
+        e.preventDefault();
         e.stopPropagation();
         setShowEditModal(true);
         setShowEditMenu(false);
     };
 
     const openRemoveModal = (e: React.MouseEvent) => {
+        e.preventDefault();
         e.stopPropagation();
         setShowRemoveModal(true);
         setShowEditMenu(false);
@@ -60,11 +63,10 @@ const AuthorCardFC: React.FC<Props> = ({
     const closeEditModal = () => setShowEditModal(false);
     const closeRemoveModal = () => setShowRemoveModal(false);
     const closeEditMenu = (e: React.MouseEvent) => {
+        e.preventDefault();
         e.stopPropagation();
         setShowEditMenu(false);
     };
-
-    const goToAuthorPage = () => history.push(path);
 
     const editAuthorHandler = (options: AuthorRequestModel) => {
         let formData = new FormData();
@@ -87,7 +89,7 @@ const AuthorCardFC: React.FC<Props> = ({
 
     return (
         <>
-            <div className={cn(styles.root, className)} onClick={goToAuthorPage}>
+            <NavLink className={cn(styles.root, className)} to={authorPath}>
                 {isSuperUser && (
                     <>
                         <span className={styles.edit} onClick={openEditMenu}>
@@ -136,7 +138,7 @@ const AuthorCardFC: React.FC<Props> = ({
                 <div className={styles.name} style={{ fontSize: 35 / Math.pow(name.length, 0.32) }}>
                     {name}
                 </div>
-            </div>
+            </NavLink>
 
             {showEditModal && (
                 <AuthorEditModal

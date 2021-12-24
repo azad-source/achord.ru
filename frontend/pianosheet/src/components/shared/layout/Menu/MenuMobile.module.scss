@@ -82,22 +82,26 @@
 
 .burgerMenu {
   display: flex;
-  width: 32px;
-  height: 22px;
+  width: 44px;
+  height: 36px;
   position: fixed;
-  left: 20px;
-  top: 30px;
+  left: 16px;
+  top: 22px;
   box-sizing: border-box;
   flex-direction: column;
   justify-content: space-between;
   z-index: 20;
   cursor: pointer;
   transition: 0.3s;
+  border: 2px solid $mainText;
+  background: rgba(255, 255, 255, 0.35);
+  padding: 9px 8px;
+  border-radius: 8px;
 
   &_line {
     width: 100%;
-    height: 3px;
-    background-color: #fff;
+    height: 2px;
+    background-color: $mainText;
   }
 }
 

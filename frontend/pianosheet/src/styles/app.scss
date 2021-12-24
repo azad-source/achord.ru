@@ -17,10 +17,6 @@ html {
 
 body {
   background-color: $mainBgColor;
-  min-width: $siteWidth;
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
   min-height: 100vh;
 }
 
@@ -51,6 +47,5 @@ body {
   body {
     display: block;
     min-width: 275px;
-    width: 100%;
   }
 }

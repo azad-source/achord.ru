@@ -50,4 +50,7 @@ export class Paths {
     public static readonly genrePage = `${Paths.genresPage}/:genreAlias`;
 
     public static getGenrePage = (genreAlias: string) => `${Paths.genresPage}/${genreAlias}`;
+
+    /** Раздел контактных данных */
+    public static readonly contactsPage = '/contacts';
 }

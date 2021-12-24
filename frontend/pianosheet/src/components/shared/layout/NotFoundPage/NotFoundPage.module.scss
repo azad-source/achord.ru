@@ -8,7 +8,8 @@
   align-items: center;
   width: 100%;
   height: 100%;
-  padding-bottom: 120px;
+  padding-bottom: 80px;
+  flex-grow: 1;
 }
 
 .sadSmile {
@@ -52,6 +53,9 @@
 }
 
 @media screen and (max-width: $siteWidthMobile) {
+  .root {
+    padding-bottom: 0;
+  }
   .sadSmile {
     display: none;
   }

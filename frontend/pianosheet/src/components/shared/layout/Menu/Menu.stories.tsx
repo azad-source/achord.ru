@@ -1,6 +1,5 @@
 import { Menu } from './Menu';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 
 export default {
     title: 'shared/Menu',
@@ -17,8 +16,4 @@ const Template: ComponentStory<typeof Menu> = (args) => <Menu {...args} />;
 
 export const Primary = Template.bind({});
 
-Primary.args = {
-    items,
-    logged: false,
-    logout: action('logout'),
-};
+Primary.args = { items };

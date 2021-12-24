@@ -27,6 +27,7 @@ interface Props {
     breadcrumbs?: BreadcrumbProps[];
     isSuperUser?: boolean;
     showAddAuthorBtn?: boolean;
+    darkTheme?: boolean;
     dropSearch: () => void;
     searchSheets: (query: string, page: number) => void;
     searchAuthors: (query: string, page: number) => void;
@@ -43,6 +44,7 @@ const PageFC: React.FC<Props> = ({
     breadcrumbs,
     isSuperUser = false,
     showAddAuthorBtn = false,
+    darkTheme = false,
     dropSearch,
     searchSheets,
     searchAuthors,
@@ -97,11 +99,11 @@ const PageFC: React.FC<Props> = ({
     };
 
     return (
-        <>
+        <div className={cn(styles.backplate, darkTheme && styles.root_dark)}>
             {!hideSheetsNav && <SheetsNav />}
             <div className={cn(styles.root, className)}>
                 {!!breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
-                {isSuperUser && showAddAuthorBtn && (
+                {isSuperUser && showAddAuthorBtn && !search.applied && (
                     <div
                         onClick={openAddAuthorModal}
                         className={styles.addAuthor}
@@ -114,7 +116,7 @@ const PageFC: React.FC<Props> = ({
             {showAddAuthorModal && (
                 <AuthorAddModal closeModal={closeAddAuthorModal} addAuthor={addAuthorHandler} />
             )}
-        </>
+        </div>
     );
 };
 

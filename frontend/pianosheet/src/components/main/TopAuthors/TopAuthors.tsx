@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootState } from 'store/rootReducer';
 import styles from './TopAuthors.scss';
-import defaultStyles from 'styles/app.scss';
 import { Paths } from 'utils/routes/Paths';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { sheetsAction } from 'store/sheetsActions';
@@ -36,22 +35,7 @@ const TopAuthorsFC: React.FC<Props> = ({ authors, sheets, getTopAuthors, getTopS
 
     return (
         <>
-            <h1 className={defaultStyles.title}>Топ 10</h1>
-            <ol className={styles.topSheets}>
-                {sheets.results.map((sheet, index) => {
-                    if (index < 10) {
-                        return (
-                            <li
-                                key={index}
-                                className={styles.topSheets_item}
-                                onClick={() => openDownloadPage(sheet)}
-                            >
-                                {sheet.name}
-                            </li>
-                        );
-                    }
-                })}
-            </ol>
+            <div className={styles.title}>Авторы</div>
             <div className={styles.topAuthors}>
                 {authors.results.map((author, index) => {
                     if (index < 10) {
@@ -65,6 +49,27 @@ const TopAuthorsFC: React.FC<Props> = ({ authors, sheets, getTopAuthors, getTopS
                     }
                 })}
             </div>
+            <div className={styles.title}>Композиции</div>
+            <ol className={styles.topSheets}>
+                {sheets.results.map((sheet, index) => {
+                    if (index < 10) {
+                        return (
+                            <li
+                                key={index}
+                                className={styles.topSheets_item}
+                                onClick={() => openDownloadPage(sheet)}
+                                style={{
+                                    background: `rgba(61, 68, 107, ${
+                                        (11 - Math.ceil((index + 1) / 2)) / 10
+                                    })`,
+                                }}
+                            >
+                                {sheet.name}
+                            </li>
+                        );
+                    }
+                })}
+            </ol>
         </>
     );
 };

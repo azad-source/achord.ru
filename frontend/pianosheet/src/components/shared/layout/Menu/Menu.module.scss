@@ -11,6 +11,7 @@
   padding: 0 15px;
   line-height: 1;
   font-size: 18px;
+  font-weight: bold;
   letter-spacing: 1px;
   text-decoration: none;
 }
@@ -41,7 +42,7 @@ a.menuItemSign {
 .logoutLink {
   padding: 0 15px;
   min-width: unset;
-  color: #fff;
+  color: $mainText;
   display: flex;
   justify-content: space-between;
   align-items: center;

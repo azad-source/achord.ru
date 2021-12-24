@@ -3,9 +3,15 @@ $defaultBg2: rgb(61, 107, 88);
 
 $mainBgColor: rgb(238, 238, 238);
 $backPlateBgColor: #fff;
-$headerBgColor: $defaultBg;
+$headerBgColor: linear-gradient(
+  110deg,
+  rgb(234, 238, 250) 0%,
+  rgb(235, 237, 243) 30%,
+  rgb(255, 255, 255) 100%
+);
+$footerBgColor: $headerBgColor;
 $mainText: $defaultBg;
-$topMenuLink: #fafafa;
+$topMenuLink: $defaultBg;
 
 $defaultButtonBg: $defaultBg;
 

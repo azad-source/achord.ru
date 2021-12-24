@@ -1,18 +1,15 @@
-import { LogoutIcon } from 'components/shared/icons/LogoutIcon';
 import * as React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import styles from './MenuMobile.module.scss';
-import cn from 'classnames';
 import { Toggle } from 'components/shared/Toggle/Toggle';
 import { SheetsNav } from '../SheetsNav/SheetsNav';
+import { MenuItemType } from '../Header/Header';
 
 interface Props {
-    items: { caption: string; link: string }[];
-    logged: boolean;
-    logout: () => void;
+    items: MenuItemType[];
 }
 
-export const MenuMobile: React.FC<Props> = ({ items, logged, logout }) => {
+export const MenuMobile: React.FC<Props> = ({ items }) => {
     const [menu, setMenu] = React.useState({
         main: { transform: 'translateY(-150%)' },
         burger: { transform: 'none' },
@@ -41,11 +38,6 @@ export const MenuMobile: React.FC<Props> = ({ items, logged, logout }) => {
             burger: { transform: 'none' },
             overlay: { display: 'none' },
         });
-    };
-
-    const logoutHandle = () => {
-        logout();
-        closeMenu();
     };
 
     const handleChangeNavLang = () => {
@@ -94,37 +86,17 @@ export const MenuMobile: React.FC<Props> = ({ items, logged, logout }) => {
                 <div className={styles.closeMenu} onClick={closeMenu}></div>
                 <div className={styles.menuitems}>
                     {items.length > 0 &&
-                        items.map(({ caption, link }) => (
+                        items.map(({ caption, link, handler }) => (
                             <NavLink
                                 key={caption}
                                 className={styles.menuItem}
-                                to={link}
+                                to={link || ''}
                                 exact
-                                onClick={closeMenu}
+                                onClick={handler}
                             >
                                 {caption}
                             </NavLink>
                         ))}
-
-                    {logged ? (
-                        <NavLink
-                            onClick={logoutHandle}
-                            className={cn(styles.menuItem, styles.logoutLink)}
-                            title="Log out"
-                            to={''}
-                        >
-                            <LogoutIcon /> Выйти
-                        </NavLink>
-                    ) : (
-                        <NavLink
-                            to="/sign-in"
-                            className={cn(styles.menuItem, styles.signLink)}
-                            exact
-                            onClick={closeMenu}
-                        >
-                            Вход
-                        </NavLink>
-                    )}
                 </div>
                 <div className={styles.sheetNav}>
                     <Toggle

@@ -1,12 +1,28 @@
 @import 'styles/default.scss';
 @import 'styles/colors.scss';
 
-.root {
-  padding: 10px $sideSpace;
+.backplate {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   box-sizing: border-box;
   height: 100%;
   flex-grow: 1;
   position: relative;
+  padding: 16px 0;
+}
+
+.root {
+  width: $siteWidth;
+  padding: 0 $sideSpace;
+  box-sizing: border-box;
+  position: relative;
+  height: 100%;
+
+  &_dark {
+    background: rgb(153, 63, 63);
+  }
 }
 
 .addAuthor {
@@ -54,8 +70,9 @@
   }
 }
 
-@media screen and (max-width: $siteWidthMobile) {
+@media screen and (max-width: $siteWidth) {
   .root {
+    width: 100%;
     padding: 10px $sideSpace_480;
   }
 }

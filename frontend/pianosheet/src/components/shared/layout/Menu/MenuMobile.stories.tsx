@@ -1,6 +1,5 @@
 import { MenuMobile } from './MenuMobile';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 
 export default {
     title: 'shared/MenuMobile',
@@ -13,14 +12,8 @@ const items = [
     { caption: 'О нас', link: '/about-us' },
 ];
 
-const Template: ComponentStory<typeof MenuMobile> = (args) => (
-    <MenuMobile {...args} />
-);
+const Template: ComponentStory<typeof MenuMobile> = (args) => <MenuMobile {...args} />;
 
 export const Primary = Template.bind({});
 
-Primary.args = {
-    items,
-    logged: false,
-    logout: action('logout'),
-};
+Primary.args = { items };

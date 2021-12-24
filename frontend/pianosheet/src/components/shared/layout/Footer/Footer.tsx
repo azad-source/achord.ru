@@ -9,10 +9,12 @@ interface Props {
 export const Footer: React.FC<Props> = ({ className }) => {
     const year = new Date().getFullYear();
     return (
-        <div className={styles.root}>
-            <div className={styles.copyright}>
-                Copyright © {SiteName} {year}
+        <footer className={styles.backplate}>
+            <div className={styles.root}>
+                <div className={styles.copyright}>
+                    Copyright © {SiteName} {year}
+                </div>
             </div>
-        </div>
+        </footer>
     );
 };

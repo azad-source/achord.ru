@@ -1,15 +1,28 @@
 @import 'styles/default.scss';
 @import 'styles/colors.scss';
 
+.backplate {
+  width: 100%;
+  height: $headerHeight;
+  box-sizing: border-box;
+  background: rgb(80, 109, 200);
+  background: $headerBgColor;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.19);
+  display: flex;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
 .root {
+  width: $siteWidth;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  background: $headerBgColor;
-  height: $headerHeight;
-  min-height: $headerHeight;
   padding: 0 $sideSpace;
+  box-sizing: border-box;
 }
 
 .logo {
@@ -22,7 +35,7 @@
 
 .logoIcon {
   box-sizing: border-box;
-  color: #fff;
+  color: $mainText;
   transition: 0.5s ease-in-out;
 }
 
@@ -33,13 +46,14 @@
 
 .svg {
   display: block;
+  color: $defaultBg;
 }
 
 .logoName {
   margin-left: 16px;
   font-size: 32px;
   font-weight: bold;
-  color: #fff;
+  color: $mainText;
   font-style: italic;
   letter-spacing: 1px;
 }
@@ -50,6 +64,7 @@
 
 @media screen and (max-width: $siteWidthMobile) {
   .root {
+    width: 100%;
     position: sticky;
     top: 0;
     z-index: 15;

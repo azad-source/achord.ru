@@ -2,7 +2,6 @@ import { Spinner } from 'components/shared/Spinner/Spinner';
 import * as React from 'react';
 import { SearchApiResults } from 'store/sheetsReducer';
 import styles from './SearchResults.scss';
-import defaultStyles from 'styles/app.scss';
 import cn from 'classnames';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
@@ -65,7 +64,7 @@ export const SearchResults: React.FC<Props> = ({
             <Spinner />
         ) : (
             <>
-                <h1 className={defaultStyles.title}>Результаты поиска</h1>
+                <div className={styles.title}>Результаты поиска</div>
                 <a className={styles.dropSearch} onClick={skipSearch}>
                     Сбросить поиск
                     <span className={styles.closeIcon}></span>
@@ -73,7 +72,7 @@ export const SearchResults: React.FC<Props> = ({
 
                 {search.sheets.results.length > 0 && (
                     <>
-                        <h2>Найденные ноты</h2>
+                        <div className={styles.searchTitle}>Найденные ноты</div>
                         <div className={styles.searchItems}>
                             {search.sheets.results.map((sheet) => (
                                 <div
@@ -99,7 +98,7 @@ export const SearchResults: React.FC<Props> = ({
 
                 {search.authors.results.length > 0 && (
                     <>
-                        <h2>Найденные композиторы</h2>
+                        <div className={styles.searchTitle}>Найденные композиторы</div>
                         <div className={cn(styles.searchItems, styles.searchAuthors)}>
                             {search.authors.results.map((author) => (
                                 <AuthorCard

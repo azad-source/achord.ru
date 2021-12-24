@@ -1,6 +1,24 @@
 @import 'styles/colors.scss';
 @import 'styles/default.scss';
 
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 35px;
+}
+
+.searchTitle {
+  font-size: 18px;
+  line-height: 1;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  background: $defaultBg;
+  border-radius: 6px;
+  color: #fff;
+  padding: 8px 10px 10px;
+}
+
 .searchItems {
   margin-left: 20px;
   margin-bottom: 20px;
@@ -27,7 +45,7 @@
 
 .dropSearch {
   position: absolute;
-  top: 50px;
+  top: 40px;
   right: 50px;
   cursor: pointer;
 }

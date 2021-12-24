@@ -8,12 +8,6 @@ import { sheetsAction } from 'store/sheetsActions';
 import { RootState } from 'store/rootReducer';
 import { QueryStatus } from 'domain/QueryStatus';
 import { useLocation } from 'react-router';
-import { searchFieldWidth } from 'domain/SiteInfo';
-
-const defaultSearchStyles = {
-    width: searchFieldWidth,
-    opacity: 0.7,
-};
 
 interface Props {
     className?: string;
@@ -31,7 +25,6 @@ const SearchFieldFC: React.FC<Props> = ({
     dropSearch,
 }) => {
     const [input, setInput] = React.useState<string>('');
-    const [style, setStyle] = React.useState(defaultSearchStyles);
     let location = useLocation();
 
     function skipSearch() {
@@ -65,7 +58,7 @@ const SearchFieldFC: React.FC<Props> = ({
 
     return (
         <div className={cn(styles.root, className)}>
-            <label className={styles.label} style={style}>
+            <label className={styles.label}>
                 <input
                     type="text"
                     className={styles.input}
@@ -73,8 +66,6 @@ const SearchFieldFC: React.FC<Props> = ({
                     onChange={(e) => setInput(e.target.value)}
                     onKeyPress={keyPressHandler}
                     onClick={searchHandler}
-                    onFocus={() => setStyle({ width: '100%', opacity: 1 })}
-                    onBlur={() => setStyle(defaultSearchStyles)}
                     value={input}
                 />
                 <Loupe className={styles.loupe} />
@@ -98,7 +89,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     );
 };
 
-export const SearchField = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(SearchFieldFC);
+export const SearchField = connect(mapStateToProps, mapDispatchToProps)(SearchFieldFC);

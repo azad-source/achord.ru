@@ -16,6 +16,8 @@ interface Props {
     getUser: () => void;
 }
 
+export type MenuItemType = { caption: string; link?: string; handler?: () => void };
+
 const HeaderFC: React.FC<Props> = ({ getUser }) => {
     const [logged] = useAuth();
 
@@ -26,7 +28,7 @@ const HeaderFC: React.FC<Props> = ({ getUser }) => {
         getUser();
     }, [location]);
 
-    const menuItems: { caption: string; link: string }[] = [
+    const menuItems: MenuItemType[] = [
         {
             caption: 'Главная',
             link: Paths.mainPage,
@@ -35,27 +37,29 @@ const HeaderFC: React.FC<Props> = ({ getUser }) => {
             caption: 'Ноты',
             link: Paths.sheetsPage,
         },
+        {
+            caption: logged ? 'Выйти' : 'Войти',
+            link: !logged ? '/sign-in' : undefined,
+            handler: logged ? logout : undefined,
+        },
         // {
         //     caption: 'Piano',
         //     link: Paths.virtPianoPage,
         // },
     ];
 
-    const logoutHandler = () => {
-        logout();
-        window.location.href = '/sign-in';
-    };
-
     return (
-        <header className={styles.root}>
-            <NavLink className={styles.logo} to="/">
-                <div className={styles.logoIcon}>
-                    <Logo className={styles.svg} />
-                </div>
-            </NavLink>
-            <SearchField className={styles.search} />
-            <Menu items={menuItems} logged={logged} logout={logoutHandler} />
-            <MenuMobile items={menuItems} logged={logged} logout={logoutHandler} />
+        <header className={styles.backplate}>
+            <div className={styles.root}>
+                <NavLink className={styles.logo} to="/">
+                    <div className={styles.logoIcon}>
+                        <Logo className={styles.svg} />
+                    </div>
+                </NavLink>
+                <SearchField className={styles.search} />
+                <Menu items={menuItems} />
+                <MenuMobile items={menuItems} />
+            </div>
         </header>
     );
 };

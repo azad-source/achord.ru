@@ -130,7 +130,7 @@ function getAuthorsFailed(
 
 function getAuthors(letter?: string, page?: number): GeneralThunkAction<void, SheetsState> {
     return (dispatch) => {
-        if (!page) dispatch(getAuthorsStarted());
+        dispatch(getAuthorsStarted());
 
         SheetsClient.getAuthors(letter, page)
             .then((authors) => {

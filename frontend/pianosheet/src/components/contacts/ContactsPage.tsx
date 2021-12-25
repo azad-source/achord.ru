@@ -8,6 +8,9 @@ import { WhatsAppIcon } from 'components/shared/icons/WhatsAppIcon';
 import { FacebookIcon } from 'components/shared/icons/FacebookIcon';
 import { VkIcon } from 'components/shared/icons/VkIcon';
 import { InstagramIcon } from 'components/shared/icons/InstagramIcon';
+import ava_chinzhin from 'images/chinzhin.png';
+import ava_mamedov from 'images/mamedov.png';
+import photo_bg from 'images/photo_bg.jpg';
 
 export const ContactsPage = () => {
     React.useEffect(() => {
@@ -17,29 +20,35 @@ export const ContactsPage = () => {
     interface ContactProps {
         avatar: string;
         name: string;
+        role?: string;
         email?: string;
         telegram?: string;
         whatsapp?: string;
         facebook?: string;
         vk?: string;
         instagram?: string;
+        webPage?: string;
     }
 
     const contact: React.FC<ContactProps> = ({
         avatar,
         name,
+        role,
         email,
         telegram,
         whatsapp,
         facebook,
         vk,
         instagram,
+        webPage,
     }) => (
         <div className={styles.contact}>
             <div className={styles.contact__avatar}>
+                <div className={styles.bgBlur} style={{ backgroundImage: `url(${photo_bg})` }} />
                 <img src={avatar} alt={name} className={styles.img} />
             </div>
             <div className={styles.contact__name}>{name}</div>
+            <div className={styles.contact__role}>{role}</div>
             <div className={styles.contact__infos}>
                 {!!email && (
                     <a className={styles.info} href={`mailto:${email}`} title="email">
@@ -102,35 +111,36 @@ export const ContactsPage = () => {
                     </a>
                 )}
             </div>
+            {!!webPage && (
+                <a className={styles.webPage} href={webPage} target="_blank" rel="noreferrer">
+                    Личный сайт
+                </a>
+            )}
         </div>
     );
 
     return (
-        <Page hideSheetsNav darkTheme>
-            {/* <Breadcrumbs items={breadcrumbs} /> */}
+        <Page hideSheetsNav>
             <div className={styles.root}>
                 <div></div>
                 <div className={styles.contacts}>
-                    {/* {contact({
-                        avatar: 'https://sun9-33.userapi.com/impg/1IArdR81t5a_Ije1haqJyu6cgsaEHain-PbyFQ/aKtpiD91AxM.jpg?size=806x1080&quality=95&sign=b908a75ed2c29550745a992866e2998f&type=album',
+                    {contact({
+                        avatar: ava_chinzhin,
                         name: 'Дмитрий ЧИНЖИН',
+                        role: 'back-end',
                         email: 'azad_63_mamedov@mail.ru',
                         telegram: 'azad_63_mamedov',
-                        whatsapp: '89276951562',
-                        vk: 'azad_m',
-                        facebook: 'azad.mamedov.338',
-                        instagram: 'azad63mamedov',
+                        webPage: 'https://chinzhin.ru/',
                     })}
                     {contact({
-                        avatar: 'https://sun9-33.userapi.com/impg/1IArdR81t5a_Ije1haqJyu6cgsaEHain-PbyFQ/aKtpiD91AxM.jpg?size=806x1080&quality=95&sign=b908a75ed2c29550745a992866e2998f&type=album',
+                        avatar: ava_mamedov,
                         name: 'Азад МАМЕДОВ',
+                        role: 'front-end',
                         email: 'azad_63_mamedov@mail.ru',
                         telegram: 'azad_63_mamedov',
-                        whatsapp: '89276951562',
-                        vk: 'azad_m',
                         facebook: 'azad.mamedov.338',
-                        instagram: 'azad63mamedov',
-                    })} */}
+                        webPage: 'https://azad-source.github.io/CV/dist/',
+                    })}
                 </div>
             </div>
         </Page>

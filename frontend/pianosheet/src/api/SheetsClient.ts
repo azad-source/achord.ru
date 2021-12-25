@@ -13,7 +13,7 @@ const apiPath = `/api/pianosheet`;
 export class SheetsClient {
     /** Получение всех авторов */
     public static getAuthors(letter?: string, page?: number): Promise<AuthorJsModel> {
-        return api.get(`${apiPath}/author/`, { params: { letter, page } }).then(retrieveData);
+        return api.get(`${apiPath}/author/`, { params: { letter, page, order_by: 'name' } }).then(retrieveData);
     }
 
     /** Получение автора по алиасу */
@@ -58,7 +58,7 @@ export class SheetsClient {
     public static getSheets(author_alias?: string, page?: number): Promise<SheetJsModel> {
         return api
             .get(`${apiPath}/note/`, {
-                params: { author_alias, page },
+                params: { author_alias, page, order_by: 'name' },
             })
             .then(retrieveData);
     }

@@ -3,6 +3,6 @@ from . import views
 
 
 urlpatterns = [
-    re_path(r'^robots.txt$', views.robots),
-    re_path(r'^sitemap.xml$', views.sitemap),
+    re_path(r'^robots.txt$',  views.robots),
+    re_path(r'^sitemap.xml$', views.Sitemap.as_view()),
 ]

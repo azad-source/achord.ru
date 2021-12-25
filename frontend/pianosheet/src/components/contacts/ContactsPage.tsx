@@ -151,8 +151,8 @@ export const ContactsPage = () => {
                         avatar: ava_chinzhin,
                         name: 'Дмитрий ЧИНЖИН',
                         role: 'back-end разработчик',
-                        email: 'azad_63_mamedov@mail.ru',
-                        telegram: 'azad_63_mamedov',
+                        email: 'chinzhin@mail.ru',
+                        telegram: 'chinzhin',
                         webPage: 'chinzhin.ru',
                     })}
                     {contact({

@@ -39,7 +39,7 @@
   &::before {
     position: relative;
     content: '*';
-    color: $errorMsgColor;
+    color: $errorMessage;
     margin-right: 2px;
   }
 }

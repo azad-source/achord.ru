@@ -85,7 +85,7 @@
   left: 0;
   width: 25px;
   height: 100%;
-  background-color: $defaultBg2;
+  background-color: $defaultBg;
   transition: 0.4s;
 }
 
@@ -111,7 +111,7 @@
 
 .notYetSheets {
   font-size: 18px;
-  color: $errorMsgColor;
+  color: $errorMessage;
   margin-bottom: 20px;
 }
 

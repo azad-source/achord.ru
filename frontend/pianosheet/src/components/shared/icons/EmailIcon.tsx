@@ -15,7 +15,7 @@ export const EmailIcon: React.FC<Props> = ({ className }) => {
             className={className}
         >
             <path
-                fill="#fff"
+                fill="currentColor"
                 d="M0 24.75v125h200v-125l-100 62.5L0 24.75zm0-12.5l100 62.5 100-62.5V-.25H0v12.5z"
             />
         </svg>

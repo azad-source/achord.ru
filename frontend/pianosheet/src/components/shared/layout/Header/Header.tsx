@@ -38,6 +38,10 @@ const HeaderFC: React.FC<Props> = ({ getUser }) => {
             link: Paths.sheetsPage,
         },
         {
+            caption: 'О нас',
+            link: Paths.contactsPage,
+        },
+        {
             caption: logged ? 'Выйти' : 'Войти',
             link: !logged ? '/sign-in' : undefined,
             handler: logged ? logout : undefined,

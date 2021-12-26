@@ -21,6 +21,7 @@ from django.views.generic import TemplateView
 from django.conf.urls import url
 
 urlpatterns = [
+    # path('silk/', include('silk.urls', namespace='silk')),
     path('google0ca94841f746284e.html', TemplateView.as_view(template_name="google0ca94841f746284e.html")), # для верификации google oauth2
     path('api/pianosheet/', include('pianosheet.urls')),
     path('', include('seo.urls')),

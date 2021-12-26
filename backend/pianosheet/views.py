@@ -123,8 +123,8 @@ class AuthorViewSet(CustomModelViewSet):
         elif alias:
             queryset = queryset.filter(alias=alias)
         elif genre_alias:
-            queryset = queryset.filter(genres__alias=genre_alias)
-            self.up_rate_list(queryset)
+            queryset = queryset.filter(genres__alias=genre_alias).prefetch_related('genres')
+            # self.up_rate_list(queryset)
         return self.make_ordering(queryset)
 
 

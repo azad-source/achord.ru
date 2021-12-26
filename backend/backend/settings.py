@@ -50,9 +50,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'psycopg2',
     'seo',
+    # 'silk',
 ]
 
 MIDDLEWARE = [
+    # 'silk.middleware.SilkyMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',

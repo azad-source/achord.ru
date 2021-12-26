@@ -5,6 +5,7 @@ import { UserJsModel } from 'domain/api/JsModels';
 import { Action } from 'redux';
 import { arrToString } from 'utils/arrayTransform';
 import { GeneralThunkAction, PayloadedAction } from 'utils/store/actionTypes';
+import { RootState } from './rootReducer';
 
 const REGISTRATION_STARTED = 'USERS/REGISTRATION_STARTED';
 const REGISTRATION_COMPLETE = 'USERS/REGISTRATION_COMPLETE';
@@ -252,18 +253,29 @@ function getCurrentUserFailed(
     return { type: GET_CURRENT_USER_FAILED, payload: { reason, message, error } };
 }
 
-function getCurrentUser(): GeneralThunkAction<void> {
-    return (dispatch) => {
-        dispatch(getCurrentUserStarted());
+function getCurrentUser(logged: boolean): GeneralThunkAction<void, RootState> {
+    return (dispatch, getState) => {
+        const {
+            users: { currentUser },
+        } = getState();
 
-        UsersClient.getUserData()
-            .then((user) => {
-                dispatch(getCurrentUserComplete(user));
-            })
-            .catch((error) => {
-                dispatch(getCurrentUserFailed('', '', error));
-            });
+        if (!currentUser.id && logged) {
+            dispatch(getCurrentUserStarted());
+
+            UsersClient.getUserData()
+                .then((user) => {
+                    dispatch(getCurrentUserComplete(user));
+                })
+                .catch((error) => {
+                    dispatch(getCurrentUserFailed('', '', error));
+                });
+        }
     };
+}
+
+const CLEAR_CURRENT_USER = 'USERS/CLEAR_CURRENT_USER';
+function clearCurrentUser(): Action {
+    return { type: CLEAR_CURRENT_USER };
 }
 
 export const usersAction = {
@@ -274,6 +286,7 @@ export const usersAction = {
     resetPassword,
     changePassword,
     getCurrentUser,
+    clearCurrentUser,
 };
 
 export const usersActionTypes = {
@@ -314,4 +327,5 @@ export const usersActionTypes = {
     GET_CURRENT_USER_FAILED,
     getCurrentUserComplete,
     getCurrentUserFailed,
+    CLEAR_CURRENT_USER,
 };

@@ -35,6 +35,14 @@
   justify-content: center;
   align-items: center;
 
+  &:hover {
+    background-color: $defaultBg;
+  }
+
+  &:hover .edit_icon_dot {
+    background: #bdc1d2;
+  }
+
   &_icon {
     position: relative;
     box-sizing: border-box;

@@ -60,6 +60,7 @@ export type GenreItemJsModel = {
     id: number;
     name: string;
     alias: string;
+    preview?: string;
 };
 
 export type AuthorJsModel = PagedJsModel<AuthorItemJsModel>;

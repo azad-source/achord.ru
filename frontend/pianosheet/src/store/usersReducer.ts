@@ -44,6 +44,7 @@ const {
     GET_CURRENT_USER_FAILED,
     getCurrentUserComplete,
     getCurrentUserFailed,
+    CLEAR_CURRENT_USER,
 } = usersActionTypes;
 
 export function usersReducer(state: UsersState = usersDefaultState, action: Action): UsersState {
@@ -172,6 +173,12 @@ export function usersReducer(state: UsersState = usersDefaultState, action: Acti
             } = action as ReturnType<typeof getCurrentUserFailed>;
             return produce(state, (draft) => {
                 draft.status = QueryStatus.error(reason, message, error);
+            });
+        }
+
+        case CLEAR_CURRENT_USER: {
+            return produce(state, (draft) => {
+                draft.currentUser = { id: null };
             });
         }
 

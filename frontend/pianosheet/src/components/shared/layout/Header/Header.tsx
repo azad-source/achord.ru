@@ -13,20 +13,25 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { usersAction } from 'store/usersActions';
 
 interface Props {
-    getUser: () => void;
+    getUser: (logged: boolean) => void;
+    clearUser: () => void;
 }
 
 export type MenuItemType = { caption: string; link?: string; handler?: () => void };
 
-const HeaderFC: React.FC<Props> = ({ getUser }) => {
+const HeaderFC: React.FC<Props> = ({ getUser, clearUser }) => {
     const [logged] = useAuth();
-
     const location = useLocation();
 
     React.useEffect(() => {
         document.title = SiteName;
-        getUser();
+        getUser(logged);
     }, [location]);
+
+    const logoutHandler = () => {
+        logout();
+        clearUser();
+    }
 
     const menuItems: MenuItemType[] = [
         {
@@ -44,7 +49,7 @@ const HeaderFC: React.FC<Props> = ({ getUser }) => {
         {
             caption: logged ? 'Выйти' : 'Войти',
             link: !logged ? '/sign-in' : undefined,
-            handler: logged ? logout : undefined,
+            handler: logged ? logoutHandler : undefined,
         },
         // {
         //     caption: 'Piano',
@@ -72,6 +77,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     return bindActionCreators(
         {
             getUser: usersAction.getCurrentUser,
+            clearUser: usersAction.clearCurrentUser,
         },
         dispatch,
     );

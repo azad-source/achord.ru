@@ -9,7 +9,6 @@ def img_html(url):
     return format_html(f'<img src="/media/{url}" style="max-height:24px;max-width:24px"/>')
 
 
-
 class NoteInline(admin.TabularInline):
     extra = 0
     model = models.Note
@@ -22,10 +21,18 @@ class AuthorAdmin(admin.ModelAdmin):
 
     def print_avatar(self, obj):
         return img_html(obj.preview_xs) if obj.preview_xs else '-'
-
-
     print_avatar.short_description = ""
+
+
+class GenreAdmin(admin.ModelAdmin):
+    list_display = ("print_avatar", 'name', 'alias')
+    list_display_links = ("print_avatar", 'name')
+
+    def print_avatar(self, obj):
+        return img_html(obj.preview) if obj.preview else '-'
+    print_avatar.short_description = ""
+
 
 admin.site.register(models.Author, AuthorAdmin)
 admin.site.register(models.Note)
-admin.site.register(models.Genre)
+admin.site.register(models.Genre, GenreAdmin)

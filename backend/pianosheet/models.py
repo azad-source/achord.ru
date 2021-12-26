@@ -18,6 +18,13 @@ class Genre(models.Model):
         blank=True,
         unique=True,
     )
+    preview = models.FileField(
+        "превью картинка",
+        upload_to="genre/preview/",
+        default="default.png",
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         verbose_name = 'Жанр'

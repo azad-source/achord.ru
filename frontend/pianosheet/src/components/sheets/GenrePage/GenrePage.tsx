@@ -43,7 +43,7 @@ const GenrePageFC: React.FC<Props> = ({
     React.useEffect(() => {
         getAuthorsByGenreAlias(genreAlias);
         setPageNumber(1);
-    }, [genreAlias, location]);
+    }, [genre, location]);
 
     const getAuthorsByPage = (page: number) => {
         getAuthorsByGenreAlias(genreAlias, page);

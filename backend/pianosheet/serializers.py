@@ -9,8 +9,8 @@ User = get_user_model()
 class GenreListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        read_only_fields = ('id', 'alias')
-        fields = (*read_only_fields,'name')
+        read_only_fields = ('id', 'alias', 'preview')
+        fields = (*read_only_fields, 'name')
 
 
 class UserSerializer(serializers.ModelSerializer):

@@ -390,6 +390,31 @@ function getTopSheets(): GeneralThunkAction<void> {
     };
 }
 
+function getRandomAuthors(): GeneralThunkAction<void> {
+    return (dispatch) => {
+        dispatch(getAuthorsStarted());
+        SheetsClient.getRandomAuthors()
+            .then((authors) => {
+                dispatch(getAuthorsComplete(authors));
+            })
+            .catch((error) => {
+                dispatch(getAuthorsFailed('', '', error));
+            });
+    };
+}
+
+function getRandomSheets(): GeneralThunkAction<void> {
+    return (dispatch) => {
+        SheetsClient.getRandomSheets()
+            .then((sheets) => {
+                dispatch(getSheetsComplete(sheets));
+            })
+            .catch((error) => {
+                dispatch(getSheetsFailed('', '', error));
+            });
+    };
+}
+
 function getAuthorsByGenreAlias(genreAlias: string, page?: number): GeneralThunkAction<void> {
     return (dispatch) => {
         dispatch(getAuthorsStarted());
@@ -480,6 +505,8 @@ export const sheetsAction = {
     getAuthorsByGenreAlias,
     getGenres,
     getGenreByAlias,
+    getRandomAuthors,
+    getRandomSheets,
 };
 
 export const sheetsActionTypes = {

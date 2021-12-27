@@ -1,3 +1,5 @@
+@import 'styles/default.scss';
+
 $sliderThick: 4px;
 $sliderColor: rgb(17, 36, 119);
 $baseColor: rgb(217, 226, 255);
@@ -19,8 +21,12 @@ $baseColor: rgb(217, 226, 255);
     box-sizing: border-box;
     padding: 15px 0;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 18px;
+
+    &_active {
+      font-weight: bold;
+      cursor: default;
+    }
   }
 }
 
@@ -39,5 +45,21 @@ $baseColor: rgb(217, 226, 255);
     background: $sliderColor;
     border-radius: 2px;
     transition: 0.3s ease;
+  }
+}
+
+@media screen and (max-width: $siteWidthMobile) {
+  .tabs {
+    &__item {
+      font-size: 15px;
+    }
+  }
+}
+
+@media screen and (max-width: $siteWidthMobileXS) {
+  .tabs {
+    &__item {
+      font-size: 12px;
+    }
   }
 }

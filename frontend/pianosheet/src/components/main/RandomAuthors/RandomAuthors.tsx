@@ -4,7 +4,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootState } from 'store/rootReducer';
-import styles from './TopAuthors.scss';
+import styles from './RandomAuthors.scss';
 import { Paths } from 'utils/routes/Paths';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { sheetsAction } from 'store/sheetsActions';
@@ -16,7 +16,7 @@ interface Props {
     getSheets: () => void;
 }
 
-const TopAuthorsFC: React.FC<Props> = ({ authors, sheets, getAuthors, getSheets }) => {
+const RandomAuthorsFC: React.FC<Props> = ({ authors, sheets, getAuthors, getSheets }) => {
     React.useEffect(() => {
         getAuthors();
         getSheets();
@@ -38,7 +38,7 @@ const TopAuthorsFC: React.FC<Props> = ({ authors, sheets, getAuthors, getSheets 
             <div className={styles.title}>Авторы</div>
             <div className={styles.topAuthors}>
                 {authors.results.map((author, index) => {
-                    if (index < 10) {
+                    if (index < 12) {
                         return (
                             <AuthorCard
                                 key={author.id}
@@ -82,11 +82,11 @@ const mapStateToProps = ({ sheets: { authors, sheets } }: RootState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return bindActionCreators(
         {
-            getAuthors: sheetsAction.getTopAuthors,
-            getSheets: sheetsAction.getTopSheets,
+            getAuthors: sheetsAction.getRandomAuthors,
+            getSheets: sheetsAction.getRandomSheets,
         },
         dispatch,
     );
 };
 
-export const TopAuthors = connect(mapStateToProps, mapDispatchToProps)(TopAuthorsFC);
+export const RandomAuthors = connect(mapStateToProps, mapDispatchToProps)(RandomAuthorsFC);

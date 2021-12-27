@@ -13,7 +13,9 @@ const apiPath = `/api/pianosheet`;
 export class SheetsClient {
     /** Получение всех авторов */
     public static getAuthors(letter?: string, page?: number): Promise<AuthorJsModel> {
-        return api.get(`${apiPath}/author/`, { params: { letter, page, order_by: 'name' } }).then(retrieveData);
+        return api
+            .get(`${apiPath}/author/`, { params: { letter, page, order_by: 'name' } })
+            .then(retrieveData);
     }
 
     /** Получение автора по алиасу */
@@ -37,6 +39,11 @@ export class SheetsClient {
     /** Получение топ авторов */
     public static getTopAuthors(): Promise<AuthorJsModel> {
         return api.get(`${apiPath}/author/`, { params: { order_by: '-rate' } }).then(retrieveData);
+    }
+
+    /** Получение рандомного списка авторов */
+    public static getRandomAuthors(): Promise<AuthorJsModel> {
+        return api.get(`${apiPath}/author/random/`).then(retrieveData);
     }
 
     /** Добавление автора */
@@ -76,6 +83,11 @@ export class SheetsClient {
     /** Получние топ нот */
     public static getTopSheets(): Promise<SheetJsModel> {
         return api.get(`${apiPath}/note/`, { params: { order_by: '-rate' } }).then(retrieveData);
+    }
+
+    /** Получние рандомного списка нот */
+    public static getRandomSheets(): Promise<SheetJsModel> {
+        return api.get(`${apiPath}/note/random/`).then(retrieveData);
     }
 
     /** Добавление нот */

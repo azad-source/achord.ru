@@ -21,7 +21,7 @@ export const Tabs: React.FC<Props> = ({ items, value, className, onValueChange }
     React.useEffect(() => {
         const width = ref.current?.offsetWidth || 0;
         const sliderStep = width / items.length;
-        const sliderWidth = 0.8 * sliderStep;
+        const sliderWidth = sliderStep;
 
         setTabs((prev) => ({
             ...prev,
@@ -50,7 +50,10 @@ export const Tabs: React.FC<Props> = ({ items, value, className, onValueChange }
                 {items.map((caption, index) => (
                     <div
                         key={caption}
-                        className={styles.tabs__item}
+                        className={cn(
+                            styles.tabs__item,
+                            index === value && styles.tabs__item_active,
+                        )}
                         onClick={() => onValueChange(index)}
                     >
                         {caption}

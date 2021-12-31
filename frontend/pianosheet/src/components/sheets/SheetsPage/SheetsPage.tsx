@@ -8,7 +8,7 @@ import { RootState } from 'store/rootReducer';
 import { bindActionCreators, Dispatch } from 'redux';
 import { sheetsAction } from 'store/sheetsActions';
 import { GenreJsModel } from 'domain/api/JsModels';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 
@@ -19,11 +19,13 @@ interface Props {
 
 const SheetsPageFC: React.FC<Props> = ({ genres, getGenres }) => {
     const [pageNumber, setPageNumber] = React.useState<number>(1);
+    const location = useLocation();
+    const title = `${SiteName} - Ноты`;
 
     React.useEffect(() => {
-        document.title = `${SiteName} - Ноты`;
+        document.title = title;
         getGenres();
-    }, []);
+    }, [location]);
 
     const breadcrumbs: BreadcrumbProps[] = [
         {
@@ -38,7 +40,7 @@ const SheetsPageFC: React.FC<Props> = ({ genres, getGenres }) => {
     };
 
     return (
-        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn>
+        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn meta={{ title }}>
             <div className={styles.genres}>
                 {genres.results.map(({ id, name, alias, preview }) => (
                     <Link

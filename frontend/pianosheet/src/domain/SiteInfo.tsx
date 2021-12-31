@@ -1,6 +1,7 @@
 import logo from 'images/logo.png';
 
 export const SiteName: string = 'A-Chord';
+export const SiteDomain: string = 'achord.ru';
 
 /** Максимальный размер загружаемого файла pdf в байтах */
 export const maxUploadPdfSize: number = 20000000;

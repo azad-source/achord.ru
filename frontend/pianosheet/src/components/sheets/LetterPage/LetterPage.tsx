@@ -23,12 +23,10 @@ const LetterPageFC: React.FC<Props> = ({ authors, status, getAuthors }) => {
     const { letter } = useParams<{ letter: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const location = useLocation();
+    const title = `${SiteName} - ${letter.toUpperCase()}`;
 
     React.useEffect(() => {
-        document.title = `${SiteName} - ${letter.toUpperCase()}`;
-    }, []);
-
-    React.useEffect(() => {
+        document.title = title;
         getAuthors(letter);
         setPageNumber(1);
     }, [letter, location]);
@@ -50,7 +48,7 @@ const LetterPageFC: React.FC<Props> = ({ authors, status, getAuthors }) => {
     ];
 
     return (
-        <Page loadStatus={status} breadcrumbs={breadcrumbs} showAddAuthorBtn>
+        <Page loadStatus={status} breadcrumbs={breadcrumbs} showAddAuthorBtn meta={{ title }}>
             <div className={styles.root}>
                 <div className={styles.title}>{letter.toUpperCase()}</div>
                 <AuthorItems

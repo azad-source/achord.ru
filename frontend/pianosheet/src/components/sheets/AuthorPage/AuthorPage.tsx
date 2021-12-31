@@ -18,6 +18,8 @@ import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumb
 import { AuthorEditModal } from '../AuthorEditModal/AuthorEditModal';
 import { Button } from 'components/shared/Button/Button';
 import { EditIcon } from 'components/shared/icons/EditIcon';
+import { SiteMetaType } from 'components/shared/seo/SEO';
+import { SiteName } from 'domain/SiteInfo';
 
 interface Props {
     className?: string;
@@ -55,6 +57,10 @@ const AuthorPageFC: React.FC<Props> = ({
         getAuthor(authorAlias);
         setPageNumber(1);
     }, [location]);
+
+    React.useEffect(() => {
+        document.title = `${SiteName} - ${author.name}`;
+    }, [location, author]);
 
     const openSheetAddModal = () => setShowSheetAddModal(true);
     const closeSheetAddModal = () => setShowSheetAddModal(false);
@@ -108,8 +114,14 @@ const AuthorPageFC: React.FC<Props> = ({
         history.push(Paths.getGenrePage(genreAlias));
     };
 
+    const meta: SiteMetaType = {
+        title: author.name,
+        description: `Ноты автора ${author.name}`,
+        image: author.preview_s,
+    };
+
     return (
-        <Page loadStatus={status} breadcrumbs={breadcrumbs}>
+        <Page loadStatus={status} breadcrumbs={breadcrumbs} meta={meta}>
             <div className={cn(styles.root, className)}>
                 <div className={styles.title}>
                     <div className={styles.authorName}>{author.name}</div>

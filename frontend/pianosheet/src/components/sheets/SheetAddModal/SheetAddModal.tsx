@@ -23,12 +23,11 @@ export const SheetAddModal: React.FC<Props> = ({ closeModal, addSheet }) => {
     };
 
     const chooseFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) setForm({ ...form, filename: e.target.files[0] });
+        if (e.target.files)
+            setForm({ ...form, filename: e.target.files[0], sheetname: e.target.files[0].name });
     };
 
-    const onSave = () => {
-        addSheet(form);
-    };
+    const onSave = () => addSheet(form);
 
     return (
         <Modal

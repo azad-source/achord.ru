@@ -16,7 +16,6 @@ import { useHistory } from 'react-router-dom';
 import { AuthorItemJsModel, AuthorRequestModel } from 'domain/api/JsModels';
 import { Paths } from 'utils/routes/Paths';
 import { AuthorAddModal } from 'components/sheets/AuthorAddModal/AuthorAddModal';
-import { SEO, SiteMetaType } from 'components/shared/seo/SEO';
 
 interface Props {
     className?: string;
@@ -29,7 +28,6 @@ interface Props {
     isSuperUser?: boolean;
     showAddAuthorBtn?: boolean;
     darkTheme?: boolean;
-    meta?: SiteMetaType;
     dropSearch: () => void;
     searchSheets: (query: string, page: number) => void;
     searchAuthors: (query: string, page: number) => void;
@@ -47,7 +45,6 @@ const PageFC: React.FC<Props> = ({
     isSuperUser = false,
     showAddAuthorBtn = false,
     darkTheme = false,
-    meta,
     dropSearch,
     searchSheets,
     searchAuthors,
@@ -103,7 +100,6 @@ const PageFC: React.FC<Props> = ({
 
     return (
         <div className={cn(styles.backplate, darkTheme && styles.root_dark)}>
-            <SEO meta={meta} />
             {!hideSheetsNav && <SheetsNav />}
             <div className={cn(styles.root, className)}>
                 {!!breadcrumbs && <Breadcrumbs items={breadcrumbs} />}

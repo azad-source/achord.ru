@@ -12,7 +12,6 @@ import { QueryStatus } from 'domain/QueryStatus';
 import { SiteName } from 'domain/SiteInfo';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { Paths } from 'utils/routes/Paths';
-import { SiteMetaType } from 'components/shared/seo/SEO';
 
 interface Props {
     genre: GenreItemJsModel;
@@ -32,7 +31,6 @@ const GenrePageFC: React.FC<Props> = ({
     const { genreAlias } = useParams<{ genreAlias: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const location = useLocation();
-    const [meta, setMeta] = React.useState<SiteMetaType>();
 
     React.useEffect(() => {
         getGenreByAlias(genreAlias);
@@ -42,7 +40,6 @@ const GenrePageFC: React.FC<Props> = ({
         if (genre) {
             const title = `${SiteName} - ${genre.name}`;
             document.title = title;
-            setMeta((prev) => ({ ...prev, title }));
         }
     }, [genre]);
 
@@ -68,7 +65,7 @@ const GenrePageFC: React.FC<Props> = ({
     ];
 
     return (
-        <Page loadStatus={status} breadcrumbs={breadcrumbs} showAddAuthorBtn meta={meta}>
+        <Page loadStatus={status} breadcrumbs={breadcrumbs} showAddAuthorBtn>
             <div className={styles.root}>
                 <div className={styles.title}>{genre.name.toUpperCase()}</div>
                 <AuthorItems

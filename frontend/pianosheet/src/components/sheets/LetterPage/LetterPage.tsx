@@ -48,7 +48,7 @@ const LetterPageFC: React.FC<Props> = ({ authors, status, getAuthors }) => {
     ];
 
     return (
-        <Page loadStatus={status} breadcrumbs={breadcrumbs} showAddAuthorBtn meta={{ title }}>
+        <Page loadStatus={status} breadcrumbs={breadcrumbs} showAddAuthorBtn>
             <div className={styles.root}>
                 <div className={styles.title}>{letter.toUpperCase()}</div>
                 <AuthorItems

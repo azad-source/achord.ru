@@ -40,7 +40,7 @@ const SheetsPageFC: React.FC<Props> = ({ genres, getGenres }) => {
     };
 
     return (
-        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn meta={{ title }}>
+        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn>
             <div className={styles.genres}>
                 {genres.results.map(({ id, name, alias, preview }) => (
                     <Link

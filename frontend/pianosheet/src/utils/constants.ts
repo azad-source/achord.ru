@@ -1,4 +1,5 @@
 export const abcEn = [
+    // '0-9',
     'a',
     'b',
     'c',

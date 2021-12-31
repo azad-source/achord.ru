@@ -8,15 +8,18 @@ import styles from './TopAuthors.scss';
 import { Paths } from 'utils/routes/Paths';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { sheetsAction } from 'store/sheetsActions';
+import { Page } from 'components/shared/layout/Page/Page';
+import { QueryStatus } from 'domain/QueryStatus';
 
 interface Props {
     authors: AuthorJsModel;
     sheets: SheetJsModel;
+    status: QueryStatus;
     getAuthors: () => void;
     getSheets: () => void;
 }
 
-const TopAuthorsFC: React.FC<Props> = ({ authors, sheets, getAuthors, getSheets }) => {
+const TopAuthorsFC: React.FC<Props> = ({ authors, sheets, status, getAuthors, getSheets }) => {
     React.useEffect(() => {
         getAuthors();
         getSheets();
@@ -34,7 +37,7 @@ const TopAuthorsFC: React.FC<Props> = ({ authors, sheets, getAuthors, getSheets 
     };
 
     return (
-        <>
+        <Page loadStatus={status} hideSheetsNav>
             <div className={styles.title}>Авторы</div>
             <div className={styles.topAuthors}>
                 {authors.results.map((author, index) => {
@@ -70,13 +73,14 @@ const TopAuthorsFC: React.FC<Props> = ({ authors, sheets, getAuthors, getSheets 
                     }
                 })}
             </ol>
-        </>
+        </Page>
     );
 };
 
-const mapStateToProps = ({ sheets: { authors, sheets } }: RootState) => ({
+const mapStateToProps = ({ sheets: { authors, sheets, status } }: RootState) => ({
     authors,
     sheets,
+    status,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {

@@ -53,4 +53,7 @@ export class Paths {
 
     /** Раздел контактных данных */
     public static readonly contactsPage = '/contacts';
+
+    /** Страница с политикой обработки перс данных */
+    public static readonly privacyPage = '/privacy';
 }

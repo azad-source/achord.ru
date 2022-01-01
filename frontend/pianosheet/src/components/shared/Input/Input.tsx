@@ -31,6 +31,7 @@ interface Props {
     onKeyPress?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
     placeholder?: string;
+    id?: string;
     className?: string;
     autoFocus?: boolean;
     accept?: string;
@@ -40,14 +41,17 @@ interface Props {
     required?: boolean;
     icon?: React.ReactNode;
     width?: number | string;
+    checked?: boolean;
 }
 
 export const Input: React.FC<Props> = ({
+    id,
     className,
     type = 'text',
     required,
     icon,
     width,
+    checked,
     onClick,
     ...props
 }) => {
@@ -59,7 +63,9 @@ export const Input: React.FC<Props> = ({
             <input
                 type={type}
                 required={required}
+                id={id}
                 className={cn(styles.input, className, styles[type])}
+                checked={checked}
                 {...props}
             />
             <div onClick={onClick}>{icon}</div>

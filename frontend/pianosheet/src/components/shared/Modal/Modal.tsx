@@ -8,6 +8,7 @@ interface Props {
     title: string;
     loadStatus?: QueryStatus;
     bottomPanel?: React.ReactNode;
+    setScroll?: boolean;
     className?: string;
     onClose: () => void;
 }
@@ -17,13 +18,14 @@ export const Modal: React.FC<Props> = ({
     children,
     loadStatus = QueryStatus.success(),
     bottomPanel,
+    setScroll = false,
     className,
     onClose,
 }) => {
     return (
         <div className={styles.root}>
             <div className={styles.overlay}></div>
-            <div className={cn(styles.modal, className)}>
+            <div className={cn(styles.modal, setScroll && styles.modal_onScroll, className)}>
                 <div className={styles.scrollWrapper}>
                     <div className={styles.modal_title}>
                         {title}

@@ -37,6 +37,14 @@
   padding: 30px 30px 0;
   box-sizing: border-box;
 
+  &_onScroll {
+    top: 50%;
+    height: 98%;
+    .scrollWrapper {
+      overflow-y: scroll;
+    }
+  }
+
   .scrollWrapper {
     display: flex;
     flex-direction: column;
@@ -48,9 +56,10 @@
     font-size: 18px;
     margin-bottom: 15px;
     padding-bottom: 14px;
+    padding-right: 25px;
     border-bottom: 1px solid #aaa;
     position: sticky;
-    top: 0;
+    top: -1px;
     background-color: #fff;
     z-index: 10;
   }

@@ -30,3 +30,28 @@
   font-size: 14px;
   max-width: 300px;
 }
+
+.privacy {
+  display: flex;
+  width: 100%;
+  margin-top: 10px;
+  margin-left: 5px;
+  box-sizing: border-box;
+  cursor: pointer;
+
+  .link {
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  &__checkbox {
+    width: 16px;
+    height: 16px;
+    margin-top: 4px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+}

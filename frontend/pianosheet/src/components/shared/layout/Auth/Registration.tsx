@@ -3,17 +3,20 @@ import { Button } from 'components/shared/Button/Button';
 import { Input } from 'components/shared/Input/Input';
 import styles from './Registration.module.scss';
 import { SiteName } from 'domain/SiteInfo';
+import { Link } from 'components/shared/Link/Link';
+import { Modal } from 'components/shared/Modal/Modal';
+import { Privacy } from 'components/shared/Privacy/Privacy';
 
 interface Props {
     errorMessage: string;
     onSwitchForm: (bool: boolean) => void;
-    registerHandler: (
-        email: string,
-        password: string,
-        event: React.FormEvent,
-    ) => Promise<void>;
+    registerHandler: (email: string, password: string, event: React.FormEvent) => Promise<void>;
     regConfirm: (isSuccessRegistration: boolean, email: string) => void;
 }
+
+type InputType = React.ChangeEvent<HTMLInputElement>;
+
+const onPrivacy = false;
 
 export const Registration: React.FC<Props> = ({
     errorMessage,
@@ -21,12 +24,33 @@ export const Registration: React.FC<Props> = ({
     registerHandler,
     regConfirm,
 }) => {
-    const [email, setEmail] = React.useState<string>('');
-    const [password, setPassword] = React.useState<string>('');
+    const [form, setForm] = React.useState<{ email: string; password: string; privacy: boolean }>({
+        email: '',
+        password: '',
+        privacy: false,
+    });
+
+    const [showPrivacyModal, setShowPrivacyModal] = React.useState<boolean>(false);
 
     const handleRegistration = (e: React.FormEvent<HTMLFormElement>) => {
-        registerHandler(email, password, e).then(() => regConfirm(true, email));
+        registerHandler(form.email, form.password, e).then(() => regConfirm(true, form.email));
     };
+
+    const handlePrivacy = (e: InputType) => {
+        setForm({ ...form, privacy: e.target.checked });
+    };
+
+    const closePrivacyModal = () => {
+        setForm({ ...form, privacy: false });
+        setShowPrivacyModal(false);
+    };
+    const openPrivacyModal = () => setShowPrivacyModal(true);
+    const applyPrivacy = () => {
+        setForm({ ...form, privacy: true });
+        setShowPrivacyModal(false);
+    };
+
+    const btnDisabled = (onPrivacy && !form.privacy) || !form.email || !form.password;
 
     return (
         <div className={styles.root}>
@@ -35,27 +59,40 @@ export const Registration: React.FC<Props> = ({
                 <Input
                     placeholder="E-mail"
                     className={styles.input}
-                    value={email}
+                    value={form.email}
                     autoFocus
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setEmail(e.target.value)
-                    }
+                    onChange={(e: InputType) => setForm({ ...form, email: e.target.value })}
                 />
                 <Input
                     type="password"
                     placeholder="Пароль"
                     className={styles.input}
-                    value={password}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setPassword(e.target.value)
-                    }
+                    value={form.password}
+                    onChange={(e: InputType) => setForm({ ...form, password: e.target.value })}
                 />
+                {onPrivacy && (
+                    <label className={styles.privacy}>
+                        <Input
+                            type="checkbox"
+                            placeholder="Политика обработки персональных данных"
+                            className={styles.privacy__checkbox}
+                            checked={form.privacy}
+                            onChange={handlePrivacy}
+                        />
+                        <Link
+                            size="small"
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={openPrivacyModal}
+                            className={styles.link}
+                        >
+                            Даю свое согласие на обработку персональных данных
+                        </Link>
+                    </label>
+                )}
+
                 <div className={styles.btnsWrapper}>
-                    <Button
-                        type="submit"
-                        className={styles.btnLogin}
-                        disabled={false}
-                    >
+                    <Button type="submit" className={styles.btnLogin} disabled={btnDisabled}>
                         Создать
                     </Button>
                     <Button
@@ -67,8 +104,26 @@ export const Registration: React.FC<Props> = ({
                     </Button>
                 </div>
             </form>
-            {!!errorMessage && (
-                <div className={styles.errorsMsg}>{errorMessage}</div>
+            {!!errorMessage && <div className={styles.errorsMsg}>{errorMessage}</div>}
+            {showPrivacyModal && (
+                <Modal
+                    title="Политика обработки персональных данных"
+                    onClose={closePrivacyModal}
+                    bottomPanel={
+                        <>
+                            <Button onClick={applyPrivacy}>Принять</Button>
+                            <Button use="link" onClick={closePrivacyModal}>
+                                Отменить
+                            </Button>
+                        </>
+                    }
+                    setScroll
+                >
+                    <Link href="/privacy" target="_blank">
+                        Открыть отдельной страницей
+                    </Link>
+                    <Privacy />
+                </Modal>
             )}
         </div>
     );

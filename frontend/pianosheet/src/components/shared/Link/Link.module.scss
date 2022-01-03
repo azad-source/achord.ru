@@ -1,0 +1,35 @@
+@import 'styles/colors.scss';
+
+.root {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+
+.link {
+  color: $linkColor;
+
+  &:active {
+    color: $linkColor;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.xsmall {
+  font-size: 10px;
+}
+
+.small {
+  font-size: 12px;
+}
+
+.medium {
+  font-size: 14px;
+}
+
+.large {
+  font-size: 16px;
+}

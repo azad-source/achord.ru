@@ -1,0 +1,11 @@
+@import 'styles/colors';
+
+.title {
+  font-size: 24px;
+  line-height: 1.5;
+  font-weight: bold;
+  text-align: center;
+  color: $errorMessage;
+  padding-top: 20vh;
+  padding: 20vh 20px 0;
+}

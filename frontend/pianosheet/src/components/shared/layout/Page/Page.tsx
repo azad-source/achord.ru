@@ -16,6 +16,7 @@ import { useHistory } from 'react-router-dom';
 import { AuthorItemJsModel, AuthorRequestModel } from 'domain/api/JsModels';
 import { Paths } from 'utils/routes/Paths';
 import { AuthorAddModal } from 'components/sheets/AuthorAddModal/AuthorAddModal';
+import { ErrorBoundary } from 'components/shared/ErrorBoundary/ErrorBoundary';
 
 interface Props {
     className?: string;
@@ -100,22 +101,24 @@ const PageFC: React.FC<Props> = ({
 
     return (
         <div className={cn(styles.backplate, darkTheme && styles.root_dark)}>
-            {!hideSheetsNav && <SheetsNav />}
-            <div className={cn(styles.root, className)}>
-                {!!breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
-                {isSuperUser && showAddAuthorBtn && !search.applied && (
-                    <div
-                        onClick={openAddAuthorModal}
-                        className={styles.addAuthor}
-                        title="Добавить автора"
-                    />
+            <ErrorBoundary>
+                {!hideSheetsNav && <SheetsNav />}
+                <div className={cn(styles.root, className)}>
+                    {!!breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
+                    {isSuperUser && showAddAuthorBtn && !search.applied && (
+                        <div
+                            onClick={openAddAuthorModal}
+                            className={styles.addAuthor}
+                            title="Добавить автора"
+                        />
+                    )}
+                    {showContent ? output : <Spinner />}
+                </div>
+                {toast}
+                {showAddAuthorModal && (
+                    <AuthorAddModal closeModal={closeAddAuthorModal} addAuthor={addAuthorHandler} />
                 )}
-                {showContent ? output : <Spinner />}
-            </div>
-            {toast}
-            {showAddAuthorModal && (
-                <AuthorAddModal closeModal={closeAddAuthorModal} addAuthor={addAuthorHandler} />
-            )}
+            </ErrorBoundary>
         </div>
     );
 };

@@ -57,7 +57,7 @@ export const ContactsPage = () => {
                     {!!telegram && (
                         <a
                             className={styles.social}
-                            href={`https://telegram.im/@${telegram}`}
+                            href={`https://t.me/${telegram}`}
                             target="_blank"
                             rel="noreferrer"
                             title="telegram"

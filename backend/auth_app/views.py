@@ -1,18 +1,17 @@
+import requests
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.views import View
-from hashlib import md5
-from rest_framework_simplejwt.tokens import RefreshToken
-import requests
 from .oauth import Oauth2Google
-User = get_user_model()
-from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from . import serializers
+from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.decorators import action
+from rest_framework_simplejwt.tokens import RefreshToken
+from djoser.views import UserViewSet as DjoserUserViewSet
+User = get_user_model()
 
 
 class SocialLinks(View):
@@ -77,7 +76,7 @@ class LoginGoogle(View):
         }
 
 
-class UserViewset(viewsets.ReadOnlyModelViewSet):
+class UserViewset(DjoserUserViewSet):
     serializer_class = serializers.UserSerializer
     permission_classes = [IsAuthenticated]
     queryset = User.objects.all()

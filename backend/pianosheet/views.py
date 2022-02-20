@@ -7,8 +7,10 @@ from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
-from .models import Author, Genre, Note
+from .models import Author, Genre, Note, AuthorStat, NoteStat
 from .serializers import AuthorSerializer, NoteSerializer, GenreListSerializer
+from django.db.models import Prefetch, Count, Q
+from .pagination import GenrePagination, AuthorPagination, NotePagination
 User = get_user_model()
 
 
@@ -20,6 +22,39 @@ class CustomModelViewSet(ModelViewSet):
         except KeyError:
             return [permission() for permission in self.permission_classes]
     
+    @property
+    def like_count(self):
+        like_count = Count('itemstat__like', filter=Q(itemstat__like=True))
+        return {'like_count': like_count}
+
+    @property
+    def all_prefetch(self):
+        user = self.request.user
+        if user and user.is_authenticated:
+            stats = self.stats_model.objects.filter(user=self.request.user)
+        else:
+            stats = self.stats_model.objects.none()
+        itemstat = Prefetch('itemstat', stats)
+        return (itemstat,)
+    
+    def list_response(self, queryset):
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def random(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset().order_by('?'))
+        return self.list_response(queryset)
+
+    @action(detail=False, methods=['get'])
+    def favorite(self, request, *args, **kwargs):
+        queryset = self.get_queryset().filter(stats=self.request.user, itemstat__favorite=True)
+        return self.list_response(queryset)
+
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
         pk = self.kwargs['pk']
@@ -59,6 +94,7 @@ class CustomModelViewSet(ModelViewSet):
 class GenreViewSet(viewsets.ModelViewSet):
     serializer_class = GenreListSerializer
     queryset = Genre.objects.all()
+    pagination_class = GenrePagination
     permission_classes = (IsAdminUser,)
     lookup_fields = ('pk', 'alias',)
     permission_dict = {
@@ -91,6 +127,8 @@ class AuthorViewSet(CustomModelViewSet):
     serializer_class = AuthorSerializer
     queryset = Author.objects.all()
     permission_classes = (IsAdminUser,)
+    pagination_class = AuthorPagination
+    stats_model = AuthorStat
     permission_dict = {
         'list': (AllowAny, ),
         'random': (AllowAny, ),
@@ -100,20 +138,10 @@ class AuthorViewSet(CustomModelViewSet):
         'destroy': (IsAdminUser, ),
     }
     
-    @action(detail=False, methods=['get'])
-    def random(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset().order_by('?'))
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset()\
+            .annotate(**self.like_count)\
+            .prefetch_related(*self.all_prefetch)
         letter = self.request.GET.get("letter")
         alias = self.request.GET.get("alias")
         genre_alias = self.request.GET.get("genre_alias")
@@ -130,7 +158,9 @@ class AuthorViewSet(CustomModelViewSet):
 
 class NoteViewSet(CustomModelViewSet):
     serializer_class = NoteSerializer
+    stats_model = NoteStat
     permission_classes = (IsAdminUser,)
+    pagination_class = NotePagination
     permission_dict = {
         'list': (AllowAny, ),
         'random': (AllowAny, ),
@@ -140,20 +170,11 @@ class NoteViewSet(CustomModelViewSet):
         'destroy': (IsOwnerOrReadOnly, ),
     }
 
-    @action(detail=False, methods=['get'])
-    def random(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset().order_by('?'))
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
     def get_queryset(self):
-        queryset = Note.objects.select_related("author")
+        queryset = Note.objects\
+            .select_related("author")\
+            .annotate(**self.like_count)\
+            .prefetch_related(*self.all_prefetch)
         author_id = self.request.GET.get("author_id")
         author_alias = self.request.GET.get("author_alias")
         genre_alias = self.request.GET.get("genre_alias")

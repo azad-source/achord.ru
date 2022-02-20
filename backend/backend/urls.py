@@ -31,5 +31,7 @@ urlpatterns = [
     path('auth/', include('djoser.urls.jwt')),
 ] + static('media/', document_root=settings.MEDIA_ROOT
 ) + static('static/', document_root=settings.STATIC_ROOT
-) + [url(r'^.*$', TemplateView.as_view(template_name="index.html"))
-]
+) 
+
+# + [url(r'^.*$', TemplateView.as_view(template_name="index.html"))
+# ]

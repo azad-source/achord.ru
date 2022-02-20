@@ -239,7 +239,6 @@ STATICFILES_DIRS = (STATIC_REACR_DIR,)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 AUTH_USER_MODEL = 'auth_app.User'
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

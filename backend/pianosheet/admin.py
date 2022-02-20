@@ -35,4 +35,6 @@ class GenreAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Author, AuthorAdmin)
 admin.site.register(models.Note)
+admin.site.register(models.NoteStat)
+admin.site.register(models.AuthorStat)
 admin.site.register(models.Genre, GenreAdmin)

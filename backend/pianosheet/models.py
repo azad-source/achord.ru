@@ -38,8 +38,34 @@ class Genre(models.Model):
     def __str__(self):
         return self.name
 
-class Author(models.Model):
 
+class AbstractStat(models.Model):
+    favorite = models.BooleanField('избранное', default=False)
+    like = models.BooleanField('лайк', default=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    class Meta:
+        abstract = True
+
+
+class AuthorStat(AbstractStat):
+    item = models.ForeignKey('Author', on_delete=models.CASCADE, related_name='itemstat')
+    
+    class Meta:
+        verbose_name = 'Лайки Избранное Авторы'
+        verbose_name_plural = 'Лайки Избранное Авторы'
+
+
+class NoteStat(AbstractStat):
+    item = models.ForeignKey('Note', on_delete=models.CASCADE, related_name='itemstat')
+    
+    class Meta:
+        verbose_name = 'Лайки Избранное Ноты'
+        verbose_name_plural = 'Лайки Избранное Ноты'
+
+
+class Author(models.Model):
+    
     name = models.CharField(
         "имя",
         max_length=128,
@@ -96,10 +122,11 @@ class Author(models.Model):
         on_delete=models.SET_NULL,
         related_name='authors', 
         null=True,
-        )
+    )
     verificated = models.BooleanField(
         'проверено', default=False,
     )
+    stats = models.ManyToManyField(User, through='AuthorStat', related_name='author_stats')
     objects = managers.AuthorManager()
     class Meta:
         verbose_name = "aвтор"
@@ -158,6 +185,7 @@ class Note(models.Model):
         "рейтинг",
         default=0,
     )
+    stats = models.ManyToManyField(User, through='NoteStat', related_name='note_stats')
     verificated = models.BooleanField(
         'проверено', default=False,
     )

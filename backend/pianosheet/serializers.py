@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from .models import Author, Note, Genre
 User = get_user_model()
+from .functions import safe_list_get
 
 
 class GenreListSerializer(serializers.ModelSerializer):
@@ -19,14 +20,32 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id',)
 
 
-class AuthorSerializer(serializers.ModelSerializer):
+class LikeFavoriteSerializer(serializers.ModelSerializer):
+    like = serializers.SerializerMethodField()
+    favorite = serializers.SerializerMethodField()
+    like_count = serializers.SerializerMethodField()
+
+    def get_like(self, obj):
+        stats = obj.itemstat.all()
+        return safe_list_get([s.like for s in stats], 0, False)
+
+    def get_favorite(self, obj):
+        stats = obj.itemstat.all()
+        return safe_list_get([s.favorite for s in stats], 0, False)
+
+    def get_like_count(self, obj):
+        return obj.like_count
+
+
+class AuthorSerializer(LikeFavoriteSerializer):
     owner = UserSerializer(read_only=True)
     genres = GenreListSerializer(many=True, required=False)
 
     class Meta:
         model = Author
+        annotated_fields = ('like', 'favorite', 'like_count')
         read_only_fields = ('id', 'preview_s', 'preview_xs', 'alias', 'rate', 'owner')
-        fields = (*read_only_fields, 'name', 'info', 'preview', 'genres')
+        fields = (*annotated_fields, *read_only_fields, 'name', 'info', 'preview', 'genres')
 
     def create(self, validated_data):
         validated_data.pop('genres', None)
@@ -59,9 +78,11 @@ class AuthorSerializer(serializers.ModelSerializer):
         instance.genres.set(genres_all)
 
 
-class NoteSerializer(serializers.ModelSerializer):
+class NoteSerializer(LikeFavoriteSerializer):
     owner = UserSerializer(read_only=True)
+
     class Meta:
         model = Note
+        annotated_fields = ('like', 'favorite', 'like_count')
         read_only_fields = ('id', 'rate', 'owner')
-        fields = (*read_only_fields, 'name', 'filename', 'author', 'content_list')
+        fields = (*annotated_fields, *read_only_fields, 'name', 'filename', 'author', 'content_list')

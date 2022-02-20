@@ -133,6 +133,12 @@ DJOSER = {
     'ACTIVATION_URL': 'activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS': {},
+    'SERIALIZERS': {
+        'current_user': 'auth_app.serializers.UserSerializer'
+    },
+    'PERMISSIONS': {
+        'user_list': ['rest_framework.permissions.IsAdminUser'],
+    },
 }
 
 

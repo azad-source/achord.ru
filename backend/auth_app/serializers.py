@@ -4,6 +4,9 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
+    '''
+    Замена для стандартного сериалайзера djoser "current_user"
+    '''
     class Meta:
         model = User
         fields = ('id', 'email', 'is_superuser', 'first_name', 'last_name', 'avatar')

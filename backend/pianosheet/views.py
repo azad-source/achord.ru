@@ -8,7 +8,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from .models import Author, Genre, Note, AuthorStat, NoteStat
-from .serializers import AuthorSerializer, NoteSerializer, GenreListSerializer
+from .serializers import AuthorSerializer, NoteSerializer, GenreListSerializer, FavoriteNoteSerializer, FavoriteAuthorSerializer, LikeAuthorSerializer, LikeNoteSerializer
 from django.db.models import Prefetch, Count, Q
 from .pagination import GenrePagination, AuthorPagination, NotePagination
 User = get_user_model()
@@ -50,10 +50,35 @@ class CustomModelViewSet(ModelViewSet):
         queryset = self.filter_queryset(self.get_queryset().order_by('?'))
         return self.list_response(queryset)
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get','post'])
     def favorite(self, request, *args, **kwargs):
-        queryset = self.get_queryset().filter(stats=self.request.user, itemstat__favorite=True)
-        return self.list_response(queryset)
+        if request.method == 'GET':
+            queryset = self.get_queryset().filter(stats=self.request.user, itemstat__favorite=True)
+            return self.list_response(queryset)
+        
+        if request.method == 'POST':
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            data = serializer.validated_data
+            self.stats_model.objects.update_or_create(user=self.request.user, item=data.get('item'),
+                defaults={'favorite': data.get('favorite', False)},
+            )
+            return Response({'result': 'OK'})
+
+    @action(detail=False, methods=['get','post'])
+    def like(self, request, *args, **kwargs):
+        if request.method == 'GET':
+            queryset = self.get_queryset().filter(stats=self.request.user, itemstat__like=True)
+            return self.list_response(queryset)
+        
+        if request.method == 'POST':
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            data = serializer.validated_data
+            self.stats_model.objects.update_or_create(user=self.request.user, item=data.get('item'),
+                defaults={'like': data.get('like', False)},
+            )
+            return Response({'result': 'OK'})
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
@@ -137,7 +162,14 @@ class AuthorViewSet(CustomModelViewSet):
         'create': (IsAdminUser, ),
         'destroy': (IsAdminUser, ),
     }
-    
+
+    def get_serializer_class(self):
+        if self.action == 'favorite' and self.request.method == 'POST':
+            return FavoriteAuthorSerializer
+        if self.action == 'like' and self.request.method == 'POST':
+            return LikeAuthorSerializer
+        return super().get_serializer_class()
+
     def get_queryset(self):
         queryset = super().get_queryset()\
             .annotate(**self.like_count)\
@@ -169,6 +201,13 @@ class NoteViewSet(CustomModelViewSet):
         'create': (IsAuthenticated, ),
         'destroy': (IsOwnerOrReadOnly, ),
     }
+
+    def get_serializer_class(self):
+        if self.action == 'favorite' and self.request.method == 'POST':
+            return FavoriteNoteSerializer
+        if self.action == 'like' and self.request.method == 'POST':
+            return LikeNoteSerializer
+        return super().get_serializer_class()
 
     def get_queryset(self):
         queryset = Note.objects\

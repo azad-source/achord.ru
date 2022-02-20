@@ -86,3 +86,23 @@ class NoteSerializer(LikeFavoriteSerializer):
         annotated_fields = ('like', 'favorite', 'like_count')
         read_only_fields = ('id', 'rate', 'owner')
         fields = (*annotated_fields, *read_only_fields, 'name', 'filename', 'author', 'content_list')
+
+
+class FavoriteNoteSerializer(serializers.Serializer):
+    item = serializers.PrimaryKeyRelatedField(queryset=Note.objects.all())
+    favorite = serializers.BooleanField()
+
+
+class FavoriteAuthorSerializer(serializers.Serializer):
+    item = serializers.PrimaryKeyRelatedField(queryset=Author.objects.all())
+    favorite = serializers.BooleanField()
+
+
+class LikeNoteSerializer(serializers.Serializer):
+    item = serializers.PrimaryKeyRelatedField(queryset=Note.objects.all())
+    like = serializers.BooleanField()
+
+
+class LikeAuthorSerializer(serializers.Serializer):
+    item = serializers.PrimaryKeyRelatedField(queryset=Author.objects.all())
+    like = serializers.BooleanField()

@@ -15,10 +15,11 @@ const onSwitchForm = (bool: boolean) => console.log('onSwitchForm', bool);
 const registerHandler = (
     email: string,
     password: string,
+    re_password: string,
     event: React.FormEvent,
 ): Promise<void> => {
     event.preventDefault();
-    console.log(`email: ${email}, password: ${password}, event: ${event}`);
+    console.log(`email: ${email}, password: ${password}, re_password: ${re_password}, event: ${event}`);
 
     return new Promise((res) => res);
 };

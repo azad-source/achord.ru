@@ -15,7 +15,7 @@ import { SocialAuthParams } from 'domain/api/JsModels';
 
 interface Props {
     status: QueryStatus;
-    registration: (email: string, password: string) => Promise<void>;
+    registration: (email: string, password: string,  re_password: string) => Promise<void>;
     authorization: (email: string, password: string) => Promise<void>;
     dropError: () => void;
     resetPassword: (email: string) => Promise<void>;
@@ -54,10 +54,11 @@ const AuthPageFC: React.FC<Props> = ({
     const registerHandler = (
         email: string,
         password: string,
+        re_password: string,
         event: React.FormEvent,
     ): Promise<void> => {
         event.preventDefault();
-        return registration(email, password);
+        return registration(email, password, re_password);
     };
 
     const logoutHandler = () => {

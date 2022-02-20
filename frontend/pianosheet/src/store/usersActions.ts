@@ -24,7 +24,7 @@ function registrationFailed(
     return { type: REGISTRATION_FAILED, payload: { reason, message, error } };
 }
 
-function registration(email: string, password: string): GeneralThunkAction<Promise<void>> {
+function registration(email: string, password: string, re_password: string): GeneralThunkAction<Promise<void>> {
     return (dispatch) => {
         dispatch(registrationStarted());
         localStorage.removeItem('Token');
@@ -32,6 +32,7 @@ function registration(email: string, password: string): GeneralThunkAction<Promi
         let formData = new FormData();
         formData.append('email', email);
         formData.append('password', password);
+        formData.append('re_password', re_password);
         return UsersClient.register(formData)
             .then((res) => {
                 login(res);

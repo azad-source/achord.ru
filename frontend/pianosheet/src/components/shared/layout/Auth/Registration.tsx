@@ -10,7 +10,7 @@ import { Privacy } from 'components/shared/Privacy/Privacy';
 interface Props {
     errorMessage: string;
     onSwitchForm: (bool: boolean) => void;
-    registerHandler: (email: string, password: string, event: React.FormEvent) => Promise<void>;
+    registerHandler: (email: string, password: string, re_password: string, event: React.FormEvent) => Promise<void>;
     regConfirm: (isSuccessRegistration: boolean, email: string) => void;
 }
 
@@ -24,16 +24,17 @@ export const Registration: React.FC<Props> = ({
     registerHandler,
     regConfirm,
 }) => {
-    const [form, setForm] = React.useState<{ email: string; password: string; privacy: boolean }>({
+    const [form, setForm] = React.useState<{ email: string; password: string; re_password: string; privacy: boolean }>({
         email: '',
         password: '',
+        re_password: '',
         privacy: false,
     });
 
     const [showPrivacyModal, setShowPrivacyModal] = React.useState<boolean>(false);
 
     const handleRegistration = (e: React.FormEvent<HTMLFormElement>) => {
-        registerHandler(form.email, form.password, e).then(() => regConfirm(true, form.email));
+        registerHandler(form.email, form.password, form.re_password, e).then(() => regConfirm(true, form.email));
     };
 
     const handlePrivacy = (e: InputType) => {
@@ -69,6 +70,13 @@ export const Registration: React.FC<Props> = ({
                     className={styles.input}
                     value={form.password}
                     onChange={(e: InputType) => setForm({ ...form, password: e.target.value })}
+                />
+                <Input
+                    type="password"
+                    placeholder="Повторите пароль"
+                    className={styles.input}
+                    value={form.re_password}
+                    onChange={(e: InputType) => setForm({ ...form, re_password: e.target.value })}
                 />
                 {onPrivacy && (
                     <label className={styles.privacy}>

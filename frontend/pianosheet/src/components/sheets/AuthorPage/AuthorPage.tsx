@@ -19,6 +19,8 @@ import { AuthorEditModal } from '../AuthorEditModal/AuthorEditModal';
 import { Button } from 'components/shared/Button/Button';
 import { EditIcon } from 'components/shared/icons/EditIcon';
 import { SiteName } from 'domain/SiteInfo';
+import { FavoriteIcon } from 'components/shared/icons/FavoriteIcon';
+import { LikeIcon } from 'components/shared/icons/LikeIcon';
 
 interface Props {
     className?: string;
@@ -30,6 +32,10 @@ interface Props {
     getSheets: (alias: string, page: number) => void;
     addSheet: (sheet: FormData) => void;
     editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
+    addAuthorToFavorite: (authorId: number, isFavorite: boolean) => void;
+    addSheetToFavorite: (sheetId: number, isFavorite: boolean) => void;
+    likeAuthor: (authorId: number, hasLike: boolean) => void;
+    likeSheet: (sheetId: number, hasLike: boolean) => void;
 }
 
 const AuthorPageFC: React.FC<Props> = ({
@@ -42,6 +48,10 @@ const AuthorPageFC: React.FC<Props> = ({
     getSheets,
     addSheet,
     editAuthor,
+    addAuthorToFavorite,
+    addSheetToFavorite,
+    likeAuthor,
+    likeSheet,
 }) => {
     const [logged] = useAuth();
     const { letter, authorAlias } = useParams<{ letter: string; authorAlias: string }>();
@@ -113,22 +123,59 @@ const AuthorPageFC: React.FC<Props> = ({
         history.push(Paths.getGenrePage(genreAlias));
     };
 
+    const swithFavoriteAuthor = () => {
+        addAuthorToFavorite(author.id, !author.favorite);
+    };
+
+    const swithLikeAuthor = () => {
+        likeAuthor(author.id, !author.like);
+    };
+
     return (
         <Page loadStatus={status} breadcrumbs={breadcrumbs}>
             <div className={cn(styles.root, className)}>
                 <div className={styles.title}>
                     <div className={styles.authorName}>{author.name}</div>
-                    {isSuperUser && (
-                        <Button
-                            className={styles.editBtn}
-                            use="link"
-                            onClick={openEditModal}
-                            icon={<EditIcon />}
-                        >
-                            Изменить
-                        </Button>
+                    {logged && (
+                        <div className={styles.actions}>
+                            {isSuperUser && (
+                                <Button
+                                    className={styles.editBtn}
+                                    use="link"
+                                    onClick={openEditModal}
+                                    disabled={status.isRequest()}
+                                >
+                                    <EditIcon />
+                                </Button>
+                            )}
+                            <Button
+                                className={cn(styles.likeBtn, author.like && styles.likeBtn_active)}
+                                use="link"
+                                onClick={swithLikeAuthor}
+                                title={author.like ? 'Убрать лайк' : 'Поставить лайк'}
+                                disabled={status.isRequest()}
+                            >
+                                {author.like_count}{' '}
+                                <LikeIcon className={styles.likeIcon} active={author.like} />
+                            </Button>
+                            <Button
+                                className={cn(
+                                    styles.favoriteBtn,
+                                    author.favorite && styles.favoriteBtn_active,
+                                )}
+                                use="link"
+                                onClick={swithFavoriteAuthor}
+                                title={
+                                    author.favorite ? 'Убрать из избранных' : 'Добавить в избранное'
+                                }
+                                disabled={status.isRequest()}
+                            >
+                                <FavoriteIcon active={author.favorite} />
+                            </Button>
+                        </div>
                     )}
                 </div>
+
                 <div className={styles.content}>
                     <div className={styles.description}>
                         <div>
@@ -165,7 +212,7 @@ const AuthorPageFC: React.FC<Props> = ({
                     <div className={styles.sheets}>
                         {sheets.results && sheets.results.length > 0 ? (
                             <>
-                                {sheets.results.map(({ name, id }) => (
+                                {sheets.results.map(({ name, id, favorite }) => (
                                     <div key={id} className={styles.sheetItem}>
                                         <a
                                             href={Paths.getSheetDownloadPath(
@@ -178,6 +225,22 @@ const AuthorPageFC: React.FC<Props> = ({
                                         >
                                             {name}
                                         </a>
+                                        <Button
+                                            className={cn(
+                                                styles.favoriteBtn,
+                                                favorite && styles.favoriteBtn_active,
+                                            )}
+                                            use="link"
+                                            onClick={() => addSheetToFavorite(id, !favorite)}
+                                            title={
+                                                favorite
+                                                    ? 'Убрать из избранных'
+                                                    : 'Добавить в избранное'
+                                            }
+                                            disabled={status.isRequest()}
+                                        >
+                                            <FavoriteIcon active={favorite} />
+                                        </Button>
                                     </div>
                                 ))}
                             </>
@@ -229,6 +292,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
             getSheets: sheetsAction.getSheets,
             addSheet: sheetsAction.addSheet,
             editAuthor: sheetsAction.editAuthor,
+            addAuthorToFavorite: sheetsAction.addAuthorToFavorite,
+            addSheetToFavorite: sheetsAction.addSheetToFavorite,
+            likeAuthor: sheetsAction.likeAuthor,
+            likeSheet: sheetsAction.likeSheet,
         },
         dispatch,
     );

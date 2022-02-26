@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { arrToString } from 'utils/arrayTransform';
+import { getAuthToken } from 'utils/tokenHelper';
 import { buildSearchString } from '../utils/urlHelpers';
 import { headers } from './UsersClient';
 
@@ -69,15 +70,25 @@ function spaApiInterceptor(resp: AxiosResponse): Promise<AxiosResponse> {
     return Promise.resolve(resp);
 }
 
-const withHeader = [
+let withHeader = [
     '/auth/users/me/',
     '/api/pianosheet/author/favorite/',
     '/api/pianosheet/note/favorite/',
 ];
 
+if (getAuthToken()?.access) {
+    withHeader = [
+        ...withHeader,
+        '/api/pianosheet/author/',
+        '/api/pianosheet/note/',
+        '/api/pianosheet/author/random/',
+        '/api/pianosheet/note/random/',
+    ];
+}
+
 const withoutHeader = ['/auth/users/'];
 
-function ieCachePreventInterceptor(config: AxiosRequestConfig): AxiosRequestConfig {
+function axiosInterceptor(config: AxiosRequestConfig): AxiosRequestConfig {
     const url = config.url || '';
 
     if ((config.method !== 'get' || withHeader.includes(url)) && !withoutHeader.includes(url)) {
@@ -94,4 +105,4 @@ function ieCachePreventInterceptor(config: AxiosRequestConfig): AxiosRequestConf
     return config;
 }
 
-api.interceptors.request.use((req) => ieCachePreventInterceptor(req));
+api.interceptors.request.use((req) => axiosInterceptor(req));

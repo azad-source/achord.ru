@@ -533,22 +533,150 @@ function addAuthorToFavoriteFailed(
     return { type: ADD_AUTHOR_TO_FAVORITE_FAILED, payload: { reason, message, error } };
 }
 
-function addAuthorToFavorite(
-    authorId: number,
-    isFavorite: boolean,
-): GeneralThunkAction<Promise<void>> {
+function addAuthorToFavorite(authorId: number, isFavorite: boolean): GeneralThunkAction<void> {
     return (dispatch) => {
         const favorite = new FormData();
         favorite.append('item', `${authorId}`);
         favorite.append('favorite', `${isFavorite}`);
 
         dispatch(addAuthorToFavoriteStarted());
-        return SheetsClient.addAuthorToFavorite(favorite)
-            .then(() => {
-                addAuthorToFavoriteComplete(authorId, isFavorite);
+        SheetsClient.addAuthorToFavorite(favorite)
+            .then((res) => {
+                if (res?.result === 'OK') {
+                    setTimeout(() => {
+                        dispatch(addAuthorToFavoriteComplete(authorId, isFavorite));
+                    }, 100);
+                }
             })
             .catch((error) => {
                 dispatch(addAuthorToFavoriteFailed('', '', error));
+                dispatch(errorHandler(error));
+            });
+    };
+}
+
+const LIKE_AUTHOR_STARTED = 'SHEETS/LIKE_AUTHOR_STARTED';
+const LIKE_AUTHOR_COMPLETE = 'SHEETS/LIKE_AUTHOR_COMPLETE';
+const LIKE_AUTHOR_FAILED = 'SHEETS/LIKE_AUTHOR_FAILED';
+function likeAuthorStarted(): Action {
+    return { type: LIKE_AUTHOR_STARTED };
+}
+function likeAuthorComplete(
+    authorId: number,
+    hasLike: boolean,
+): PayloadedAction<{ authorId: number; hasLike: boolean }> {
+    return { type: LIKE_AUTHOR_COMPLETE, payload: { authorId, hasLike } };
+}
+function likeAuthorFailed(
+    reason: string,
+    message: string,
+    error: Error,
+): PayloadedAction<{ reason: string; message: string; error: Error }> {
+    return { type: LIKE_AUTHOR_FAILED, payload: { reason, message, error } };
+}
+
+function likeAuthor(authorId: number, hasLike: boolean): GeneralThunkAction<void> {
+    return (dispatch) => {
+        const favorite = new FormData();
+        favorite.append('item', `${authorId}`);
+        favorite.append('like', `${hasLike}`);
+
+        dispatch(likeAuthorStarted());
+        SheetsClient.addLikeToAuthor(favorite)
+            .then((res) => {
+                if (res?.result === 'OK') {
+                    setTimeout(() => {
+                        dispatch(likeAuthorComplete(authorId, hasLike));
+                    }, 100);
+                }
+            })
+            .catch((error) => {
+                dispatch(likeAuthorFailed('', '', error));
+                dispatch(errorHandler(error));
+            });
+    };
+}
+
+//----------------------------------
+const ADD_SHEET_TO_FAVORITE_STARTED = 'SHEETS/ADD_SHEET_TO_FAVORITE_STARTED';
+const ADD_SHEET_TO_FAVORITE_COMPLETE = 'SHEETS/ADD_SHEET_TO_FAVORITE_COMPLETE';
+const ADD_SHEET_TO_FAVORITE_FAILED = 'SHEETS/ADD_SHEET_TO_FAVORITE_FAILED';
+function addSheetToFavoriteStarted(): Action {
+    return { type: ADD_SHEET_TO_FAVORITE_STARTED };
+}
+function addSheetToFavoriteComplete(
+    sheetId: number,
+    isFavorite: boolean,
+): PayloadedAction<{ sheetId: number; isFavorite: boolean }> {
+    return { type: ADD_SHEET_TO_FAVORITE_COMPLETE, payload: { sheetId, isFavorite } };
+}
+function addSheetToFavoriteFailed(
+    reason: string,
+    message: string,
+    error: Error,
+): PayloadedAction<{ reason: string; message: string; error: Error }> {
+    return { type: ADD_SHEET_TO_FAVORITE_FAILED, payload: { reason, message, error } };
+}
+
+function addSheetToFavorite(sheetId: number, isFavorite: boolean): GeneralThunkAction<void> {
+    return (dispatch) => {
+        const favorite = new FormData();
+        favorite.append('item', `${sheetId}`);
+        favorite.append('favorite', `${isFavorite}`);
+
+        dispatch(addSheetToFavoriteStarted());
+        SheetsClient.addSheetToFavorite(favorite)
+            .then((res) => {
+                if (res?.result === 'OK') {
+                    setTimeout(() => {
+                        dispatch(addSheetToFavoriteComplete(sheetId, isFavorite));
+                    }, 100);
+                }
+            })
+            .catch((error) => {
+                dispatch(addSheetToFavoriteFailed('', '', error));
+                dispatch(errorHandler(error));
+            });
+    };
+}
+
+const LIKE_SHEET_STARTED = 'SHEETS/LIKE_SHEET_STARTED';
+const LIKE_SHEET_COMPLETE = 'SHEETS/LIKE_SHEET_COMPLETE';
+const LIKE_SHEET_FAILED = 'SHEETS/LIKE_SHEET_FAILED';
+function likeSheetStarted(): Action {
+    return { type: LIKE_SHEET_STARTED };
+}
+function likeSheetComplete(
+    sheetId: number,
+    hasLike: boolean,
+): PayloadedAction<{ sheetId: number; hasLike: boolean }> {
+    return { type: LIKE_SHEET_COMPLETE, payload: { sheetId, hasLike } };
+}
+function likeSheetFailed(
+    reason: string,
+    message: string,
+    error: Error,
+): PayloadedAction<{ reason: string; message: string; error: Error }> {
+    return { type: LIKE_SHEET_FAILED, payload: { reason, message, error } };
+}
+
+function likeSheet(sheetId: number, hasLike: boolean): GeneralThunkAction<void> {
+    return (dispatch) => {
+        const favorite = new FormData();
+        favorite.append('item', `${sheetId}`);
+        favorite.append('like', `${hasLike}`);
+
+        dispatch(likeSheetStarted());
+        SheetsClient.addLikeToSheet(favorite)
+            .then((res) => {
+                if (res?.result === 'OK') {
+                    setTimeout(() => {
+                        dispatch(likeSheetComplete(sheetId, hasLike));
+                    }, 100);
+                }
+            })
+            .catch((error) => {
+                dispatch(likeSheetFailed('', '', error));
                 dispatch(errorHandler(error));
             });
     };
@@ -576,6 +704,9 @@ export const sheetsAction = {
     getFavoriteAuthors,
     getFavoriteSheets,
     addAuthorToFavorite,
+    addSheetToFavorite,
+    likeAuthor,
+    likeSheet,
 };
 
 export const sheetsActionTypes = {
@@ -647,4 +778,19 @@ export const sheetsActionTypes = {
     ADD_AUTHOR_TO_FAVORITE_FAILED,
     addAuthorToFavoriteComplete,
     addAuthorToFavoriteFailed,
+    LIKE_AUTHOR_STARTED,
+    LIKE_AUTHOR_COMPLETE,
+    LIKE_AUTHOR_FAILED,
+    likeAuthorComplete,
+    likeAuthorFailed,
+    ADD_SHEET_TO_FAVORITE_STARTED,
+    ADD_SHEET_TO_FAVORITE_COMPLETE,
+    ADD_SHEET_TO_FAVORITE_FAILED,
+    addSheetToFavoriteComplete,
+    addSheetToFavoriteFailed,
+    LIKE_SHEET_STARTED,
+    LIKE_SHEET_COMPLETE,
+    LIKE_SHEET_FAILED,
+    likeSheetComplete,
+    likeSheetFailed,
 };

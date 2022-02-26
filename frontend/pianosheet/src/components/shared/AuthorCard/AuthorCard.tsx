@@ -7,6 +7,9 @@ import defaultImg from 'images/default.png';
 import { AuthorEditModal } from 'components/sheets/AuthorEditModal/AuthorEditModal';
 import { AuthorItemJsModel, AuthorRequestModel } from 'domain/api/JsModels';
 import { RemoveModal } from '../RemoveModal/RemoveModal';
+import { useAuth } from 'api/UsersClient';
+import { FavoriteIcon } from '../icons/FavoriteIcon';
+import { Button } from '../Button/Button';
 
 interface Props {
     className?: string;
@@ -14,6 +17,7 @@ interface Props {
     isSuperUser?: boolean;
     editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
     removeAuthor: (authorId: number) => void;
+    addAuthorToFavorite: (authorId: number, isFavorite: boolean) => void;
 }
 
 export const AuthorCard: React.FC<Props> = ({
@@ -22,13 +26,16 @@ export const AuthorCard: React.FC<Props> = ({
     isSuperUser = false,
     editAuthor,
     removeAuthor,
+    addAuthorToFavorite,
 }) => {
     const history = useHistory();
     const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
     const [showRemoveModal, setShowRemoveModal] = React.useState<boolean>(false);
     const [showEditMenu, setShowEditMenu] = React.useState<boolean>(false);
 
-    const { id, preview, alias, name } = author;
+    const [logged] = useAuth();
+
+    const { id, preview, alias, name, favorite } = author;
     const authorImage = preview || defaultImg;
     const authorPath = alias ? Paths.getAuthorPath(author.name.charAt(0), alias) : '';
 
@@ -44,7 +51,7 @@ export const AuthorCard: React.FC<Props> = ({
         }, 4000);
     };
 
-    const openEditModal = (e: React.MouseEvent<HTMLSpanElement>) => {
+    const openEditModal = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
         setShowEditModal(true);
@@ -85,10 +92,17 @@ export const AuthorCard: React.FC<Props> = ({
         removeAuthor(author.id);
     };
 
+    const addToFavorite = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+        addAuthorToFavorite(id, !favorite);
+        setShowEditMenu(false);
+    };
+
     return (
         <>
             <NavLink className={cn(styles.root, className)} to={authorPath}>
-                {isSuperUser && (
+                {logged && (
                     <>
                         <span className={styles.edit} onClick={openEditMenu}>
                             <div className={styles.edit_icon}>
@@ -99,18 +113,25 @@ export const AuthorCard: React.FC<Props> = ({
                         </span>
                         {showEditMenu && (
                             <div className={styles.editMenu}>
-                                <div className={styles.editMenu_item} onClick={openEditModal}>
-                                    Изменить
+                                {isSuperUser && (
+                                    <div className={styles.editMenu_item} onClick={openEditModal}>
+                                        Изменить
+                                    </div>
+                                )}
+                                <div className={cn(styles.editMenu_item)} onClick={addToFavorite}>
+                                    {favorite ? 'Убрать из избранных' : 'В избранное'}
                                 </div>
-                                <div
-                                    className={cn(
-                                        styles.editMenu_item,
-                                        styles.editMenu_item__remove,
-                                    )}
-                                    onClick={openRemoveModal}
-                                >
-                                    Удалить
-                                </div>
+                                {isSuperUser && (
+                                    <div
+                                        className={cn(
+                                            styles.editMenu_item,
+                                            styles.editMenu_item__remove,
+                                        )}
+                                        onClick={openRemoveModal}
+                                    >
+                                        Удалить
+                                    </div>
+                                )}
                                 <div className={styles.editMenu_item} onClick={closeEditMenu}>
                                     Отмена
                                 </div>
@@ -120,6 +141,20 @@ export const AuthorCard: React.FC<Props> = ({
                 )}
 
                 <div className={styles.img}>
+                    {logged && (
+                        <Button
+                            className={cn(
+                                styles.favoriteBtn,
+                                favorite && styles.favoriteBtn_active,
+                            )}
+                            use="link"
+                            onClick={addToFavorite}
+                            title={favorite ? 'Убрать из избранных' : 'Добавить в избранное'}
+                            disabled={false}
+                        >
+                            <FavoriteIcon active={favorite} />
+                        </Button>
+                    )}
                     <div
                         className={cn(styles.img_bg, !hasPreview && styles.img_bg__default)}
                         style={{ backgroundImage: 'url(' + authorImage + ')' }}

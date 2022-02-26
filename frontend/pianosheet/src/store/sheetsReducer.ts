@@ -50,6 +50,9 @@ export const defaultSheetItem: SheetItemJsModel = {
     filename: '',
     savedate: '',
     rate: 0,
+    favorite: false,
+    like: false,
+    like_count: 0,
 };
 
 export const defaultGenreItem: GenreItemJsModel = {
@@ -152,6 +155,21 @@ const {
     ADD_AUTHOR_TO_FAVORITE_FAILED,
     addAuthorToFavoriteComplete,
     addAuthorToFavoriteFailed,
+    LIKE_AUTHOR_STARTED,
+    LIKE_AUTHOR_COMPLETE,
+    LIKE_AUTHOR_FAILED,
+    likeAuthorComplete,
+    likeAuthorFailed,
+    ADD_SHEET_TO_FAVORITE_STARTED,
+    ADD_SHEET_TO_FAVORITE_COMPLETE,
+    ADD_SHEET_TO_FAVORITE_FAILED,
+    addSheetToFavoriteComplete,
+    addSheetToFavoriteFailed,
+    LIKE_SHEET_STARTED,
+    LIKE_SHEET_COMPLETE,
+    LIKE_SHEET_FAILED,
+    likeSheetComplete,
+    likeSheetFailed,
 } = sheetsActionTypes;
 
 export function sheetsReducer(
@@ -424,6 +442,12 @@ export function sheetsReducer(
                 if (draft.author.id === authorId) {
                     draft.author.favorite = isFavorite;
                 }
+                draft.authors.results.forEach(({ id }, index) => {
+                    if (id === authorId) {
+                        draft.authors.results[index].favorite = isFavorite;
+                    }
+                });
+
                 draft.status = QueryStatus.success();
             });
         }
@@ -431,6 +455,100 @@ export function sheetsReducer(
             const {
                 payload: { reason, message, error },
             } = action as ReturnType<typeof addAuthorToFavoriteFailed>;
+            return produce(state, (draft) => {
+                draft.status = QueryStatus.error(reason, message, error);
+            });
+        }
+
+        case LIKE_AUTHOR_STARTED: {
+            return produce(state, (draft) => {
+                draft.status = QueryStatus.request();
+            });
+        }
+        case LIKE_AUTHOR_COMPLETE: {
+            const {
+                payload: { authorId, hasLike },
+            } = action as ReturnType<typeof likeAuthorComplete>;
+            return produce(state, (draft) => {
+                if (draft.author.id === authorId) {
+                    draft.author.like = hasLike;
+                    draft.author.like_count = draft.author.like_count + (hasLike ? 1 : -1);
+                }
+                draft.authors.results.forEach(({ id }, index) => {
+                    if (id === authorId) {
+                        draft.authors.results[index].like = hasLike;
+                        draft.authors.results[index].like_count =
+                            draft.authors.results[index].like_count + (hasLike ? 1 : -1);
+                    }
+                });
+
+                draft.status = QueryStatus.success();
+            });
+        }
+        case LIKE_AUTHOR_FAILED: {
+            const {
+                payload: { reason, message, error },
+            } = action as ReturnType<typeof likeAuthorFailed>;
+            return produce(state, (draft) => {
+                draft.status = QueryStatus.error(reason, message, error);
+            });
+        }
+
+        //----------
+
+        case ADD_SHEET_TO_FAVORITE_STARTED: {
+            return produce(state, (draft) => {
+                draft.status = QueryStatus.request();
+            });
+        }
+        case ADD_SHEET_TO_FAVORITE_COMPLETE: {
+            const {
+                payload: { sheetId, isFavorite },
+            } = action as ReturnType<typeof addSheetToFavoriteComplete>;
+            return produce(state, (draft) => {
+                draft.sheets.results.forEach(({ id }, index) => {
+                    if (id === sheetId) {
+                        draft.sheets.results[index].favorite = isFavorite;
+                    }
+                });
+
+                draft.status = QueryStatus.success();
+            });
+        }
+        case ADD_SHEET_TO_FAVORITE_FAILED: {
+            const {
+                payload: { reason, message, error },
+            } = action as ReturnType<typeof addSheetToFavoriteFailed>;
+            return produce(state, (draft) => {
+                draft.status = QueryStatus.error(reason, message, error);
+            });
+        }
+
+        case LIKE_SHEET_STARTED: {
+            return produce(state, (draft) => {
+                draft.status = QueryStatus.request();
+            });
+        }
+        case LIKE_SHEET_COMPLETE: {
+            const {
+                payload: { sheetId, hasLike },
+            } = action as ReturnType<typeof likeSheetComplete>;
+            return produce(state, (draft) => {
+                draft.sheets.results.forEach(({ id }, index) => {
+                    if (id === sheetId) {
+                        draft.sheets.results[index].like = hasLike;
+                        draft.sheets.results[index].like_count =
+                            draft.sheets.results[index].like_count + (hasLike ? 1 : -1);
+                    }
+                });
+
+                draft.status = QueryStatus.success();
+            });
+        }
+        case LIKE_SHEET_FAILED: {
+            const {
+                payload: { reason, message, error },
+            } = action as ReturnType<typeof likeSheetFailed>;
             return produce(state, (draft) => {
                 draft.status = QueryStatus.error(reason, message, error);
             });

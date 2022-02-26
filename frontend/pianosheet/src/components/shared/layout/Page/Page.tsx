@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { sheetsAction } from 'store/sheetsActions';
 import { SheetsNav } from '../SheetsNav/SheetsNav';
-import { SearchApiResults } from 'store/sheetsReducer';
 import { SearchResults } from 'components/search/SearchResults';
 import { useToast } from 'components/shared/Toast/Toast';
 import { BreadcrumbProps, Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
@@ -22,65 +21,38 @@ interface Props {
     className?: string;
     loadStatus?: QueryStatus;
     children: React.ReactNode;
-    search: SearchApiResults;
+    searchApplied: boolean;
     hideSheetsNav?: boolean;
     warning?: string;
     breadcrumbs?: BreadcrumbProps[];
     isSuperUser?: boolean;
     showAddAuthorBtn?: boolean;
     darkTheme?: boolean;
-    dropSearch: () => void;
-    searchSheets: (query: string, page: number) => void;
-    searchAuthors: (query: string, page: number) => void;
     addAuthor: (author: FormData) => Promise<AuthorItemJsModel | false>;
-    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
-    removeAuthor: (authorId: number) => void;
 }
 
 const PageFC: React.FC<Props> = ({
     className,
     children,
     loadStatus = QueryStatus.success(),
-    search,
+    searchApplied,
     hideSheetsNav = false,
     warning,
     breadcrumbs,
     isSuperUser = false,
     showAddAuthorBtn = false,
     darkTheme = false,
-    dropSearch,
-    searchSheets,
-    searchAuthors,
     addAuthor,
-    editAuthor,
-    removeAuthor,
 }) => {
-    const [showContent, setShowContent] = React.useState<boolean>(false);
     const [showAddAuthorModal, setShowAddAuthorModal] = React.useState<boolean>(false);
     const history = useHistory();
 
-    React.useEffect(() => {
-        setTimeout(() => {
-            setShowContent(true);
-        }, 200);
-    }, []);
-
     let output: React.ReactNode = '';
 
-    if (search.applied) {
-        output = (
-            <SearchResults
-                search={search}
-                skipSearch={dropSearch}
-                searchSheets={searchSheets}
-                searchAuthors={searchAuthors}
-                isSuperUser={isSuperUser}
-                editAuthor={editAuthor}
-                removeAuthor={removeAuthor}
-            />
-        );
+    if (searchApplied) {
+        output = <SearchResults />;
     } else {
-        output = loadStatus.isRequest() ? <Spinner /> : children;
+        output = children;
     }
 
     const { toast, push } = useToast();
@@ -112,14 +84,15 @@ const PageFC: React.FC<Props> = ({
                 {!hideSheetsNav && <SheetsNav />}
                 <div className={cn(styles.root, className)}>
                     {!!breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
-                    {isSuperUser && showAddAuthorBtn && !search.applied && (
+                    {isSuperUser && showAddAuthorBtn && !searchApplied && (
                         <div
                             onClick={openAddAuthorModal}
                             className={styles.addAuthor}
                             title="Добавить автора"
                         />
                     )}
-                    {showContent ? output : <Spinner />}
+                    {loadStatus.isRequest() && <Spinner />}
+                    {output}
                 </div>
                 {toast}
                 {showAddAuthorModal && (
@@ -134,12 +107,13 @@ type OwnProps = Pick<Props, 'className' | 'loadStatus' | 'children' | 'darkTheme
 
 const mapStateToProps = (
     { sheets, users: { currentUser } }: RootState,
-    { className, loadStatus, children }: OwnProps,
+    { className, loadStatus, children, darkTheme }: OwnProps,
 ) => ({
     className,
     loadStatus,
     children,
-    search: sheets.search,
+    darkTheme,
+    searchApplied: sheets.search.applied,
     warning: sheets.warning,
     isSuperUser: currentUser.is_superuser,
 });
@@ -147,12 +121,7 @@ const mapStateToProps = (
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return bindActionCreators(
         {
-            dropSearch: sheetsAction.dropSearch,
-            searchSheets: sheetsAction.searchSheetsByPage,
-            searchAuthors: sheetsAction.searchAuthorsByPage,
             addAuthor: sheetsAction.addAuthor,
-            editAuthor: sheetsAction.editAuthor,
-            removeAuthor: sheetsAction.removeAuthor,
         },
         dispatch,
     );

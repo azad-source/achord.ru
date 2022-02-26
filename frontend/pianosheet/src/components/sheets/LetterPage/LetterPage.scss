@@ -18,6 +18,15 @@
   margin-bottom: 40px;
 }
 
+.empty {
+  width: 100%;
+  padding-top: 30px;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @media screen and (max-width: $siteWidthTab) {
   .authors {
     grid-template-columns: repeat(3, 1fr);

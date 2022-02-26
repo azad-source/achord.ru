@@ -2,7 +2,6 @@ import {
     AuthorJsModel,
     AuthorItemJsModel,
     SheetItemJsModel,
-    GenreJsModel,
     GenreItemJsModel,
 } from 'domain/api/JsModels';
 import authorImage from './img200x200.jpg';
@@ -14,6 +13,9 @@ const sheetDefault: SheetItemJsModel = {
     author: 1,
     savedate: '01.01.2021',
     rate: 0,
+    like: false,
+    favorite: false,
+    like_count: 0,
 };
 
 const sheetsNames = [

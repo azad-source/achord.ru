@@ -10,6 +10,10 @@ import { Paths } from 'utils/routes/Paths';
 import { AuthorItemJsModel, SheetItemJsModel } from 'domain/api/JsModels';
 import { SheetsClient } from 'api/SheetsClient';
 import { SiteName } from 'domain/SiteInfo';
+import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+import { sheetsAction } from 'store/sheetsActions';
+import { RootState } from 'store/rootReducer';
 
 interface Props {
     search: SearchApiResults;
@@ -19,9 +23,10 @@ interface Props {
     searchAuthors: (query: string, page: number) => void;
     editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
     removeAuthor: (authorId: number) => void;
+    addAuthorToFavorite: (authorId: number, isFavorite: boolean) => void;
 }
 
-export const SearchResults: React.FC<Props> = ({
+const SearchResultsFC: React.FC<Props> = ({
     search,
     isSuperUser = false,
     editAuthor,
@@ -29,6 +34,7 @@ export const SearchResults: React.FC<Props> = ({
     skipSearch,
     searchSheets,
     searchAuthors,
+    addAuthorToFavorite,
 }) => {
     let output: React.ReactNode;
     const [pageNumberSheet, setPageNumberSheet] = React.useState<number>(1);
@@ -114,6 +120,7 @@ export const SearchResults: React.FC<Props> = ({
                                     isSuperUser={isSuperUser}
                                     editAuthor={editAuthor}
                                     removeAuthor={removeAuthor}
+                                    addAuthorToFavorite={addAuthorToFavorite}
                                 />
                             ))}
                         </div>
@@ -134,3 +141,24 @@ export const SearchResults: React.FC<Props> = ({
 
     return <>{output}</>;
 };
+
+const mapStateToProps = ({ sheets, users: { currentUser } }: RootState) => ({
+    search: sheets.search,
+    isSuperUser: currentUser.is_superuser,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+    return bindActionCreators(
+        {
+            skipSearch: sheetsAction.dropSearch,
+            searchSheets: sheetsAction.searchSheetsByPage,
+            searchAuthors: sheetsAction.searchAuthorsByPage,
+            editAuthor: sheetsAction.editAuthor,
+            removeAuthor: sheetsAction.removeAuthor,
+            addAuthorToFavorite: sheetsAction.addAuthorToFavorite,
+        },
+        dispatch,
+    );
+};
+
+export const SearchResults = connect(mapStateToProps, mapDispatchToProps)(SearchResultsFC);

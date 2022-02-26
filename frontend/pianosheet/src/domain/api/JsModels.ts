@@ -57,6 +57,9 @@ export type SheetItemJsModel = {
     author: number;
     savedate: string;
     rate: number;
+    like: boolean;
+    favorite: boolean;
+    like_count: number;
 };
 
 export type GenreItemJsModel = {

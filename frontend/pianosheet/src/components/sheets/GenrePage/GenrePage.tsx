@@ -23,6 +23,7 @@ interface Props {
     getAuthorsByGenreAlias: (genreAlias: string, page?: number) => void;
     editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
     removeAuthor: (authorId: number) => void;
+    addAuthorToFavorite: (authorId: number, isFavorite: boolean) => void;
 }
 
 const GenrePageFC: React.FC<Props> = ({
@@ -34,6 +35,7 @@ const GenrePageFC: React.FC<Props> = ({
     getAuthorsByGenreAlias,
     editAuthor,
     removeAuthor,
+    addAuthorToFavorite,
 }) => {
     const { genreAlias } = useParams<{ genreAlias: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
@@ -84,6 +86,7 @@ const GenrePageFC: React.FC<Props> = ({
                             isSuperUser={isSuperUser}
                             editAuthor={editAuthor}
                             removeAuthor={removeAuthor}
+                            addAuthorToFavorite={addAuthorToFavorite}
                         />
                     ))}
                 </div>
@@ -113,6 +116,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
             getAuthorsByGenreAlias: sheetsAction.getAuthorsByGenreAlias,
             editAuthor: sheetsAction.editAuthor,
             removeAuthor: sheetsAction.removeAuthor,
+            addAuthorToFavorite: sheetsAction.addAuthorToFavorite,
         },
         dispatch,
     );

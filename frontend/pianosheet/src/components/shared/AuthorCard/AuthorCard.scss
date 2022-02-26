@@ -13,6 +13,7 @@
   width: 200px;
   background-color: #fff;
   border-radius: 15px;
+  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   text-decoration: none;
 
@@ -142,6 +143,22 @@
   align-items: center;
   letter-spacing: 1px;
   line-height: 1.2;
+}
+
+.favoriteBtn {
+  padding: 0 !important;
+  margin: 0;
+  position: absolute;
+  z-index: 5;
+  top: 10px;
+  left: 10px;
+  transition: 0.3s;
+  min-width: unset !important;
+  outline: none;
+
+  &_active {
+    transition: 0.3s;
+  }
 }
 
 @media screen and (max-width: $siteWidthTab) {

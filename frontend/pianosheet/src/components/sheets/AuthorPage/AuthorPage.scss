@@ -7,15 +7,63 @@
 
 .title {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
 .authorName {
   font-size: 22px;
   font-weight: bold;
   margin-top: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   letter-spacing: 1px;
   line-height: 1.3;
+}
+
+.actions {
+  display: inline-flex;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background-color: $defaultBg;
+  border-radius: 16px;
+}
+
+.editBtn,
+.likeBtn,
+.favoriteBtn {
+  color: rgb(241, 241, 241);
+  padding: 0;
+  margin: 0;
+  min-width: unset;
+  margin-right: 20px;
+  outline: none;
+}
+
+.likeBtn {
+  transition: 0.3s;
+  font-size: 18px;
+  line-height: 1;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &_active {
+    transition: 0.3s;
+  }
+  .likeIcon {
+    margin-left: 6px;
+  }
+}
+
+.favoriteBtn {
+  transition: 0.3s;
+  margin-right: 0;
+
+  &_active {
+    transition: 0.3s;
+  }
 }
 
 .content {
@@ -63,7 +111,9 @@
 }
 
 .sheetItem {
-  padding: 4px 0 3px 45px;
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 10px 3px 45px;
   background-color: #eee;
   margin-bottom: 10px;
   position: relative;
@@ -184,14 +234,6 @@
   }
 }
 
-.editBtn {
-  padding: 0;
-  margin: 0;
-  min-width: unset;
-  margin-left: 16px;
-  height: unset;
-}
-
 @media screen and (max-width: $siteWidthTab) {
   .photo {
     height: 300px;
@@ -213,5 +255,14 @@
 
   .editBtn {
     font-size: 0;
+  }
+
+  .title {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actions {
+    align-self: flex-end;
   }
 }

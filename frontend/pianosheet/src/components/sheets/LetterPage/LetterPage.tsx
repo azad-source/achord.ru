@@ -21,6 +21,7 @@ interface Props {
     getAuthors: (letter?: string, page?: number) => void;
     editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
     removeAuthor: (authorId: number) => void;
+    addAuthorToFavorite: (authorId: number, isFavorite: boolean) => void;
 }
 
 const LetterPageFC: React.FC<Props> = ({
@@ -30,6 +31,7 @@ const LetterPageFC: React.FC<Props> = ({
     getAuthors,
     editAuthor,
     removeAuthor,
+    addAuthorToFavorite,
 }) => {
     const { letter } = useParams<{ letter: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
@@ -71,6 +73,7 @@ const LetterPageFC: React.FC<Props> = ({
                             isSuperUser={isSuperUser}
                             editAuthor={editAuthor}
                             removeAuthor={removeAuthor}
+                            addAuthorToFavorite={addAuthorToFavorite}
                         />
                     ))}
                 </div>
@@ -80,6 +83,9 @@ const LetterPageFC: React.FC<Props> = ({
                         pageNumber={pageNumber}
                         switchPage={getAuthorsByPage}
                     />
+                )}
+                {authors.count === 0 && !status.isRequest() && (
+                    <div className={styles.empty}>Раздел пока пустой</div>
                 )}
             </div>
         </Page>
@@ -98,6 +104,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
             getAuthors: sheetsAction.getAuthors,
             editAuthor: sheetsAction.editAuthor,
             removeAuthor: sheetsAction.removeAuthor,
+            addAuthorToFavorite: sheetsAction.addAuthorToFavorite,
         },
         dispatch,
     );

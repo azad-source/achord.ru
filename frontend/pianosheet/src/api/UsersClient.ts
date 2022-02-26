@@ -2,19 +2,20 @@ import { SocialLinksJsModel, TokenJsModel, UserJsModel } from 'domain/api/JsMode
 import { api, retrieveData } from './apiConfig';
 import { createAuthProvider } from 'react-token-auth';
 import { AxiosResponse } from 'axios';
+import { getAuthToken } from 'utils/tokenHelper';
 
 const apiPath = `/auth`;
 
 export const headers = () => {
-    const token: { access: string; refresh: string } = localStorage.getItem('REACT_TOKEN_AUTH_KEY')
-        ? JSON.parse(localStorage.getItem('REACT_TOKEN_AUTH_KEY') || '') || null
-        : '';
+    let Authorization = null;
+
+    const token = getAuthToken();
 
     const socialToken = localStorage.getItem('Token');
 
-    let Authorization: string = `JWT ${token && token.access}`;
+    if (token?.access) Authorization = `JWT ${token.access}`;
 
-    if (socialToken) Authorization = `Token ${socialToken && socialToken}`;
+    if (socialToken) Authorization = `Token ${socialToken}`;
 
     return { Authorization };
 };

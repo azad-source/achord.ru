@@ -81,8 +81,13 @@ export class SheetsClient {
     }
 
     /** Добавление автора в список избранных */
-    public static addAuthorToFavorite(author: FormData): Promise<AuthorItemJsModel> {
+    public static addAuthorToFavorite(author: FormData): Promise<{ result: string }> {
         return api.post(`${apiPath}/author/favorite/`, author).then(retrieveData);
+    }
+
+    /** Проставление лайка автору */
+    public static addLikeToAuthor(author: FormData): Promise<{ result: string }> {
+        return api.post(`${apiPath}/author/like/`, author).then(retrieveData);
     }
 
     /** Редактирование автора по id */
@@ -141,8 +146,13 @@ export class SheetsClient {
     }
 
     /** Добавление нот в список избранных */
-    public static addSheetToFavorite(sheet: FormData): Promise<SheetItemJsModel> {
+    public static addSheetToFavorite(sheet: FormData): Promise<{ result: string }> {
         return api.post(`${apiPath}/note/favorite/`, sheet).then(retrieveData);
+    }
+
+    /** Проставление лайка нотам */
+    public static addLikeToSheet(sheet: FormData): Promise<{ result: string }> {
+        return api.post(`${apiPath}/note/like/`, sheet).then(retrieveData);
     }
 
     /** Поиск нот */

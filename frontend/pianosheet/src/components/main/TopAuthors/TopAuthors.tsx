@@ -15,6 +15,7 @@ import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { sheetsAction } from 'store/sheetsActions';
 import { Page } from 'components/shared/layout/Page/Page';
 import { QueryStatus } from 'domain/QueryStatus';
+import { SheetRow } from 'components/shared/SheetRow/SheetRow';
 
 interface Props {
     authors: AuthorJsModel;
@@ -25,6 +26,8 @@ interface Props {
     getSheets: () => void;
     editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
     removeAuthor: (authorId: number) => void;
+    addAuthorToFavorite: (authorId: number, isFavorite: boolean) => void;
+    addSheetToFavorite: (sheetId: number, isFavorite: boolean) => void;
 }
 
 const TopAuthorsFC: React.FC<Props> = ({
@@ -36,6 +39,8 @@ const TopAuthorsFC: React.FC<Props> = ({
     getSheets,
     editAuthor,
     removeAuthor,
+    addAuthorToFavorite,
+    addSheetToFavorite,
 }) => {
     React.useEffect(() => {
         getAuthors();
@@ -65,24 +70,20 @@ const TopAuthorsFC: React.FC<Props> = ({
                         isSuperUser={isSuperUser}
                         editAuthor={editAuthor}
                         removeAuthor={removeAuthor}
+                        addAuthorToFavorite={addAuthorToFavorite}
                     />
                 ))}
             </div>
             <div className={styles.title}>Композиции</div>
             <ol className={styles.topSheets}>
                 {sheets.results.map((sheet, index) => (
-                    <li
+                    <SheetRow
                         key={sheet.id}
-                        className={styles.topSheets_item}
-                        onClick={() => openDownloadPage(sheet)}
-                        style={{
-                            background: `rgba(61, 68, 107, ${
-                                (11 - Math.ceil((index + 1) / 2)) / 10
-                            })`,
-                        }}
-                    >
-                        {sheet.name}
-                    </li>
+                        sheet={sheet}
+                        index={index}
+                        onOpen={openDownloadPage}
+                        addToFavorite={addSheetToFavorite}
+                    />
                 ))}
             </ol>
         </Page>
@@ -106,6 +107,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
             getSheets: sheetsAction.getTopSheets,
             editAuthor: sheetsAction.editAuthor,
             removeAuthor: sheetsAction.removeAuthor,
+            addAuthorToFavorite: sheetsAction.addAuthorToFavorite,
+            addSheetToFavorite: sheetsAction.addSheetToFavorite,
         },
         dispatch,
     );

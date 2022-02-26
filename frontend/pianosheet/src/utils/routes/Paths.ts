@@ -56,4 +56,7 @@ export class Paths {
 
     /** Страница с политикой обработки перс данных */
     public static readonly privacyPage = '/privacy';
+
+    /** Страница с информацией для правообладателей */
+    public static readonly copyrightHoldersPage = '/copyright-holders';
 }

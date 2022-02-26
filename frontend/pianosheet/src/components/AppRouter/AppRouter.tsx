@@ -19,6 +19,7 @@ import { PlayOnlinePage } from 'components/virtualPiano/PlayOnlinePage';
 import { GenrePage } from 'components/sheets/GenrePage/GenrePage';
 import { ContactsPage } from 'components/contacts/ContactsPage';
 import { PrivacyPage } from 'components/privacy/PrivacyPage';
+import { CopyrightHolders } from 'components/rights/CopyrightHolders';
 
 const AppRouter = () => (
     <div className={styles.root}>
@@ -42,6 +43,7 @@ const AppRouter = () => (
                     <Route path={Paths.virtPianoPage} component={PlayOnlinePage} exact />
                     <Route path={Paths.contactsPage} component={ContactsPage} exact />
                     <Route path={Paths.privacyPage} component={PrivacyPage} exact />
+                    <Route path={Paths.copyrightHoldersPage} component={CopyrightHolders} exact />
                     <Route path={Paths.mainPage} component={MainPage} exact />
                     <Route component={NotFoundPage} />
                 </Switch>

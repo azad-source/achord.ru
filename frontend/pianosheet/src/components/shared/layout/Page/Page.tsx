@@ -11,7 +11,7 @@ import { SheetsNav } from '../SheetsNav/SheetsNav';
 import { SearchResults } from 'components/search/SearchResults';
 import { useToast } from 'components/shared/Toast/Toast';
 import { BreadcrumbProps, Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { AuthorItemJsModel, AuthorRequestModel } from 'domain/api/JsModels';
 import { Paths } from 'utils/routes/Paths';
 import { AuthorAddModal } from 'components/sheets/AuthorAddModal/AuthorAddModal';
@@ -46,6 +46,12 @@ const PageFC: React.FC<Props> = ({
 }) => {
     const [showAddAuthorModal, setShowAddAuthorModal] = React.useState<boolean>(false);
     const history = useHistory();
+
+    const { pathname } = useLocation();
+
+    React.useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
 
     let output: React.ReactNode = '';
 

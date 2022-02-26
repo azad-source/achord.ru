@@ -4,7 +4,7 @@ import styles from './Privacy.module.scss';
 
 export const Privacy = () => {
     const domainLink = (
-        <Link href="https://achord.ru" target="_blank" rel="noreferrer">
+        <Link href="https://achord.ru" target="_blank" rel="noreferrer" className={styles.link}>
             https://achord.ru
         </Link>
     );

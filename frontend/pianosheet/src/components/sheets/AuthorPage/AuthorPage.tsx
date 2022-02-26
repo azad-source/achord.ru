@@ -225,22 +225,24 @@ const AuthorPageFC: React.FC<Props> = ({
                                         >
                                             {name}
                                         </a>
-                                        <Button
-                                            className={cn(
-                                                styles.favoriteBtn,
-                                                favorite && styles.favoriteBtn_active,
-                                            )}
-                                            use="link"
-                                            onClick={() => addSheetToFavorite(id, !favorite)}
-                                            title={
-                                                favorite
-                                                    ? 'Убрать из избранных'
-                                                    : 'Добавить в избранное'
-                                            }
-                                            disabled={status.isRequest()}
-                                        >
-                                            <FavoriteIcon active={favorite} />
-                                        </Button>
+                                        {logged && (
+                                            <Button
+                                                className={cn(
+                                                    styles.favoriteBtn,
+                                                    favorite && styles.favoriteBtn_active,
+                                                )}
+                                                use="link"
+                                                onClick={() => addSheetToFavorite(id, !favorite)}
+                                                title={
+                                                    favorite
+                                                        ? 'Убрать из избранных'
+                                                        : 'Добавить в избранное'
+                                                }
+                                                disabled={status.isRequest()}
+                                            >
+                                                <FavoriteIcon active={favorite} />
+                                            </Button>
+                                        )}
                                     </div>
                                 ))}
                             </>

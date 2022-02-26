@@ -11,7 +11,7 @@ interface Props {
     index: number;
     status?: QueryStatus;
     onOpen: (sheet: SheetItemJsModel) => void;
-    addToFavorite: (sheetId: number, isFavorite: boolean) => void;
+    addToFavorite?: (sheetId: number, isFavorite: boolean) => void;
 }
 
 export const SheetRow: React.FC<Props> = ({
@@ -30,7 +30,9 @@ export const SheetRow: React.FC<Props> = ({
     const handleAddToFavorite = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        addToFavorite(id, !favorite);
+        if (addToFavorite) {
+            addToFavorite(id, !favorite);
+        }
     };
 
     return (
@@ -38,15 +40,17 @@ export const SheetRow: React.FC<Props> = ({
             <div className={styles.caption}>
                 {index + 1}. {sheet.name}
             </div>
-            <Button
-                className={cn(styles.favoriteBtn, favorite && styles.favoriteBtn_active)}
-                use="link"
-                onClick={handleAddToFavorite}
-                title={favorite ? 'Убрать из избранных' : 'Добавить в избранное'}
-                disabled={status.isRequest()}
-            >
-                <FavoriteIcon active={favorite} />
-            </Button>
+            {!!addToFavorite && (
+                <Button
+                    className={cn(styles.favoriteBtn, favorite && styles.favoriteBtn_active)}
+                    use="link"
+                    onClick={handleAddToFavorite}
+                    title={favorite ? 'Убрать из избранных' : 'Добавить в избранное'}
+                    disabled={status.isRequest()}
+                >
+                    <FavoriteIcon active={favorite} />
+                </Button>
+            )}
         </div>
     );
 };

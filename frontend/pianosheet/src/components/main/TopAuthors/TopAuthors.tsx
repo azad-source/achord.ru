@@ -16,6 +16,7 @@ import { sheetsAction } from 'store/sheetsActions';
 import { Page } from 'components/shared/layout/Page/Page';
 import { QueryStatus } from 'domain/QueryStatus';
 import { SheetRow } from 'components/shared/SheetRow/SheetRow';
+import { useAuth } from 'api/UsersClient';
 
 interface Props {
     authors: AuthorJsModel;
@@ -46,6 +47,8 @@ const TopAuthorsFC: React.FC<Props> = ({
         getAuthors();
         getSheets();
     }, []);
+
+    const [logged] = useAuth();
 
     const openDownloadPage = (sheet: SheetItemJsModel) => {
         SheetsClient.getAuthorById(sheet.author).then((author) => {
@@ -82,7 +85,7 @@ const TopAuthorsFC: React.FC<Props> = ({
                         sheet={sheet}
                         index={index}
                         onOpen={openDownloadPage}
-                        addToFavorite={addSheetToFavorite}
+                        addToFavorite={logged ? addSheetToFavorite : undefined}
                     />
                 ))}
             </ol>

@@ -51,7 +51,7 @@ export const Registration: React.FC<Props> = ({
         setShowPrivacyModal(false);
     };
 
-    const btnDisabled = (onPrivacy && !form.privacy) || !form.email || !form.password;
+    const btnDisabled = (onPrivacy && !form.privacy) || !form.email || !form.password  || !form.re_password;
 
     return (
         <div className={styles.root}>

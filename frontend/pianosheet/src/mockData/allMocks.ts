@@ -97,6 +97,9 @@ const AuthorList: AuthorItemJsModel[] = authorsNames.map((name, index) => ({
     rate: 0,
     genres: [],
     owner: 1,
+    favorite: false,
+    like: false,
+    like_count: 0,
 }));
 
 export const AuthorsMock: AuthorJsModel = {

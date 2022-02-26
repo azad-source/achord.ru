@@ -31,6 +31,7 @@ const HeaderFC: React.FC<Props> = ({ getUser, clearUser }) => {
     const logoutHandler = () => {
         logout();
         clearUser();
+        window.location.pathname = '/sign-in';
     }
 
     const menuItems: MenuItemType[] = [

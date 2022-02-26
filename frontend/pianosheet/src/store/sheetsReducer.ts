@@ -38,6 +38,9 @@ export const defaultAuthorItem: AuthorItemJsModel = {
     rate: 0,
     genres: [],
     owner: 0,
+    favorite: false,
+    like: false,
+    like_count: 0,
 };
 
 export const defaultSheetItem: SheetItemJsModel = {
@@ -144,6 +147,11 @@ const {
     GET_GENRE_FAILED,
     getGenreComplete,
     getGenreFailed,
+    ADD_AUTHOR_TO_FAVORITE_STARTED,
+    ADD_AUTHOR_TO_FAVORITE_COMPLETE,
+    ADD_AUTHOR_TO_FAVORITE_FAILED,
+    addAuthorToFavoriteComplete,
+    addAuthorToFavoriteFailed,
 } = sheetsActionTypes;
 
 export function sheetsReducer(
@@ -398,6 +406,31 @@ export function sheetsReducer(
             const {
                 payload: { reason, message, error },
             } = action as ReturnType<typeof getGenreFailed>;
+            return produce(state, (draft) => {
+                draft.status = QueryStatus.error(reason, message, error);
+            });
+        }
+
+        case ADD_AUTHOR_TO_FAVORITE_STARTED: {
+            return produce(state, (draft) => {
+                draft.status = QueryStatus.request();
+            });
+        }
+        case ADD_AUTHOR_TO_FAVORITE_COMPLETE: {
+            const {
+                payload: { authorId, isFavorite },
+            } = action as ReturnType<typeof addAuthorToFavoriteComplete>;
+            return produce(state, (draft) => {
+                if (draft.author.id === authorId) {
+                    draft.author.favorite = isFavorite;
+                }
+                draft.status = QueryStatus.success();
+            });
+        }
+        case ADD_AUTHOR_TO_FAVORITE_FAILED: {
+            const {
+                payload: { reason, message, error },
+            } = action as ReturnType<typeof addAuthorToFavoriteFailed>;
             return produce(state, (draft) => {
                 draft.status = QueryStatus.error(reason, message, error);
             });

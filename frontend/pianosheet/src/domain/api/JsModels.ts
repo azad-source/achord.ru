@@ -45,6 +45,9 @@ export type AuthorItemJsModel = {
     rate: number;
     genres: GenreItemJsModel[];
     owner: number;
+    like: boolean;
+    favorite: boolean;
+    like_count: number;
 };
 
 export type SheetItemJsModel = {

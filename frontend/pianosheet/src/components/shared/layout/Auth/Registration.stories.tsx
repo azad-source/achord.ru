@@ -19,7 +19,7 @@ const registerHandler = (
     event: React.FormEvent,
 ): Promise<void> => {
     event.preventDefault();
-    console.log(`email: ${email}, password: ${password}, re_password: ${re_password}, event: ${event}`);
+    console.log(`email: ${email}, password: ${password}, re_password: ${re_password}`);
 
     return new Promise((res) => res);
 };

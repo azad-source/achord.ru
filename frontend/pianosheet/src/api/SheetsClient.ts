@@ -46,9 +46,19 @@ export class SheetsClient {
         return api.get(`${apiPath}/author/random/`).then(retrieveData);
     }
 
+    /** Получение списка избранных авторов */
+    public static getFavoriteAuthors(): Promise<AuthorJsModel> {
+        return api.get(`${apiPath}/author/favorite/`).then(retrieveData);
+    }
+
     /** Добавление автора */
     public static addAuthor(author: FormData): Promise<AuthorItemJsModel> {
         return api.post(`${apiPath}/author/`, author).then(retrieveData);
+    }
+
+    /** Добавление автора в список избранных */
+    public static addAuthorToFavorite(author: FormData): Promise<AuthorItemJsModel> {
+        return api.post(`${apiPath}/author/favorite/`, author).then(retrieveData);
     }
 
     /** Редактирование автора по id */
@@ -90,9 +100,19 @@ export class SheetsClient {
         return api.get(`${apiPath}/note/random/`).then(retrieveData);
     }
 
+    /** Получение списка избранных нот */
+    public static getFavoriteSheets(): Promise<SheetJsModel> {
+        return api.get(`${apiPath}/note/favorite/`).then(retrieveData);
+    }
+
     /** Добавление нот */
     public static addSheet(sheet: FormData): Promise<SheetItemJsModel> {
         return api.post(`${apiPath}/note/`, sheet).then(retrieveData);
+    }
+
+    /** Добавление нот в список избранных */
+    public static addSheetToFavorite(sheet: FormData): Promise<SheetItemJsModel> {
+        return api.post(`${apiPath}/note/favorite/`, sheet).then(retrieveData);
     }
 
     /** Поиск нот */

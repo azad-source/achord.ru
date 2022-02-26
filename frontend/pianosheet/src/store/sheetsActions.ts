@@ -378,9 +378,34 @@ function getTopAuthors(): GeneralThunkAction<void> {
     };
 }
 
+function getFavoriteAuthors(): GeneralThunkAction<void> {
+    return (dispatch) => {
+        dispatch(getAuthorsStarted());
+        SheetsClient.getFavoriteAuthors()
+            .then((authors) => {
+                dispatch(getAuthorsComplete(authors));
+            })
+            .catch((error) => {
+                dispatch(getAuthorsFailed('', '', error));
+            });
+    };
+}
+
 function getTopSheets(): GeneralThunkAction<void> {
     return (dispatch) => {
         SheetsClient.getTopSheets()
+            .then((sheets) => {
+                dispatch(getSheetsComplete(sheets));
+            })
+            .catch((error) => {
+                dispatch(getSheetsFailed('', '', error));
+            });
+    };
+}
+
+function getFavoriteSheets(): GeneralThunkAction<void> {
+    return (dispatch) => {
+        SheetsClient.getFavoriteSheets()
             .then((sheets) => {
                 dispatch(getSheetsComplete(sheets));
             })
@@ -488,6 +513,47 @@ function getGenreByAlias(genreAlias: string): GeneralThunkAction<void> {
     };
 }
 
+const ADD_AUTHOR_TO_FAVORITE_STARTED = 'SHEETS/ADD_AUTHOR_TO_FAVORITE_STARTED';
+const ADD_AUTHOR_TO_FAVORITE_COMPLETE = 'SHEETS/ADD_AUTHOR_TO_FAVORITE_COMPLETE';
+const ADD_AUTHOR_TO_FAVORITE_FAILED = 'SHEETS/ADD_AUTHOR_TO_FAVORITE_FAILED';
+function addAuthorToFavoriteStarted(): Action {
+    return { type: ADD_AUTHOR_TO_FAVORITE_STARTED };
+}
+function addAuthorToFavoriteComplete(
+    authorId: number,
+    isFavorite: boolean,
+): PayloadedAction<{ authorId: number; isFavorite: boolean }> {
+    return { type: ADD_AUTHOR_TO_FAVORITE_COMPLETE, payload: { authorId, isFavorite } };
+}
+function addAuthorToFavoriteFailed(
+    reason: string,
+    message: string,
+    error: Error,
+): PayloadedAction<{ reason: string; message: string; error: Error }> {
+    return { type: ADD_AUTHOR_TO_FAVORITE_FAILED, payload: { reason, message, error } };
+}
+
+function addAuthorToFavorite(
+    authorId: number,
+    isFavorite: boolean,
+): GeneralThunkAction<Promise<void>> {
+    return (dispatch) => {
+        const favorite = new FormData();
+        favorite.append('item', `${authorId}`);
+        favorite.append('favorite', `${isFavorite}`);
+
+        dispatch(addAuthorToFavoriteStarted());
+        return SheetsClient.addAuthorToFavorite(favorite)
+            .then(() => {
+                addAuthorToFavoriteComplete(authorId, isFavorite);
+            })
+            .catch((error) => {
+                dispatch(addAuthorToFavoriteFailed('', '', error));
+                dispatch(errorHandler(error));
+            });
+    };
+}
+
 export const sheetsAction = {
     getSheets,
     getAuthors,
@@ -507,6 +573,9 @@ export const sheetsAction = {
     getGenreByAlias,
     getRandomAuthors,
     getRandomSheets,
+    getFavoriteAuthors,
+    getFavoriteSheets,
+    addAuthorToFavorite,
 };
 
 export const sheetsActionTypes = {
@@ -573,4 +642,9 @@ export const sheetsActionTypes = {
     GET_GENRE_FAILED,
     getGenreComplete,
     getGenreFailed,
+    ADD_AUTHOR_TO_FAVORITE_STARTED,
+    ADD_AUTHOR_TO_FAVORITE_COMPLETE,
+    ADD_AUTHOR_TO_FAVORITE_FAILED,
+    addAuthorToFavoriteComplete,
+    addAuthorToFavoriteFailed,
 };

@@ -69,8 +69,18 @@ function spaApiInterceptor(resp: AxiosResponse): Promise<AxiosResponse> {
     return Promise.resolve(resp);
 }
 
+const withHeader = [
+    '/auth/users/me/',
+    '/api/pianosheet/author/favorite/',
+    '/api/pianosheet/note/favorite/',
+];
+
+const withoutHeader = ['/auth/users/'];
+
 function ieCachePreventInterceptor(config: AxiosRequestConfig): AxiosRequestConfig {
-    if ((config.method !== 'get' || config.url === '/auth/users/me/') && config.url !== '/auth/users/') {
+    const url = config.url || '';
+
+    if ((config.method !== 'get' || withHeader.includes(url)) && !withoutHeader.includes(url)) {
         config.headers = {
             'Content-Type': 'multipart/form-data',
             ...headers(),

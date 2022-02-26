@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { RootState } from 'store/rootReducer';
 import { bindActionCreators, Dispatch } from 'redux';
 import { sheetsAction } from 'store/sheetsActions';
-import { AuthorJsModel } from 'domain/api/JsModels';
+import { AuthorItemJsModel, AuthorJsModel } from 'domain/api/JsModels';
 import { QueryStatus } from 'domain/QueryStatus';
 import { SiteName } from 'domain/SiteInfo';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
@@ -17,10 +17,20 @@ import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 interface Props {
     authors: AuthorJsModel;
     status: QueryStatus;
+    isSuperUser?: boolean;
     getAuthors: (letter?: string, page?: number) => void;
+    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
+    removeAuthor: (authorId: number) => void;
 }
 
-const LetterPageFC: React.FC<Props> = ({ authors, status, getAuthors }) => {
+const LetterPageFC: React.FC<Props> = ({
+    authors,
+    status,
+    isSuperUser = false,
+    getAuthors,
+    editAuthor,
+    removeAuthor,
+}) => {
     const { letter } = useParams<{ letter: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const location = useLocation();
@@ -54,7 +64,14 @@ const LetterPageFC: React.FC<Props> = ({ authors, status, getAuthors }) => {
                 <div className={styles.title}>{letter.toUpperCase()}</div>
                 <div className={styles.authors}>
                     {authors.results.map((author, index) => (
-                        <AuthorCard key={index} author={author} className={styles.authors_item} />
+                        <AuthorCard
+                            key={index}
+                            author={author}
+                            className={styles.authors_item}
+                            isSuperUser={isSuperUser}
+                            editAuthor={editAuthor}
+                            removeAuthor={removeAuthor}
+                        />
                     ))}
                 </div>
                 {authors.page_count > 1 && (
@@ -79,6 +96,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     return bindActionCreators(
         {
             getAuthors: sheetsAction.getAuthors,
+            editAuthor: sheetsAction.editAuthor,
+            removeAuthor: sheetsAction.removeAuthor,
         },
         dispatch,
     );

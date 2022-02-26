@@ -33,6 +33,8 @@ interface Props {
     searchSheets: (query: string, page: number) => void;
     searchAuthors: (query: string, page: number) => void;
     addAuthor: (author: FormData) => Promise<AuthorItemJsModel | false>;
+    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
+    removeAuthor: (authorId: number) => void;
 }
 
 const PageFC: React.FC<Props> = ({
@@ -50,6 +52,8 @@ const PageFC: React.FC<Props> = ({
     searchSheets,
     searchAuthors,
     addAuthor,
+    editAuthor,
+    removeAuthor,
 }) => {
     const [showContent, setShowContent] = React.useState<boolean>(false);
     const [showAddAuthorModal, setShowAddAuthorModal] = React.useState<boolean>(false);
@@ -70,6 +74,9 @@ const PageFC: React.FC<Props> = ({
                 skipSearch={dropSearch}
                 searchSheets={searchSheets}
                 searchAuthors={searchAuthors}
+                isSuperUser={isSuperUser}
+                editAuthor={editAuthor}
+                removeAuthor={removeAuthor}
             />
         );
     } else {
@@ -123,7 +130,7 @@ const PageFC: React.FC<Props> = ({
     );
 };
 
-type OwnProps = Pick<Props, 'className' | 'loadStatus' | 'children'>;
+type OwnProps = Pick<Props, 'className' | 'loadStatus' | 'children' | 'darkTheme'>;
 
 const mapStateToProps = (
     { sheets, users: { currentUser } }: RootState,
@@ -144,6 +151,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
             searchSheets: sheetsAction.searchSheetsByPage,
             searchAuthors: sheetsAction.searchAuthorsByPage,
             addAuthor: sheetsAction.addAuthor,
+            editAuthor: sheetsAction.editAuthor,
+            removeAuthor: sheetsAction.removeAuthor,
         },
         dispatch,
     );

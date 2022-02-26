@@ -7,10 +7,6 @@ import defaultImg from 'images/default.png';
 import { AuthorEditModal } from 'components/sheets/AuthorEditModal/AuthorEditModal';
 import { AuthorItemJsModel, AuthorRequestModel } from 'domain/api/JsModels';
 import { RemoveModal } from '../RemoveModal/RemoveModal';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import { sheetsAction } from 'store/sheetsActions';
-import { RootState } from 'store/rootReducer';
 
 interface Props {
     className?: string;
@@ -20,7 +16,7 @@ interface Props {
     removeAuthor: (authorId: number) => void;
 }
 
-const AuthorCardFC: React.FC<Props> = ({
+export const AuthorCard: React.FC<Props> = ({
     className,
     author,
     isSuperUser = false,
@@ -160,20 +156,3 @@ const AuthorCardFC: React.FC<Props> = ({
         </>
     );
 };
-
-const mapStateToProps = (state: RootState) => {
-    return {
-        isSuperUser: state.users.currentUser.is_superuser,
-    };
-};
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return bindActionCreators(
-        {
-            editAuthor: sheetsAction.editAuthor,
-            removeAuthor: sheetsAction.removeAuthor,
-        },
-        dispatch,
-    );
-};
-
-export const AuthorCard = connect(mapStateToProps, mapDispatchToProps)(AuthorCardFC);

@@ -7,19 +7,25 @@ import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { useLocation } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
-import { SheetItemJsModel } from 'domain/api/JsModels';
+import { AuthorItemJsModel, SheetItemJsModel } from 'domain/api/JsModels';
 import { SheetsClient } from 'api/SheetsClient';
 import { SiteName } from 'domain/SiteInfo';
 
 interface Props {
     search: SearchApiResults;
+    isSuperUser?: boolean;
     skipSearch: () => void;
     searchSheets: (query: string, page: number) => void;
     searchAuthors: (query: string, page: number) => void;
+    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
+    removeAuthor: (authorId: number) => void;
 }
 
 export const SearchResults: React.FC<Props> = ({
     search,
+    isSuperUser = false,
+    editAuthor,
+    removeAuthor,
     skipSearch,
     searchSheets,
     searchAuthors,
@@ -105,6 +111,9 @@ export const SearchResults: React.FC<Props> = ({
                                     key={author.id}
                                     author={author}
                                     className={styles.searchAuthor}
+                                    isSuperUser={isSuperUser}
+                                    editAuthor={editAuthor}
+                                    removeAuthor={removeAuthor}
                                 />
                             ))}
                         </div>

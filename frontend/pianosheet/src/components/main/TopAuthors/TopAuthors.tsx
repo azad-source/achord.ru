@@ -1,5 +1,10 @@
 import { SheetsClient } from 'api/SheetsClient';
-import { AuthorJsModel, SheetItemJsModel, SheetJsModel } from 'domain/api/JsModels';
+import {
+    AuthorItemJsModel,
+    AuthorJsModel,
+    SheetItemJsModel,
+    SheetJsModel,
+} from 'domain/api/JsModels';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -15,11 +20,23 @@ interface Props {
     authors: AuthorJsModel;
     sheets: SheetJsModel;
     status: QueryStatus;
+    isSuperUser?: boolean;
     getAuthors: () => void;
     getSheets: () => void;
+    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
+    removeAuthor: (authorId: number) => void;
 }
 
-const TopAuthorsFC: React.FC<Props> = ({ authors, sheets, status, getAuthors, getSheets }) => {
+const TopAuthorsFC: React.FC<Props> = ({
+    authors,
+    sheets,
+    status,
+    isSuperUser = false,
+    getAuthors,
+    getSheets,
+    editAuthor,
+    removeAuthor,
+}) => {
     React.useEffect(() => {
         getAuthors();
         getSheets();
@@ -45,6 +62,9 @@ const TopAuthorsFC: React.FC<Props> = ({ authors, sheets, status, getAuthors, ge
                         key={author.id}
                         author={author}
                         className={styles.topAuthors_item}
+                        isSuperUser={isSuperUser}
+                        editAuthor={editAuthor}
+                        removeAuthor={removeAuthor}
                     />
                 ))}
             </div>
@@ -69,10 +89,14 @@ const TopAuthorsFC: React.FC<Props> = ({ authors, sheets, status, getAuthors, ge
     );
 };
 
-const mapStateToProps = ({ sheets: { authors, sheets, status } }: RootState) => ({
+const mapStateToProps = ({
+    sheets: { authors, sheets, status },
+    users: { currentUser },
+}: RootState) => ({
     authors,
     sheets,
     status,
+    isSuperUser: currentUser.is_superuser,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
@@ -80,6 +104,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
         {
             getAuthors: sheetsAction.getTopAuthors,
             getSheets: sheetsAction.getTopSheets,
+            editAuthor: sheetsAction.editAuthor,
+            removeAuthor: sheetsAction.removeAuthor,
         },
         dispatch,
     );

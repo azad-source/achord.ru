@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { RootState } from 'store/rootReducer';
 import { bindActionCreators, Dispatch } from 'redux';
 import { sheetsAction } from 'store/sheetsActions';
-import { AuthorJsModel, GenreItemJsModel } from 'domain/api/JsModels';
+import { AuthorItemJsModel, AuthorJsModel, GenreItemJsModel } from 'domain/api/JsModels';
 import { QueryStatus } from 'domain/QueryStatus';
 import { SiteName } from 'domain/SiteInfo';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
@@ -18,16 +18,22 @@ interface Props {
     genre: GenreItemJsModel;
     authors: AuthorJsModel;
     status: QueryStatus;
+    isSuperUser?: boolean;
     getGenreByAlias: (genreAlias: string) => void;
     getAuthorsByGenreAlias: (genreAlias: string, page?: number) => void;
+    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
+    removeAuthor: (authorId: number) => void;
 }
 
 const GenrePageFC: React.FC<Props> = ({
     genre,
     authors,
     status,
+    isSuperUser = false,
     getGenreByAlias,
     getAuthorsByGenreAlias,
+    editAuthor,
+    removeAuthor,
 }) => {
     const { genreAlias } = useParams<{ genreAlias: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
@@ -71,7 +77,14 @@ const GenrePageFC: React.FC<Props> = ({
                 <div className={styles.title}>{genre.name.toUpperCase()}</div>
                 <div className={styles.authors}>
                     {authors.results.map((author, index) => (
-                        <AuthorCard key={index} author={author} className={styles.authors_item} />
+                        <AuthorCard
+                            key={index}
+                            author={author}
+                            className={styles.authors_item}
+                            isSuperUser={isSuperUser}
+                            editAuthor={editAuthor}
+                            removeAuthor={removeAuthor}
+                        />
                     ))}
                 </div>
                 {authors.page_count > 1 && (
@@ -90,6 +103,7 @@ const mapStateToProps = (state: RootState) => ({
     genre: state.sheets.genre,
     authors: state.sheets.authors,
     status: state.sheets.status,
+    isSuperUser: state.users.currentUser.is_superuser,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
@@ -97,6 +111,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
         {
             getGenreByAlias: sheetsAction.getGenreByAlias,
             getAuthorsByGenreAlias: sheetsAction.getAuthorsByGenreAlias,
+            editAuthor: sheetsAction.editAuthor,
+            removeAuthor: sheetsAction.removeAuthor,
         },
         dispatch,
     );

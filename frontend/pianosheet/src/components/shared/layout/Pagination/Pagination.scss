@@ -9,13 +9,14 @@
 
 .item {
   border: 1px solid #333;
-  border-radius: 6px;
+  border-radius: 14px;
   width: 50px;
   height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
   line-height: 1;
+  font-weight: bold;
   margin-right: 10px;
   cursor: pointer;
   outline: none;
@@ -28,7 +29,7 @@
 
 .currentItem {
   cursor: default;
-  background-color: #ccc;
+  background-color: #e3e3e3;
   border: none;
 }
 

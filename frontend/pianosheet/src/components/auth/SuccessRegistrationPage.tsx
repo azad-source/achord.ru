@@ -30,7 +30,7 @@ const SuccessRegistrationPageFC: React.FC<Props> = ({
     }, []);
 
     return (
-        <Page hideSheetsNav loadStatus={status}>
+        <Page hideSheetsNav>
             {confirm.isConfirmed ? (
                 <div
                     className={cn(

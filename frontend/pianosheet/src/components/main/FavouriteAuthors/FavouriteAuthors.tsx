@@ -65,7 +65,7 @@ const FavouriteAuthorsFC: React.FC<Props> = ({
     const hasSheets = sheets.results.length > 0;
 
     return (
-        <Page loadStatus={status} hideSheetsNav>
+        <Page hideSheetsNav>
             {hasAuthors && (
                 <>
                     <div className={styles.title}>Авторы</div>
@@ -75,10 +75,9 @@ const FavouriteAuthorsFC: React.FC<Props> = ({
                                 key={author.id}
                                 author={author}
                                 className={styles.topAuthors_item}
-                                isSuperUser={isSuperUser}
-                                editAuthor={editAuthor}
-                                removeAuthor={removeAuthor}
-                                addAuthorToFavorite={addAuthorToFavorite}
+                                editAuthor={isSuperUser ? editAuthor : undefined}
+                                removeAuthor={isSuperUser ? removeAuthor : undefined}
+                                addAuthorToFavorite={logged ? addAuthorToFavorite : undefined}
                             />
                         ))}
                     </div>

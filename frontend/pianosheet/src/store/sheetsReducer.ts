@@ -78,6 +78,7 @@ const sheetsDefaultState: SheetsState = {
     author: defaultAuthorItem,
     total: 0,
     status: QueryStatus.initial(),
+    localStatus: QueryStatus.initial(),
     search: { ...defaultSearch },
     warning: '',
 };
@@ -90,6 +91,7 @@ export interface SheetsState {
     genre: GenreItemJsModel;
     total: number;
     status: QueryStatus;
+    localStatus: QueryStatus;
     search: SearchApiResults;
     warning: string;
 }
@@ -179,14 +181,14 @@ export function sheetsReducer(
     switch (action.type) {
         case ADD_SHEET_STARTED: {
             return produce(state, (draft) => {
-                draft.status = QueryStatus.request();
+                draft.localStatus = QueryStatus.request();
             });
         }
         case ADD_SHEET_COMPLETE: {
             const { payload: sheet } = action as ReturnType<typeof addSheetComplete>;
             return produce(state, (draft) => {
                 draft.sheets.results = [...draft.sheets.results, sheet];
-                draft.status = QueryStatus.success();
+                draft.localStatus = QueryStatus.success();
             });
         }
         case ADD_SHEET_FAILED: {
@@ -194,19 +196,19 @@ export function sheetsReducer(
                 payload: { reason, message, error },
             } = action as ReturnType<typeof addSheetFailed>;
             return produce(state, (draft) => {
-                draft.status = QueryStatus.error(reason, message, error);
+                draft.localStatus = QueryStatus.error(reason, message, error);
             });
         }
         case ADD_AUTHOR_STARTED: {
             return produce(state, (draft) => {
-                draft.status = QueryStatus.request();
+                draft.localStatus = QueryStatus.request();
             });
         }
         case ADD_AUTHOR_COMPLETE: {
             const { payload: author } = action as ReturnType<typeof addAuthorComplete>;
             return produce(state, (draft) => {
                 draft.authors.results = [...draft.authors.results, author];
-                draft.status = QueryStatus.success();
+                draft.localStatus = QueryStatus.success();
             });
         }
         case ADD_AUTHOR_FAILED: {
@@ -214,7 +216,7 @@ export function sheetsReducer(
                 payload: { reason, message, error },
             } = action as ReturnType<typeof addAuthorFailed>;
             return produce(state, (draft) => {
-                draft.status = QueryStatus.error(reason, message, error);
+                draft.localStatus = QueryStatus.error(reason, message, error);
             });
         }
         case GET_SHEETS_STARTED: {
@@ -284,7 +286,7 @@ export function sheetsReducer(
 
         case EDIT_AUTHOR_STARTED: {
             return produce(state, (draft) => {
-                draft.status = QueryStatus.request();
+                draft.localStatus = QueryStatus.request();
             });
         }
         case EDIT_AUTHOR_COMPLETE: {
@@ -297,7 +299,7 @@ export function sheetsReducer(
                 );
 
                 draft.authors.results = modifed;
-                draft.status = QueryStatus.success();
+                draft.localStatus = QueryStatus.success();
             });
         }
         case EDIT_AUTHOR_FAILED: {
@@ -305,7 +307,7 @@ export function sheetsReducer(
                 payload: { reason, message, error },
             } = action as ReturnType<typeof editAuthorFailed>;
             return produce(state, (draft) => {
-                draft.status = QueryStatus.error(reason, message, error);
+                draft.localStatus = QueryStatus.error(reason, message, error);
             });
         }
 
@@ -431,7 +433,7 @@ export function sheetsReducer(
 
         case ADD_AUTHOR_TO_FAVORITE_STARTED: {
             return produce(state, (draft) => {
-                draft.status = QueryStatus.request();
+                draft.localStatus = QueryStatus.request();
             });
         }
         case ADD_AUTHOR_TO_FAVORITE_COMPLETE: {
@@ -448,7 +450,7 @@ export function sheetsReducer(
                     }
                 });
 
-                draft.status = QueryStatus.success();
+                draft.localStatus = QueryStatus.success();
             });
         }
         case ADD_AUTHOR_TO_FAVORITE_FAILED: {
@@ -456,13 +458,13 @@ export function sheetsReducer(
                 payload: { reason, message, error },
             } = action as ReturnType<typeof addAuthorToFavoriteFailed>;
             return produce(state, (draft) => {
-                draft.status = QueryStatus.error(reason, message, error);
+                draft.localStatus = QueryStatus.error(reason, message, error);
             });
         }
 
         case LIKE_AUTHOR_STARTED: {
             return produce(state, (draft) => {
-                draft.status = QueryStatus.request();
+                draft.localStatus = QueryStatus.request();
             });
         }
         case LIKE_AUTHOR_COMPLETE: {
@@ -482,7 +484,7 @@ export function sheetsReducer(
                     }
                 });
 
-                draft.status = QueryStatus.success();
+                draft.localStatus = QueryStatus.success();
             });
         }
         case LIKE_AUTHOR_FAILED: {
@@ -490,15 +492,13 @@ export function sheetsReducer(
                 payload: { reason, message, error },
             } = action as ReturnType<typeof likeAuthorFailed>;
             return produce(state, (draft) => {
-                draft.status = QueryStatus.error(reason, message, error);
+                draft.localStatus = QueryStatus.error(reason, message, error);
             });
         }
 
-        //----------
-
         case ADD_SHEET_TO_FAVORITE_STARTED: {
             return produce(state, (draft) => {
-                draft.status = QueryStatus.request();
+                draft.localStatus = QueryStatus.request();
             });
         }
         case ADD_SHEET_TO_FAVORITE_COMPLETE: {
@@ -512,7 +512,7 @@ export function sheetsReducer(
                     }
                 });
 
-                draft.status = QueryStatus.success();
+                draft.localStatus = QueryStatus.success();
             });
         }
         case ADD_SHEET_TO_FAVORITE_FAILED: {
@@ -520,13 +520,13 @@ export function sheetsReducer(
                 payload: { reason, message, error },
             } = action as ReturnType<typeof addSheetToFavoriteFailed>;
             return produce(state, (draft) => {
-                draft.status = QueryStatus.error(reason, message, error);
+                draft.localStatus = QueryStatus.error(reason, message, error);
             });
         }
 
         case LIKE_SHEET_STARTED: {
             return produce(state, (draft) => {
-                draft.status = QueryStatus.request();
+                draft.localStatus = QueryStatus.request();
             });
         }
         case LIKE_SHEET_COMPLETE: {
@@ -542,7 +542,7 @@ export function sheetsReducer(
                     }
                 });
 
-                draft.status = QueryStatus.success();
+                draft.localStatus = QueryStatus.success();
             });
         }
         case LIKE_SHEET_FAILED: {
@@ -550,7 +550,7 @@ export function sheetsReducer(
                 payload: { reason, message, error },
             } = action as ReturnType<typeof likeSheetFailed>;
             return produce(state, (draft) => {
-                draft.status = QueryStatus.error(reason, message, error);
+                draft.localStatus = QueryStatus.error(reason, message, error);
             });
         }
 

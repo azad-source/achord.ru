@@ -62,7 +62,7 @@ const TopAuthorsFC: React.FC<Props> = ({
     };
 
     return (
-        <Page loadStatus={status} hideSheetsNav>
+        <Page hideSheetsNav>
             <div className={styles.title}>Авторы</div>
             <div className={styles.topAuthors}>
                 {authors.results.map((author) => (
@@ -70,10 +70,9 @@ const TopAuthorsFC: React.FC<Props> = ({
                         key={author.id}
                         author={author}
                         className={styles.topAuthors_item}
-                        isSuperUser={isSuperUser}
-                        editAuthor={editAuthor}
-                        removeAuthor={removeAuthor}
-                        addAuthorToFavorite={addAuthorToFavorite}
+                        editAuthor={isSuperUser ? editAuthor : undefined}
+                        removeAuthor={isSuperUser ? removeAuthor : undefined}
+                        addAuthorToFavorite={logged ? addAuthorToFavorite : undefined}
                     />
                 ))}
             </div>

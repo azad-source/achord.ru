@@ -597,7 +597,6 @@ function likeAuthor(authorId: number, hasLike: boolean): GeneralThunkAction<void
     };
 }
 
-//----------------------------------
 const ADD_SHEET_TO_FAVORITE_STARTED = 'SHEETS/ADD_SHEET_TO_FAVORITE_STARTED';
 const ADD_SHEET_TO_FAVORITE_COMPLETE = 'SHEETS/ADD_SHEET_TO_FAVORITE_COMPLETE';
 const ADD_SHEET_TO_FAVORITE_FAILED = 'SHEETS/ADD_SHEET_TO_FAVORITE_FAILED';

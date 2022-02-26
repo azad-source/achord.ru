@@ -19,7 +19,8 @@ import { ErrorBoundary } from 'components/shared/ErrorBoundary/ErrorBoundary';
 
 interface Props {
     className?: string;
-    loadStatus?: QueryStatus;
+    globalStatus?: QueryStatus;
+    localStatus?: QueryStatus;
     children: React.ReactNode;
     searchApplied: boolean;
     hideSheetsNav?: boolean;
@@ -34,7 +35,8 @@ interface Props {
 const PageFC: React.FC<Props> = ({
     className,
     children,
-    loadStatus = QueryStatus.success(),
+    globalStatus = QueryStatus.success(),
+    localStatus = QueryStatus.success(),
     searchApplied,
     hideSheetsNav = false,
     warning,
@@ -97,8 +99,8 @@ const PageFC: React.FC<Props> = ({
                             title="Добавить автора"
                         />
                     )}
-                    {loadStatus.isRequest() && <Spinner />}
-                    {output}
+                    {globalStatus.isRequest() ? <Spinner /> : output}
+                    {localStatus.isRequest() && <Spinner withBackground />}
                 </div>
                 {toast}
                 {showAddAuthorModal && (
@@ -109,18 +111,19 @@ const PageFC: React.FC<Props> = ({
     );
 };
 
-type OwnProps = Pick<Props, 'className' | 'loadStatus' | 'children' | 'darkTheme'>;
+type OwnProps = Pick<Props, 'className' | 'children' | 'darkTheme'>;
 
 const mapStateToProps = (
-    { sheets, users: { currentUser } }: RootState,
-    { className, loadStatus, children, darkTheme }: OwnProps,
+    { sheets: { search, status, localStatus, warning }, users: { currentUser } }: RootState,
+    { className, children, darkTheme }: OwnProps,
 ) => ({
     className,
-    loadStatus,
+    globalStatus: status,
+    localStatus: localStatus,
     children,
     darkTheme,
-    searchApplied: sheets.search.applied,
-    warning: sheets.warning,
+    searchApplied: search.applied,
+    warning: warning,
     isSuperUser: currentUser.is_superuser,
 });
 

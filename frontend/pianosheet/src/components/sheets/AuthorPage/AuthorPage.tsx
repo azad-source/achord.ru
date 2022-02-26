@@ -132,7 +132,7 @@ const AuthorPageFC: React.FC<Props> = ({
     };
 
     return (
-        <Page loadStatus={status} breadcrumbs={breadcrumbs}>
+        <Page breadcrumbs={breadcrumbs}>
             <div className={cn(styles.root, className)}>
                 <div className={styles.title}>
                     <div className={styles.authorName}>{author.name}</div>

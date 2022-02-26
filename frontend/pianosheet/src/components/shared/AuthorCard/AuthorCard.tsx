@@ -7,23 +7,20 @@ import defaultImg from 'images/default.png';
 import { AuthorEditModal } from 'components/sheets/AuthorEditModal/AuthorEditModal';
 import { AuthorItemJsModel, AuthorRequestModel } from 'domain/api/JsModels';
 import { RemoveModal } from '../RemoveModal/RemoveModal';
-import { useAuth } from 'api/UsersClient';
 import { FavoriteIcon } from '../icons/FavoriteIcon';
 import { Button } from '../Button/Button';
 
 interface Props {
     className?: string;
     author: AuthorItemJsModel;
-    isSuperUser?: boolean;
-    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
-    removeAuthor: (authorId: number) => void;
-    addAuthorToFavorite: (authorId: number, isFavorite: boolean) => void;
+    editAuthor?: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
+    removeAuthor?: (authorId: number) => void;
+    addAuthorToFavorite?: (authorId: number, isFavorite: boolean) => void;
 }
 
 export const AuthorCard: React.FC<Props> = ({
     className,
     author,
-    isSuperUser = false,
     editAuthor,
     removeAuthor,
     addAuthorToFavorite,
@@ -32,8 +29,6 @@ export const AuthorCard: React.FC<Props> = ({
     const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
     const [showRemoveModal, setShowRemoveModal] = React.useState<boolean>(false);
     const [showEditMenu, setShowEditMenu] = React.useState<boolean>(false);
-
-    const [logged] = useAuth();
 
     const { id, preview, alias, name, favorite } = author;
     const authorImage = preview || defaultImg;
@@ -80,29 +75,37 @@ export const AuthorCard: React.FC<Props> = ({
         if (options.info !== author.info) formData.append('info', options.info);
         if (options.genres !== author.genres)
             formData.append('genres', JSON.stringify(options.genres.map(({ id }) => id)));
-        editAuthor(id, formData).then((res) => {
-            if (res) {
-                history.push(Paths.getAuthorPath(res.name.charAt(0), res.alias));
-            }
-        });
+
+        if (editAuthor) {
+            editAuthor(id, formData).then((res) => {
+                if (res) {
+                    history.push(Paths.getAuthorPath(res.name.charAt(0), res.alias));
+                }
+            });
+        }
+
         closeEditModal();
     };
 
     const handleRemove = () => {
-        removeAuthor(author.id);
+        if (removeAuthor) {
+            removeAuthor(author.id);
+        }
     };
 
     const addToFavorite = (e: React.MouseEvent) => {
         e.stopPropagation();
         e.preventDefault();
-        addAuthorToFavorite(id, !favorite);
+        if (addAuthorToFavorite) {
+            addAuthorToFavorite(id, !favorite);
+        }
         setShowEditMenu(false);
     };
 
     return (
         <>
             <NavLink className={cn(styles.root, className)} to={authorPath}>
-                {logged && (
+                {!!addAuthorToFavorite && (
                     <>
                         <span className={styles.edit} onClick={openEditMenu}>
                             <div className={styles.edit_icon}>
@@ -113,7 +116,7 @@ export const AuthorCard: React.FC<Props> = ({
                         </span>
                         {showEditMenu && (
                             <div className={styles.editMenu}>
-                                {isSuperUser && (
+                                {!!editAuthor && (
                                     <div className={styles.editMenu_item} onClick={openEditModal}>
                                         Изменить
                                     </div>
@@ -121,7 +124,7 @@ export const AuthorCard: React.FC<Props> = ({
                                 <div className={cn(styles.editMenu_item)} onClick={addToFavorite}>
                                     {favorite ? 'Убрать из избранных' : 'В избранное'}
                                 </div>
-                                {isSuperUser && (
+                                {!!removeAuthor && (
                                     <div
                                         className={cn(
                                             styles.editMenu_item,
@@ -141,7 +144,7 @@ export const AuthorCard: React.FC<Props> = ({
                 )}
 
                 <div className={styles.img}>
-                    {logged && (
+                    {!!addAuthorToFavorite && (
                         <Button
                             className={cn(
                                 styles.favoriteBtn,

@@ -13,6 +13,7 @@ import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumb
 import { Paths } from 'utils/routes/Paths';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
+import { useAuth } from 'api/UsersClient';
 
 interface Props {
     authors: AuthorJsModel;
@@ -37,6 +38,7 @@ const LetterPageFC: React.FC<Props> = ({
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const location = useLocation();
     const title = `${SiteName} - ${letter.toUpperCase()}`;
+    const [logged] = useAuth();
 
     React.useEffect(() => {
         document.title = title;
@@ -61,7 +63,7 @@ const LetterPageFC: React.FC<Props> = ({
     ];
 
     return (
-        <Page loadStatus={status} breadcrumbs={breadcrumbs} showAddAuthorBtn>
+        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn>
             <div className={styles.root}>
                 <div className={styles.title}>{letter.toUpperCase()}</div>
                 <div className={styles.authors}>
@@ -70,10 +72,9 @@ const LetterPageFC: React.FC<Props> = ({
                             key={index}
                             author={author}
                             className={styles.authors_item}
-                            isSuperUser={isSuperUser}
-                            editAuthor={editAuthor}
-                            removeAuthor={removeAuthor}
-                            addAuthorToFavorite={addAuthorToFavorite}
+                            editAuthor={isSuperUser ? editAuthor : undefined}
+                            removeAuthor={isSuperUser ? removeAuthor : undefined}
+                            addAuthorToFavorite={logged ? addAuthorToFavorite : undefined}
                         />
                     ))}
                 </div>

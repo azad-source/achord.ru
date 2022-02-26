@@ -16,7 +16,7 @@ interface Props {
 
 type InputType = React.ChangeEvent<HTMLInputElement>;
 
-const onPrivacy = false;
+const onPrivacy = true;
 
 export const Registration: React.FC<Props> = ({
     errorMessage,

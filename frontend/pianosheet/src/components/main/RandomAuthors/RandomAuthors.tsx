@@ -40,38 +40,30 @@ const RandomAuthorsFC: React.FC<Props> = ({ authors, sheets, status, getAuthors,
         <Page loadStatus={status} hideSheetsNav>
             <div className={styles.title}>Авторы</div>
             <div className={styles.topAuthors}>
-                {authors.results.map((author, index) => {
-                    if (index < 12) {
-                        return (
-                            <AuthorCard
-                                key={author.id}
-                                author={author}
-                                className={styles.topAuthors_item}
-                            />
-                        );
-                    }
-                })}
+                {authors.results.map((author) => (
+                    <AuthorCard
+                        key={author.id}
+                        author={author}
+                        className={styles.topAuthors_item}
+                    />
+                ))}
             </div>
             <div className={styles.title}>Композиции</div>
             <ol className={styles.topSheets}>
-                {sheets.results.map((sheet, index) => {
-                    if (index < 10) {
-                        return (
-                            <li
-                                key={index}
-                                className={styles.topSheets_item}
-                                onClick={() => openDownloadPage(sheet)}
-                                style={{
-                                    background: `rgba(61, 68, 107, ${
-                                        (11 - Math.ceil((index + 1) / 2)) / 10
-                                    })`,
-                                }}
-                            >
-                                {sheet.name}
-                            </li>
-                        );
-                    }
-                })}
+                {sheets.results.map((sheet, index) => (
+                    <li
+                        key={sheet.id}
+                        className={styles.topSheets_item}
+                        onClick={() => openDownloadPage(sheet)}
+                        style={{
+                            background: `rgba(61, 68, 107, ${
+                                (11 - Math.ceil((index + 1) / 2)) / 10
+                            })`,
+                        }}
+                    >
+                        {sheet.name}
+                    </li>
+                ))}
             </ol>
         </Page>
     );

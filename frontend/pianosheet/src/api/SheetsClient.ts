@@ -6,6 +6,16 @@ import {
     GenreJsModel,
     GenreItemJsModel,
 } from 'domain/api/JsModels';
+import {
+    DEFAULT_AUTHORS_SIZE,
+    DEFAULT_SHEETS_SIZE,
+    FAVORITE_AUTHORS_SIZE,
+    FAVORITE_SHEETS_SIZE,
+    RANDOM_AUTHORS_SIZE,
+    RANDOM_SHEETS_SIZE,
+    TOP_AUTHORS_SIZE,
+    TOP_SHEETS_SIZE,
+} from 'utils/constants';
 import { api, retrieveData } from './apiConfig';
 
 const apiPath = `/api/pianosheet`;
@@ -14,7 +24,9 @@ export class SheetsClient {
     /** Получение всех авторов */
     public static getAuthors(letter?: string, page?: number): Promise<AuthorJsModel> {
         return api
-            .get(`${apiPath}/author/`, { params: { letter, page, order_by: 'name' } })
+            .get(`${apiPath}/author/`, {
+                params: { letter, page, order_by: 'name', page_size: DEFAULT_AUTHORS_SIZE },
+            })
             .then(retrieveData);
     }
 
@@ -33,22 +45,34 @@ export class SheetsClient {
         genre_alias: string,
         page?: number,
     ): Promise<AuthorJsModel> {
-        return api.get(`${apiPath}/author/`, { params: { genre_alias, page } }).then(retrieveData);
+        return api
+            .get(`${apiPath}/author/`, {
+                params: { genre_alias, page, page_size: DEFAULT_AUTHORS_SIZE },
+            })
+            .then(retrieveData);
     }
 
     /** Получение топ авторов */
     public static getTopAuthors(): Promise<AuthorJsModel> {
-        return api.get(`${apiPath}/author/`, { params: { order_by: '-rate' } }).then(retrieveData);
+        return api
+            .get(`${apiPath}/author/`, {
+                params: { order_by: '-rate', page_size: TOP_AUTHORS_SIZE },
+            })
+            .then(retrieveData);
     }
 
     /** Получение рандомного списка авторов */
     public static getRandomAuthors(): Promise<AuthorJsModel> {
-        return api.get(`${apiPath}/author/random/`).then(retrieveData);
+        return api
+            .get(`${apiPath}/author/random/`, { params: { page_size: RANDOM_AUTHORS_SIZE } })
+            .then(retrieveData);
     }
 
     /** Получение списка избранных авторов */
     public static getFavoriteAuthors(): Promise<AuthorJsModel> {
-        return api.get(`${apiPath}/author/favorite/`).then(retrieveData);
+        return api
+            .get(`${apiPath}/author/favorite/`, { params: { page_size: FAVORITE_AUTHORS_SIZE } })
+            .then(retrieveData);
     }
 
     /** Добавление автора */
@@ -75,7 +99,7 @@ export class SheetsClient {
     public static getSheets(author_alias?: string, page?: number): Promise<SheetJsModel> {
         return api
             .get(`${apiPath}/note/`, {
-                params: { author_alias, page, order_by: 'name' },
+                params: { author_alias, page, order_by: 'name', page_size: DEFAULT_SHEETS_SIZE },
             })
             .then(retrieveData);
     }
@@ -92,17 +116,23 @@ export class SheetsClient {
 
     /** Получние топ нот */
     public static getTopSheets(): Promise<SheetJsModel> {
-        return api.get(`${apiPath}/note/`, { params: { order_by: '-rate' } }).then(retrieveData);
+        return api
+            .get(`${apiPath}/note/`, { params: { order_by: '-rate', page_size: TOP_SHEETS_SIZE } })
+            .then(retrieveData);
     }
 
     /** Получние рандомного списка нот */
     public static getRandomSheets(): Promise<SheetJsModel> {
-        return api.get(`${apiPath}/note/random/`).then(retrieveData);
+        return api
+            .get(`${apiPath}/note/random/`, { params: { page_size: RANDOM_SHEETS_SIZE } })
+            .then(retrieveData);
     }
 
     /** Получение списка избранных нот */
     public static getFavoriteSheets(): Promise<SheetJsModel> {
-        return api.get(`${apiPath}/note/favorite/`).then(retrieveData);
+        return api
+            .get(`${apiPath}/note/favorite/`, { params: { page_size: FAVORITE_SHEETS_SIZE } })
+            .then(retrieveData);
     }
 
     /** Добавление нот */

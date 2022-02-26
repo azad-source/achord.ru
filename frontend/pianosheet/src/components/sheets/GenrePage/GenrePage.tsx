@@ -7,11 +7,12 @@ import { RootState } from 'store/rootReducer';
 import { bindActionCreators, Dispatch } from 'redux';
 import { sheetsAction } from 'store/sheetsActions';
 import { AuthorJsModel, GenreItemJsModel } from 'domain/api/JsModels';
-import { AuthorItems } from '../AuthorItems/AuthorItems';
 import { QueryStatus } from 'domain/QueryStatus';
 import { SiteName } from 'domain/SiteInfo';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { Paths } from 'utils/routes/Paths';
+import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
+import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 
 interface Props {
     genre: GenreItemJsModel;
@@ -68,11 +69,18 @@ const GenrePageFC: React.FC<Props> = ({
         <Page loadStatus={status} breadcrumbs={breadcrumbs} showAddAuthorBtn>
             <div className={styles.root}>
                 <div className={styles.title}>{genre.name.toUpperCase()}</div>
-                <AuthorItems
-                    authors={authors}
-                    getAuthorsByPage={getAuthorsByPage}
-                    pageNumber={pageNumber}
-                />
+                <div className={styles.authors}>
+                    {authors.results.map((author, index) => (
+                        <AuthorCard key={index} author={author} className={styles.authors_item} />
+                    ))}
+                </div>
+                {authors.page_count > 1 && (
+                    <Pagination
+                        pageCount={authors.page_count}
+                        pageNumber={pageNumber}
+                        switchPage={getAuthorsByPage}
+                    />
+                )}
             </div>
         </Page>
     );

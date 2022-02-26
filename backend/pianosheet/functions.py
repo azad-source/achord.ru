@@ -151,3 +151,11 @@ class PathAndRename(object):
 
 
 path_and_rename = PathAndRename('notes')
+
+
+def safe_list_get(list, index, default=None):
+    '''Безопасный способ взятия элемента из массива.'''
+    try:
+        return list[index]
+    except IndexError:
+        return default

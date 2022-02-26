@@ -1,18 +1,13 @@
+import requests
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.views import View
-from hashlib import md5
-from rest_framework_simplejwt.tokens import RefreshToken
-import requests
 from .oauth import Oauth2Google
-User = get_user_model()
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
-from . import serializers
-from rest_framework.generics import get_object_or_404
-from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework_simplejwt.tokens import RefreshToken
+from djoser.views import UserViewSet as DjoserUserViewSet
+User = get_user_model()
 
 
 class SocialLinks(View):
@@ -77,16 +72,13 @@ class LoginGoogle(View):
         }
 
 
-class UserViewset(viewsets.ReadOnlyModelViewSet):
-    serializer_class = serializers.UserSerializer
-    permission_classes = [IsAuthenticated]
-    queryset = User.objects.all()
-    
-    @action(detail=False, methods=['get'])
-    def me(self, request):
-        instance = get_object_or_404(
-            self.get_queryset(), 
-            id=self.request.user.id
-        )
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+class UserViewset(DjoserUserViewSet):
+    @action(["get", "delete"], detail=False)
+    def me(self, request, *args, **kwargs):
+        self.get_object = self.get_instance
+        if request.method == "GET":
+            return self.retrieve(request, *args, **kwargs)
+        elif request.method == "DELETE":
+            return self.destroy(request, *args, **kwargs)
+        # Убраны методы изменения своего пользователя put и patch 
+        # Так как можно сделать себя админом Lol =)

@@ -4,11 +4,7 @@ import * as React from 'react';
 import styles from './Footer.module.scss';
 import cn from 'classnames';
 
-interface Props {
-    className?: string;
-}
-
-export const Footer: React.FC<Props> = ({ className }) => {
+export const Footer = () => {
     const year = new Date().getFullYear();
     return (
         <footer className={styles.backplate}>

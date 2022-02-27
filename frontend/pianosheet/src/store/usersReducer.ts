@@ -23,7 +23,6 @@ const {
     AUTHORIZATION_STARTED,
     AUTHORIZATION_COMPLETE,
     AUTHORIZATION_FAILED,
-    authorizationComplete,
     authorizationFailed,
     CONFIRM_EMAIL_STARTED,
     CONFIRM_EMAIL_COMPLETE,
@@ -76,10 +75,8 @@ export function usersReducer(state: UsersState = usersDefaultState, action: Acti
             });
         }
         case AUTHORIZATION_COMPLETE: {
-            const { user } = action as ReturnType<typeof authorizationComplete>;
             return produce(state, (draft) => {
                 draft.status = QueryStatus.success();
-                draft.currentUser = user;
             });
         }
         case AUTHORIZATION_FAILED: {

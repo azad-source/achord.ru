@@ -20,7 +20,8 @@ import { ErrorBoundary } from 'components/shared/ErrorBoundary/ErrorBoundary';
 interface Props {
     className?: string;
     status?: QueryStatus;
-    localStatus?: QueryStatus;
+    sheetStatus?: QueryStatus;
+    userStatus?: QueryStatus;
     children: React.ReactNode;
     searchApplied: boolean;
     hideSheetsNav?: boolean;
@@ -36,7 +37,8 @@ const PageFC: React.FC<Props> = ({
     className,
     children,
     status = QueryStatus.initial(),
-    localStatus = QueryStatus.initial(),
+    sheetStatus = QueryStatus.initial(),
+    userStatus = QueryStatus.initial(),
     searchApplied,
     hideSheetsNav = false,
     warning,
@@ -100,7 +102,9 @@ const PageFC: React.FC<Props> = ({
                         />
                     )}
                     {status.isRequest() ? <Spinner /> : output}
-                    {localStatus.isRequest() && <Spinner withBackground />}
+                    {(sheetStatus.isRequest() || userStatus.isRequest()) && (
+                        <Spinner withBackground />
+                    )}
                 </div>
                 {toast}
                 {showAddAuthorModal && (
@@ -114,11 +118,15 @@ const PageFC: React.FC<Props> = ({
 type OwnProps = Pick<Props, 'className' | 'children' | 'status' | 'darkTheme'>;
 
 const mapStateToProps = (
-    { sheets: { search, localStatus, warning }, users: { currentUser } }: RootState,
+    {
+        sheets: { search, localStatus, warning },
+        users: { currentUser, status: userStatus },
+    }: RootState,
     { className, children, status, darkTheme }: OwnProps,
 ) => ({
     className,
-    localStatus: localStatus,
+    sheetStatus: localStatus,
+    userStatus,
     status,
     children,
     darkTheme,

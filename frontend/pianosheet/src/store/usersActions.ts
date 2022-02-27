@@ -24,7 +24,11 @@ function registrationFailed(
     return { type: REGISTRATION_FAILED, payload: { reason, message, error } };
 }
 
-function registration(email: string, password: string, re_password: string): GeneralThunkAction<Promise<void>> {
+function registration(
+    email: string,
+    password: string,
+    re_password: string,
+): GeneralThunkAction<Promise<void>> {
     return (dispatch) => {
         dispatch(registrationStarted());
         localStorage.removeItem('Token');
@@ -50,8 +54,8 @@ const AUTHORIZATION_FAILED = 'USERS/AUTHORIZATION_FAILED';
 function authorizationStarted(): Action {
     return { type: AUTHORIZATION_STARTED };
 }
-function authorizationComplete(user: UserJsModel): PayloadedAction<UserJsModel> {
-    return { type: AUTHORIZATION_COMPLETE, payload: user };
+function authorizationComplete(): Action {
+    return { type: AUTHORIZATION_COMPLETE };
 }
 function authorizationFailed(
     reason: string,
@@ -72,6 +76,7 @@ function authorization(email: string, password: string): GeneralThunkAction<Prom
         return UsersClient.login(formData)
             .then((res) => {
                 login(res);
+                dispatch(authorizationComplete());
             })
             .catch((res) => {
                 const { statusText, reason, error } = errorData(res);
@@ -300,8 +305,6 @@ export const usersActionTypes = {
     AUTHORIZATION_STARTED,
     AUTHORIZATION_COMPLETE,
     AUTHORIZATION_FAILED,
-    authorizationStarted,
-    authorizationComplete,
     authorizationFailed,
     CONFIRM_EMAIL_STARTED,
     CONFIRM_EMAIL_COMPLETE,

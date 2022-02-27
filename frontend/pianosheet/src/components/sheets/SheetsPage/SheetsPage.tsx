@@ -11,13 +11,15 @@ import { GenreJsModel } from 'domain/api/JsModels';
 import { Link, useLocation } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
+import { QueryStatus } from 'domain/QueryStatus';
 
 interface Props {
     genres: GenreJsModel;
+    status: QueryStatus;
     getGenres: (page?: number) => void;
 }
 
-const SheetsPageFC: React.FC<Props> = ({ genres, getGenres }) => {
+const SheetsPageFC: React.FC<Props> = ({ genres, status, getGenres }) => {
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const location = useLocation();
     const title = `${SiteName} - Ноты`;
@@ -40,7 +42,7 @@ const SheetsPageFC: React.FC<Props> = ({ genres, getGenres }) => {
     };
 
     return (
-        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn>
+        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn status={status}>
             <div className={styles.root}>
                 {genres.results.map(({ id, name, alias, preview }) => (
                     <Link
@@ -72,6 +74,7 @@ const SheetsPageFC: React.FC<Props> = ({ genres, getGenres }) => {
 
 const mapStateToProps = (state: RootState) => {
     return {
+        status: state.sheets.status,
         genres: state.sheets.genres,
     };
 };

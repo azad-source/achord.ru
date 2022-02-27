@@ -12,6 +12,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { usersAction } from 'store/usersActions';
 import { QueryStatus } from 'domain/QueryStatus';
 import { SocialAuthParams } from 'domain/api/JsModels';
+import { Link } from 'react-router-dom';
 
 interface Props {
     status: QueryStatus;
@@ -61,11 +62,6 @@ const AuthPageFC: React.FC<Props> = ({
         return registration(email, password, re_password);
     };
 
-    const logoutHandler = () => {
-        logout();
-        window.location.href = '/sign-in';
-    };
-
     const handleRegConfirm = (isSuccessRegistration: boolean, email: string) => {
         setRegEvent({ isSuccessRegistration, email });
     };
@@ -85,9 +81,14 @@ const AuthPageFC: React.FC<Props> = ({
                             <div className={styles.successAuthMsg}>Вы авторизованы!</div>
                         )}
 
-                        <Button use="link" onClick={logoutHandler}>
-                            Выйти
-                        </Button>
+                        <div className={styles.linkWrapper}>
+                            <Link to="/" className={styles.link}>
+                                Главная
+                            </Link>
+                            <Link to="/sign-in" onClick={logout} className={styles.link}>
+                                Выйти
+                            </Link>
+                        </div>
                     </div>
                 ) : isRegForm ? (
                     <Registration

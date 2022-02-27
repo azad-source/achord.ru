@@ -32,7 +32,7 @@ const HeaderFC: React.FC<Props> = ({ getUser, clearUser }) => {
         logout();
         clearUser();
         window.location.pathname = '/sign-in';
-    }
+    };
 
     const menuItems: MenuItemType[] = [
         {
@@ -42,10 +42,6 @@ const HeaderFC: React.FC<Props> = ({ getUser, clearUser }) => {
         {
             caption: 'Ноты',
             link: Paths.sheetsPage,
-        },
-        {
-            caption: 'О нас',
-            link: Paths.contactsPage,
         },
         {
             caption: logged ? 'Выйти' : 'Войти',

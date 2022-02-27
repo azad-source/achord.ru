@@ -163,6 +163,8 @@ class AuthorViewSet(CustomModelViewSet):
         'update': (IsAdminUser, ),
         'create': (IsAdminUser, ),
         'destroy': (IsAdminUser, ),
+        'like': (IsAuthenticated,),
+        'favorite': (IsAuthenticated,),
     }
 
     def get_serializer_class(self):
@@ -202,6 +204,8 @@ class NoteViewSet(CustomModelViewSet):
         'update': (IsOwnerOrReadOnly, ),
         'create': (IsAuthenticated, ),
         'destroy': (IsOwnerOrReadOnly, ),
+        'like': (IsAuthenticated,),
+        'favorite': (IsAuthenticated,),
     }
 
     def get_serializer_class(self):

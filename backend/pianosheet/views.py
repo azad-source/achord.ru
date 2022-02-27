@@ -14,14 +14,7 @@ from .pagination import GenrePagination, AuthorPagination, NotePagination
 User = get_user_model()
 
 
-class CustomModelViewSet(ModelViewSet):
-    permission_dict = {}
-    def get_permissions(self):
-        try:
-            return [permission() for permission in self.permission_dict[self.action]]
-        except KeyError:
-            return [permission() for permission in self.permission_classes]
-    
+class StatMixin:
     @property
     def like_count(self):
         like_count = Count('itemstat__like', filter=Q(itemstat__like=True))
@@ -35,7 +28,16 @@ class CustomModelViewSet(ModelViewSet):
         else:
             stats = self.stats_model.objects.none()
         itemstat = Prefetch('itemstat', stats)
-        return (itemstat,)
+        return (itemstat,)   
+
+
+class CustomModelViewSet(StatMixin, ModelViewSet):
+    permission_dict = {}
+    def get_permissions(self):
+        try:
+            return [permission() for permission in self.permission_dict[self.action]]
+        except KeyError:
+            return [permission() for permission in self.permission_classes]
     
     def list_response(self, queryset):
         page = self.paginate_queryset(queryset)
@@ -226,21 +228,27 @@ class NoteViewSet(CustomModelViewSet):
         return self.make_ordering(queryset)
 
 
-class SearchAuthorViewSet(ReadOnlyModelViewSet):
+class SearchAuthorViewSet(StatMixin, ReadOnlyModelViewSet):
+    stats_model = AuthorStat
     serializer_class = AuthorSerializer
     def get_queryset(self):
         query = self.request.GET.get("query")
         if query:
-            return Author.objects.complex_search(query, 'name')
+            return Author.objects.complex_search(query, 'name')\
+                .annotate(**self.like_count)\
+                .prefetch_related(*self.all_prefetch)
         else:
             return Author.objects.none()
 
 
-class SearchNoteViewSet(ReadOnlyModelViewSet):
+class SearchNoteViewSet(StatMixin, ReadOnlyModelViewSet):
+    stats_model = NoteStat
     serializer_class = NoteSerializer
     def get_queryset(self):
         query = self.request.GET.get("query")
         if query:
-            return Note.objects.complex_search(query, 'name')
+            return Note.objects.complex_search(query, 'name')\
+                .annotate(**self.like_count)\
+                .prefetch_related(*self.all_prefetch)
         else:
             return Note.objects.none()

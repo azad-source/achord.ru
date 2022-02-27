@@ -9,11 +9,9 @@ import { RootState } from 'store/rootReducer';
 import { QueryStatus } from 'domain/QueryStatus';
 import { Input } from 'components/shared/Input/Input';
 import { Button } from 'components/shared/Button/Button';
-import { Loader } from 'components/shared/layout/Loader/Loader';
 
 interface Props {
     status: QueryStatus;
-    className?: string;
     changePassword: (
         uid: string,
         token: string,
@@ -22,11 +20,7 @@ interface Props {
     ) => Promise<ChangePasswordType>;
 }
 
-const ChangePasswordPageFC: React.FC<Props> = ({
-    status,
-    className,
-    changePassword,
-}) => {
+const ChangePasswordPageFC: React.FC<Props> = ({ status, changePassword }) => {
     const { uid, token } = useParams<{ uid: string; token: string }>();
     const [form, setForm] = React.useState<{
         new_password: string;
@@ -39,12 +33,9 @@ const ChangePasswordPageFC: React.FC<Props> = ({
 
     const handleChangePassword = (e: React.FormEvent) => {
         e.preventDefault();
-        changePassword(
-            uid,
-            token,
-            form.new_password,
-            form.re_new_password,
-        ).then((res) => setChangePass(res));
+        changePassword(uid, token, form.new_password, form.re_new_password).then((res) =>
+            setChangePass(res),
+        );
     };
 
     const validation = () => {
@@ -53,14 +44,11 @@ const ChangePasswordPageFC: React.FC<Props> = ({
             const pass = prev.new_password;
             const re_pass = prev.re_new_password;
 
-            if (!/[a-z]/.test(pass))
-                error.push('Пароль должен содержать латинские буквы.');
-            if (!/[0-9]/.test(pass))
-                error.push('Пароль должен содержать цифры');
+            if (!/[a-z]/.test(pass)) error.push('Пароль должен содержать латинские буквы.');
+            if (!/[0-9]/.test(pass)) error.push('Пароль должен содержать цифры');
             if (!/[A-Z]/.test(pass))
                 error.push('Должна быть хотябы одна буква в верхнем регистре.');
-            if (pass.length < 6)
-                error.push('Длина пароли должна быть не менее 6 символов.');
+            if (pass.length < 6) error.push('Длина пароли должна быть не менее 6 символов.');
             if (pass !== re_pass) error.push('Ввденные пароли не совпадают.');
 
             return {
@@ -81,59 +69,56 @@ const ChangePasswordPageFC: React.FC<Props> = ({
     };
 
     return (
-        <Page hideSheetsNav>
-            <div className={styles.root}>
-                <Loader loadStatus={status}>
-                    <h1>Смена пароля</h1>
-                    {changePass.isChangedPassword ? (
-                        <div className={styles.successChanePass}>
-                            <div>Пароль успешно изменен!</div>
-                            <br />
-                            <div>Перейти на <Link to="/" className={styles.link}>Главную страницу</Link></div>
-                        </div>
-                    ) : (
-                        <>
-                            <form onSubmit={(e) => handleChangePassword(e)}>
-                                <Input
-                                    value={form.new_password}
-                                    onChange={handleChangeInput('new_password')}
-                                    required
-                                    autoFocus
-                                    className={styles.input}
-                                    type="password"
-                                />
-                                <Input
-                                    value={form.re_new_password}
-                                    onChange={handleChangeInput(
-                                        're_new_password',
-                                    )}
-                                    required
-                                    autoFocus
-                                    className={styles.input}
-                                    type="password"
-                                />
-                                <Button disabled={!!form.error?.length}>
-                                    Сохранить
-                                </Button>
-                            </form>
-                            <div className={styles.error}>
-                                <ol>
-                                    {form.error?.map((er) => (
-                                        <li key={er}>{er}</li>
-                                    ))}
-                                </ol>
-                            </div>
-                            <div className={styles.error}>
-                                <ol>
-                                    {changePass.message?.map((er) => (
-                                        <div key={er}>{er}</div>
-                                    ))}
-                                </ol>
-                            </div>
-                        </>
-                    )}
-                </Loader>
-            </div>
+        <Page hideSheetsNav className={styles.root}>
+            <h1>Смена пароля</h1>
+            {changePass.isChangedPassword ? (
+                <div className={styles.successChanePass}>
+                    <div>Пароль успешно изменен!</div>
+                    <br />
+                    <div>
+                        Перейти на{' '}
+                        <Link to="/" className={styles.link}>
+                            Главную страницу
+                        </Link>
+                    </div>
+                </div>
+            ) : (
+                <>
+                    <form onSubmit={(e) => handleChangePassword(e)}>
+                        <Input
+                            value={form.new_password}
+                            onChange={handleChangeInput('new_password')}
+                            required
+                            autoFocus
+                            className={styles.input}
+                            type="password"
+                        />
+                        <Input
+                            value={form.re_new_password}
+                            onChange={handleChangeInput('re_new_password')}
+                            required
+                            autoFocus
+                            className={styles.input}
+                            type="password"
+                        />
+                        <Button disabled={!!form.error?.length}>Сохранить</Button>
+                    </form>
+                    <div className={styles.error}>
+                        <ol>
+                            {form.error?.map((er) => (
+                                <li key={er}>{er}</li>
+                            ))}
+                        </ol>
+                    </div>
+                    <div className={styles.error}>
+                        <ol>
+                            {changePass.message?.map((er) => (
+                                <div key={er}>{er}</div>
+                            ))}
+                        </ol>
+                    </div>
+                </>
+            )}
         </Page>
     );
 };

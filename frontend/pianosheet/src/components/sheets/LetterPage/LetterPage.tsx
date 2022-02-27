@@ -63,32 +63,30 @@ const LetterPageFC: React.FC<Props> = ({
     ];
 
     return (
-        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn>
-            <div className={styles.root}>
-                <div className={styles.title}>{letter.toUpperCase()}</div>
-                <div className={styles.authors}>
-                    {authors.results.map((author, index) => (
-                        <AuthorCard
-                            key={index}
-                            author={author}
-                            className={styles.authors_item}
-                            editAuthor={isSuperUser ? editAuthor : undefined}
-                            removeAuthor={isSuperUser ? removeAuthor : undefined}
-                            addAuthorToFavorite={logged ? addAuthorToFavorite : undefined}
-                        />
-                    ))}
-                </div>
-                {authors.page_count > 1 && (
-                    <Pagination
-                        pageCount={authors.page_count}
-                        pageNumber={pageNumber}
-                        switchPage={getAuthorsByPage}
+        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn status={status}>
+            <div className={styles.title}>{letter.toUpperCase()}</div>
+            <div className={styles.authors}>
+                {authors.results.map((author, index) => (
+                    <AuthorCard
+                        key={index}
+                        author={author}
+                        className={styles.authors_item}
+                        editAuthor={isSuperUser ? editAuthor : undefined}
+                        removeAuthor={isSuperUser ? removeAuthor : undefined}
+                        addAuthorToFavorite={logged ? addAuthorToFavorite : undefined}
                     />
-                )}
-                {authors.count === 0 && !status.isRequest() && (
-                    <div className={styles.empty}>Раздел пока пустой</div>
-                )}
+                ))}
             </div>
+            {authors.page_count > 1 && (
+                <Pagination
+                    pageCount={authors.page_count}
+                    pageNumber={pageNumber}
+                    switchPage={getAuthorsByPage}
+                />
+            )}
+            {authors.count === 0 && !status.isRequest() && (
+                <div className={styles.empty}>Раздел пока пустой</div>
+            )}
         </Page>
     );
 };

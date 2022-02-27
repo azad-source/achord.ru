@@ -9,10 +9,6 @@
   line-height: 1.5;
 }
 
-.root {
-  padding: 0 80px;
-}
-
 .aboutUs {
   text-align: justify;
   text-indent: 25px;
@@ -145,17 +141,7 @@
   }
 }
 
-@media screen and (max-width: $siteWidthTab) {
-  .root {
-    padding: 0 5vw;
-  }
-}
-
 @media screen and (max-width: $siteWidthMobile) {
-  .root {
-    padding: 0 2vw;
-  }
-
   .title {
     margin-top: 20px;
   }

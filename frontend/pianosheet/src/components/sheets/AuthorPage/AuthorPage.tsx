@@ -23,7 +23,6 @@ import { FavoriteIcon } from 'components/shared/icons/FavoriteIcon';
 import { LikeIcon } from 'components/shared/icons/LikeIcon';
 
 interface Props {
-    className?: string;
     author: AuthorItemJsModel;
     sheets: SheetJsModel;
     status: QueryStatus;
@@ -39,7 +38,6 @@ interface Props {
 }
 
 const AuthorPageFC: React.FC<Props> = ({
-    className,
     author,
     sheets,
     status,
@@ -132,75 +130,116 @@ const AuthorPageFC: React.FC<Props> = ({
     };
 
     return (
-        <Page breadcrumbs={breadcrumbs}>
-            <div className={cn(styles.root, className)}>
-                <div className={styles.title}>
-                    <div className={styles.authorName}>{author.name}</div>
-                    {logged && (
-                        <div className={styles.actions}>
-                            {isSuperUser && (
-                                <Button
-                                    className={styles.editBtn}
-                                    use="link"
-                                    onClick={openEditModal}
-                                    disabled={status.isRequest()}
-                                >
-                                    <EditIcon />
-                                </Button>
+        <Page breadcrumbs={breadcrumbs} status={status}>
+            <div className={styles.title}>
+                <div className={styles.authorName}>{author.name}</div>
+                {logged && (
+                    <div className={styles.actions}>
+                        {isSuperUser && (
+                            <Button
+                                className={styles.editBtn}
+                                use="link"
+                                onClick={openEditModal}
+                                disabled={status.isRequest()}
+                            >
+                                <EditIcon />
+                            </Button>
+                        )}
+                        <Button
+                            className={cn(styles.likeBtn, author.like && styles.likeBtn_active)}
+                            use="link"
+                            onClick={swithLikeAuthor}
+                            title={author.like ? 'Убрать лайк' : 'Поставить лайк'}
+                            disabled={status.isRequest()}
+                        >
+                            {author.like_count}{' '}
+                            <LikeIcon className={styles.likeIcon} active={author.like} />
+                        </Button>
+                        <Button
+                            className={cn(
+                                styles.favoriteBtn,
+                                author.favorite && styles.favoriteBtn_active,
                             )}
-                            <Button
-                                className={cn(styles.likeBtn, author.like && styles.likeBtn_active)}
-                                use="link"
-                                onClick={swithLikeAuthor}
-                                title={author.like ? 'Убрать лайк' : 'Поставить лайк'}
-                                disabled={status.isRequest()}
-                            >
-                                {author.like_count}{' '}
-                                <LikeIcon className={styles.likeIcon} active={author.like} />
-                            </Button>
-                            <Button
-                                className={cn(
-                                    styles.favoriteBtn,
-                                    author.favorite && styles.favoriteBtn_active,
-                                )}
-                                use="link"
-                                onClick={swithFavoriteAuthor}
-                                title={
-                                    author.favorite ? 'Убрать из избранных' : 'Добавить в избранное'
-                                }
-                                disabled={status.isRequest()}
-                            >
-                                <FavoriteIcon active={author.favorite} />
-                            </Button>
-                        </div>
-                    )}
-                </div>
+                            use="link"
+                            onClick={swithFavoriteAuthor}
+                            title={author.favorite ? 'Убрать из избранных' : 'Добавить в избранное'}
+                            disabled={status.isRequest()}
+                        >
+                            <FavoriteIcon active={author.favorite} />
+                        </Button>
+                    </div>
+                )}
+            </div>
 
-                <div className={styles.content}>
-                    <div className={styles.description}>
-                        <div>
-                            <div className={styles.photo}>
-                                <img
-                                    src={author.preview}
-                                    alt={author.name}
-                                    className={styles.image}
-                                />
-                            </div>
-                            <div className={styles.genres}>
-                                {author.genres.map(({ name, id, alias }) => (
-                                    <div
-                                        key={id}
-                                        className={styles.genres_item}
-                                        onClick={() => goToGenre(alias)}
+            <div className={styles.content}>
+                <div className={styles.description}>
+                    <div>
+                        <div className={styles.photo}>
+                            <img src={author.preview} alt={author.name} className={styles.image} />
+                        </div>
+                        <div className={styles.genres}>
+                            {author.genres.map(({ name, id, alias }) => (
+                                <div
+                                    key={id}
+                                    className={styles.genres_item}
+                                    onClick={() => goToGenre(alias)}
+                                >
+                                    {name}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className={styles.authorInfo}>{author.info}</div>
+                </div>
+                <div className={styles.sheetTitle}>НОТЫ</div>
+                {sheets.page_count > 1 && (
+                    <Pagination
+                        pageNumber={pageNumber}
+                        pageCount={sheets.page_count}
+                        switchPage={getSheetsByPage}
+                        size="small"
+                    />
+                )}
+                <div className={styles.sheets}>
+                    {sheets.results && sheets.results.length > 0 ? (
+                        <>
+                            {sheets.results.map(({ name, id, favorite }) => (
+                                <div key={id} className={styles.sheetItem}>
+                                    <a
+                                        href={Paths.getSheetDownloadPath(
+                                            letter,
+                                            authorAlias,
+                                            id.toString(),
+                                        )}
+                                        className={styles.sheetLink}
+                                        target="blank_"
                                     >
                                         {name}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div className={styles.authorInfo}>{author.info}</div>
-                    </div>
-                    <div className={styles.sheetTitle}>НОТЫ</div>
+                                    </a>
+                                    {logged && (
+                                        <Button
+                                            className={cn(
+                                                styles.favoriteBtn,
+                                                favorite && styles.favoriteBtn_active,
+                                            )}
+                                            use="link"
+                                            onClick={() => addSheetToFavorite(id, !favorite)}
+                                            title={
+                                                favorite
+                                                    ? 'Убрать из избранных'
+                                                    : 'Добавить в избранное'
+                                            }
+                                            disabled={status.isRequest()}
+                                        >
+                                            <FavoriteIcon active={favorite} />
+                                        </Button>
+                                    )}
+                                </div>
+                            ))}
+                        </>
+                    ) : (
+                        <div className={styles.notYetSheets}>Тут скоро появятся ноты</div>
+                    )}
                     {sheets.page_count > 1 && (
                         <Pagination
                             pageNumber={pageNumber}
@@ -209,61 +248,12 @@ const AuthorPageFC: React.FC<Props> = ({
                             size="small"
                         />
                     )}
-                    <div className={styles.sheets}>
-                        {sheets.results && sheets.results.length > 0 ? (
-                            <>
-                                {sheets.results.map(({ name, id, favorite }) => (
-                                    <div key={id} className={styles.sheetItem}>
-                                        <a
-                                            href={Paths.getSheetDownloadPath(
-                                                letter,
-                                                authorAlias,
-                                                id.toString(),
-                                            )}
-                                            className={styles.sheetLink}
-                                            target="blank_"
-                                        >
-                                            {name}
-                                        </a>
-                                        {logged && (
-                                            <Button
-                                                className={cn(
-                                                    styles.favoriteBtn,
-                                                    favorite && styles.favoriteBtn_active,
-                                                )}
-                                                use="link"
-                                                onClick={() => addSheetToFavorite(id, !favorite)}
-                                                title={
-                                                    favorite
-                                                        ? 'Убрать из избранных'
-                                                        : 'Добавить в избранное'
-                                                }
-                                                disabled={status.isRequest()}
-                                            >
-                                                <FavoriteIcon active={favorite} />
-                                            </Button>
-                                        )}
-                                    </div>
-                                ))}
-                            </>
-                        ) : (
-                            <div className={styles.notYetSheets}>Тут скоро появятся ноты</div>
-                        )}
-                        {sheets.page_count > 1 && (
-                            <Pagination
-                                pageNumber={pageNumber}
-                                pageCount={sheets.page_count}
-                                switchPage={getSheetsByPage}
-                                size="small"
-                            />
-                        )}
-                        {logged && (
-                            <div className={cn(styles.sheetItemAdd)} onClick={openSheetAddModal}>
-                                <AddIcon className={styles.addSheetIcon} />
-                                Добавить ноты
-                            </div>
-                        )}
-                    </div>
+                    {logged && (
+                        <div className={cn(styles.sheetItemAdd)} onClick={openSheetAddModal}>
+                            <AddIcon className={styles.addSheetIcon} />
+                            Добавить ноты
+                        </div>
+                    )}
                 </div>
             </div>
             {showSheetAddModal && (

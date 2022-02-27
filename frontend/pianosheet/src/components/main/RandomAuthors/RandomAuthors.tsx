@@ -62,7 +62,7 @@ const RandomAuthorsFC: React.FC<Props> = ({
     const [logged] = useAuth();
 
     return (
-        <Page hideSheetsNav>
+        <Page hideSheetsNav status={status}>
             <div className={styles.title}>Авторы</div>
             <div className={styles.topAuthors}>
                 {authors.results.map((author) => (

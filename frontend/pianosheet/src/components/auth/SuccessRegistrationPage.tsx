@@ -11,15 +11,10 @@ import { QueryStatus } from 'domain/QueryStatus';
 
 interface Props {
     status: QueryStatus;
-    className?: string;
     confirmEmail: (uid: string, token: string) => Promise<ConfirmationType>;
 }
 
-const SuccessRegistrationPageFC: React.FC<Props> = ({
-    status,
-    className,
-    confirmEmail,
-}) => {
+const SuccessRegistrationPageFC: React.FC<Props> = ({ status, confirmEmail }) => {
     const { uid, token } = useParams<{ uid: string; token: string }>();
     const [confirm, setConfirm] = React.useState<ConfirmationType>({
         isConfirmed: false,
@@ -32,28 +27,16 @@ const SuccessRegistrationPageFC: React.FC<Props> = ({
     return (
         <Page hideSheetsNav>
             {confirm.isConfirmed ? (
-                <div
-                    className={cn(
-                        styles.confirmMessage,
-                        styles.confirmMessage_success,
-                    )}
-                >
+                <div className={cn(styles.confirmMessage, styles.confirmMessage_success)}>
                     <div>Почта успешно подтверждена!</div>
                     <div className={styles.confirmMessage__description}>
                         Перейти на <Link to="/">Главную страницу</Link>
                     </div>
                 </div>
             ) : (
-                <div
-                    className={cn(
-                        styles.confirmMessage,
-                        styles.confirmMessage_error,
-                    )}
-                >
+                <div className={cn(styles.confirmMessage, styles.confirmMessage_error)}>
                     <div>Почта не подтверждена!</div>
-                    <div className={styles.confirmMessage__description}>
-                        {confirm.message}
-                    </div>
+                    <div className={styles.confirmMessage__description}>{confirm.message}</div>
                 </div>
             )}
         </Page>

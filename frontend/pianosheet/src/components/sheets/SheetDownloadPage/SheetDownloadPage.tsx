@@ -1,6 +1,5 @@
 import * as React from 'react';
 import styles from './SheetDownloadPage.scss';
-import cn from 'classnames';
 import { useParams } from 'react-router-dom';
 import { Page } from 'components/shared/layout/Page/Page';
 import { Button } from 'components/shared/Button/Button';
@@ -11,11 +10,7 @@ import { SiteName } from 'domain/SiteInfo';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { Paths } from 'utils/routes/Paths';
 
-interface Props {
-    className?: string;
-}
-
-export const SheetDownloadPage: React.FC<Props> = ({ className }) => {
+export const SheetDownloadPage = () => {
     const { letter, authorAlias, sheetId } =
         useParams<{ letter: string; authorAlias: string; sheetId: string }>();
 
@@ -71,7 +66,7 @@ export const SheetDownloadPage: React.FC<Props> = ({ className }) => {
 
     return (
         <Page breadcrumbs={breadcrumbs}>
-            <div className={cn(styles.root, className)}>
+            <div className={styles.root}>
                 <div className={styles.fileName}>{sheet.name}</div>
                 {sheet.filename ? (
                     <div className={styles.download}>

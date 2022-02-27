@@ -5,7 +5,6 @@ import { SiteName } from 'domain/SiteInfo';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 import { FavouriteAuthors } from './FavouriteAuthors/FavouriteAuthors';
-import styles from './MainPage.scss';
 import { RandomAuthors } from './RandomAuthors/RandomAuthors';
 import { TopAuthors } from './TopAuthors/TopAuthors';
 
@@ -29,10 +28,8 @@ const MainPageFC = () => {
 
     return (
         <Page>
-            <div className={styles.root}>
-                <Tabs items={tabs} value={tab} onValueChange={handleChangeTab} />
-                {tab === 0 ? <RandomAuthors /> : tab === 1 ? <TopAuthors /> : <FavouriteAuthors />}
-            </div>
+            <Tabs items={tabs} value={tab} onValueChange={handleChangeTab} />
+            {tab === 0 ? <RandomAuthors /> : tab === 1 ? <TopAuthors /> : <FavouriteAuthors />}
         </Page>
     );
 };

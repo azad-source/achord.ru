@@ -62,7 +62,7 @@ const TopAuthorsFC: React.FC<Props> = ({
     };
 
     return (
-        <Page hideSheetsNav>
+        <Page hideSheetsNav status={status}>
             <div className={styles.title}>Авторы</div>
             <div className={styles.topAuthors}>
                 {authors.results.map((author) => (

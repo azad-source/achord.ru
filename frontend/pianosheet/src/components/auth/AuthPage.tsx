@@ -15,7 +15,7 @@ import { SocialAuthParams } from 'domain/api/JsModels';
 
 interface Props {
     status: QueryStatus;
-    registration: (email: string, password: string,  re_password: string) => Promise<void>;
+    registration: (email: string, password: string, re_password: string) => Promise<void>;
     authorization: (email: string, password: string) => Promise<void>;
     dropError: () => void;
     resetPassword: (email: string) => Promise<void>;
@@ -65,7 +65,6 @@ const AuthPageFC: React.FC<Props> = ({
         logout();
         window.location.href = '/sign-in';
     };
-
 
     const handleRegConfirm = (isSuccessRegistration: boolean, email: string) => {
         setRegEvent({ isSuccessRegistration, email });

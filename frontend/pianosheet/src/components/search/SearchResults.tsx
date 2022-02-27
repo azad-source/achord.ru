@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { sheetsAction } from 'store/sheetsActions';
 import { RootState } from 'store/rootReducer';
+import { useAuth } from 'api/UsersClient';
 
 interface Props {
     search: SearchApiResults;
@@ -40,6 +41,8 @@ const SearchResultsFC: React.FC<Props> = ({
     const [pageNumberSheet, setPageNumberSheet] = React.useState<number>(1);
     const [pageNumberAuthor, setPageNumberAuthor] = React.useState<number>(1);
     const location = useLocation();
+
+    const [logged] = useAuth();
 
     const getSheetsByPage = (page: number) => {
         searchSheets(search.query, page);
@@ -117,10 +120,9 @@ const SearchResultsFC: React.FC<Props> = ({
                                     key={author.id}
                                     author={author}
                                     className={styles.searchAuthor}
-                                    isSuperUser={isSuperUser}
-                                    editAuthor={editAuthor}
-                                    removeAuthor={removeAuthor}
-                                    addAuthorToFavorite={addAuthorToFavorite}
+                                    editAuthor={isSuperUser ? editAuthor : undefined}
+                                    removeAuthor={isSuperUser ? removeAuthor : undefined}
+                                    addAuthorToFavorite={logged ? addAuthorToFavorite : undefined}
                                 />
                             ))}
                         </div>

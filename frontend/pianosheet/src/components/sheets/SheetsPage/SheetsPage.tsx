@@ -41,11 +41,11 @@ const SheetsPageFC: React.FC<Props> = ({ genres, getGenres }) => {
 
     return (
         <Page breadcrumbs={breadcrumbs} showAddAuthorBtn>
-            <div className={styles.genres}>
+            <div className={styles.root}>
                 {genres.results.map(({ id, name, alias, preview }) => (
                     <Link
                         key={id}
-                        className={styles.genres__item}
+                        className={styles.item}
                         to={Paths.getGenrePage(alias)}
                         style={{
                             fontSize: 22 / Math.pow(name.length, 0.25),

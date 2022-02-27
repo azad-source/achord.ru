@@ -65,12 +65,12 @@ const FavouriteAuthorsFC: React.FC<Props> = ({
     const hasSheets = sheets.results.length > 0;
 
     return (
-        <Page hideSheetsNav>
+        <Page hideSheetsNav status={status}>
             {hasAuthors && (
                 <>
                     <div className={styles.title}>Авторы</div>
                     <div className={styles.topAuthors}>
-                        {authors.results.map((author, index) => (
+                        {authors.results.map((author) => (
                             <AuthorCard
                                 key={author.id}
                                 author={author}

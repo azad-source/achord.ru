@@ -90,9 +90,7 @@ const SheetDownloadPageFC: React.FC<Props> = ({ isSuperUser = false }) => {
                                 {isSuperUser && (
                                     <>
                                         <Document
-                                            file={
-                                                'http://localhost:3000/media/notes/ABBA/ABBA%20-%20Gold.pdf'
-                                            }
+                                            file={sheet.filename}
                                             onLoadSuccess={onDocumentLoadSuccess}
                                         >
                                             <PDFPage pageNumber={pageNumber} />

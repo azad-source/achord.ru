@@ -21,9 +21,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class LikeFavoriteSerializer(serializers.ModelSerializer):
-    like = serializers.SerializerMethodField()
-    favorite = serializers.SerializerMethodField()
-    like_count = serializers.SerializerMethodField()
+    like = serializers.SerializerMethodField(read_only=True)
+    favorite = serializers.SerializerMethodField(read_only=True)
+    like_count = serializers.SerializerMethodField(read_only=True)
 
     def get_like(self, obj):
         stats = obj.itemstat.all()
@@ -34,7 +34,7 @@ class LikeFavoriteSerializer(serializers.ModelSerializer):
         return safe_list_get([s.favorite for s in stats], 0, False)
 
     def get_like_count(self, obj):
-        return obj.like_count
+        return getattr(obj, 'like_count', 0)
 
 
 class AuthorSerializer(LikeFavoriteSerializer):
@@ -44,9 +44,9 @@ class AuthorSerializer(LikeFavoriteSerializer):
     class Meta:
         model = Author
         annotated_fields = ('like', 'favorite', 'like_count')
-        read_only_fields = ('id', 'preview_s', 'preview_xs', 'alias', 'rate', 'owner')
-        fields = (*annotated_fields, *read_only_fields, 'name', 'info', 'preview', 'genres')
-
+        read_only_fields = (*annotated_fields, 'id', 'preview_s', 'preview_xs', 'alias', 'rate', 'owner')
+        fields = (*read_only_fields, 'name', 'info', 'preview', 'genres')
+    
     def create(self, validated_data):
         validated_data.pop('genres', None)
         instance = Author.objects.create(**validated_data)
@@ -80,7 +80,7 @@ class AuthorSerializer(LikeFavoriteSerializer):
 
 class NoteSerializer(LikeFavoriteSerializer):
     owner = UserSerializer(read_only=True)
-
+    
     class Meta:
         model = Note
         annotated_fields = ('like', 'favorite', 'like_count')

@@ -9,8 +9,16 @@ import { defaultAuthorItem, defaultSheetItem } from 'store/sheetsReducer';
 import { SiteName } from 'domain/SiteInfo';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { Paths } from 'utils/routes/Paths';
+import { Document, Page as PDFPage } from 'react-pdf';
+import { PDFDocumentProxy } from 'pdfjs-dist';
+import { connect } from 'react-redux';
+import { RootState } from 'store/rootReducer';
 
-export const SheetDownloadPage = () => {
+interface Props {
+    isSuperUser?: boolean;
+}
+
+const SheetDownloadPageFC: React.FC<Props> = ({ isSuperUser = false }) => {
     const { letter, authorAlias, sheetId } =
         useParams<{ letter: string; authorAlias: string; sheetId: string }>();
 
@@ -64,6 +72,13 @@ export const SheetDownloadPage = () => {
         }, 1000);
     };
 
+    const [pagesCount, setPagesCount] = React.useState(0);
+    const [pageNumber, setPageNumber] = React.useState(1);
+
+    const onDocumentLoadSuccess = (pdf: PDFDocumentProxy) => {
+        setPagesCount(pdf.numPages);
+    };
+
     return (
         <Page breadcrumbs={breadcrumbs}>
             <div className={styles.root}>
@@ -71,9 +86,31 @@ export const SheetDownloadPage = () => {
                 {sheet.filename ? (
                     <div className={styles.download}>
                         {downloadState.counter < 1 ? (
-                            <Button onClick={download} className={styles.downloadButton} use="link">
-                                Ссылка на скачивание
-                            </Button>
+                            <div>
+                                {isSuperUser && (
+                                    <>
+                                        <Document
+                                            file={
+                                                'http://localhost:3000/media/notes/ABBA/ABBA%20-%20Gold.pdf'
+                                            }
+                                            onLoadSuccess={onDocumentLoadSuccess}
+                                        >
+                                            <PDFPage pageNumber={pageNumber} />
+                                        </Document>
+                                        <p>
+                                            Page {pageNumber} of {pagesCount}
+                                        </p>
+                                    </>
+                                )}
+
+                                <Button
+                                    onClick={download}
+                                    className={styles.downloadButton}
+                                    use="link"
+                                >
+                                    Ссылка на скачивание
+                                </Button>
+                            </div>
                         ) : downloadState.started ? (
                             <div className={styles.downloadInfo}>
                                 Через {downloadState.counter} секунд появится ссылка на скачивание
@@ -91,3 +128,9 @@ export const SheetDownloadPage = () => {
         </Page>
     );
 };
+
+const mapStateToProps = (state: RootState) => ({
+    isSuperUser: state.users.currentUser.is_superuser,
+});
+
+export const SheetDownloadPage = connect(mapStateToProps)(SheetDownloadPageFC);

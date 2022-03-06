@@ -40,10 +40,6 @@ export const AuthorCard: React.FC<Props> = ({
         e.preventDefault();
         e.stopPropagation();
         setShowEditMenu((prev) => !prev);
-
-        setTimeout(() => {
-            if (!showEditMenu) setShowEditMenu(false);
-        }, 4000);
     };
 
     const openEditModal = (e: React.MouseEvent) => {
@@ -101,6 +97,10 @@ export const AuthorCard: React.FC<Props> = ({
         }
         setShowEditMenu(false);
     };
+
+    document.addEventListener('click', () => {
+        if (showEditMenu) setShowEditMenu(false);
+    });
 
     return (
         <>

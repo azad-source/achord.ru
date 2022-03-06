@@ -1,4 +1,5 @@
 @import 'styles/default.scss';
+@import 'styles/colors.scss';
 
 $sliderThick: 4px;
 $sliderColor: rgb(17, 36, 119);
@@ -18,7 +19,6 @@ $baseColor: rgb(217, 226, 255);
   &__item {
     width: 100%;
     text-align: center;
-    box-sizing: border-box;
     padding: 15px 0;
     cursor: pointer;
     font-size: 18px;
@@ -26,6 +26,7 @@ $baseColor: rgb(217, 226, 255);
     &_active {
       font-weight: bold;
       cursor: default;
+      border-bottom: 4px solid $defaultBg;
     }
   }
 }
@@ -36,16 +37,6 @@ $baseColor: rgb(217, 226, 255);
   box-sizing: border-box;
   background: $baseColor;
   position: relative;
-
-  &__slider {
-    position: absolute;
-    box-sizing: border-box;
-    top: -$sliderThick;
-    height: $sliderThick;
-    background: $sliderColor;
-    border-radius: 2px;
-    transition: 0.3s ease;
-  }
 }
 
 @media screen and (max-width: $siteWidthMobile) {

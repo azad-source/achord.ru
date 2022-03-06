@@ -121,9 +121,6 @@ export const AuthorCard: React.FC<Props> = ({
                                         Изменить
                                     </div>
                                 )}
-                                <div className={cn(styles.editMenu_item)} onClick={addToFavorite}>
-                                    {favorite ? 'Убрать из избранных' : 'В избранное'}
-                                </div>
                                 {!!removeAuthor && (
                                     <div
                                         className={cn(
@@ -135,9 +132,11 @@ export const AuthorCard: React.FC<Props> = ({
                                         Удалить
                                     </div>
                                 )}
-                                <div className={styles.editMenu_item} onClick={closeEditMenu}>
-                                    Отмена
-                                </div>
+                                {(!!editAuthor || !!removeAuthor) && (
+                                    <div className={styles.editMenu_item} onClick={closeEditMenu}>
+                                        Отмена
+                                    </div>
+                                )}
                             </div>
                         )}
                     </>

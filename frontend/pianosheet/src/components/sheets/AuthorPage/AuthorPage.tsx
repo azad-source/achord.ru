@@ -129,6 +129,12 @@ const AuthorPageFC: React.FC<Props> = ({
         likeAuthor(author.id, !author.like);
     };
 
+    const handleSheetToFavorite = (e: React.MouseEvent, id: number, favorite: boolean) => {
+        e.stopPropagation();
+        e.preventDefault();
+        addSheetToFavorite(id, favorite);
+    };
+
     return (
         <Page breadcrumbs={breadcrumbs} status={status}>
             <div className={styles.title}>
@@ -159,6 +165,7 @@ const AuthorPageFC: React.FC<Props> = ({
                             className={cn(
                                 styles.favoriteBtn,
                                 author.favorite && styles.favoriteBtn_active,
+                                styles.favoriteBtn_showAlways,
                             )}
                             use="link"
                             onClick={swithFavoriteAuthor}
@@ -204,18 +211,17 @@ const AuthorPageFC: React.FC<Props> = ({
                     {sheets.results && sheets.results.length > 0 ? (
                         <>
                             {sheets.results.map(({ name, id, favorite }) => (
-                                <div key={id} className={styles.sheetItem}>
-                                    <a
-                                        href={Paths.getSheetDownloadPath(
-                                            letter,
-                                            authorAlias,
-                                            id.toString(),
-                                        )}
-                                        className={styles.sheetLink}
-                                        target="blank_"
-                                    >
-                                        {name}
-                                    </a>
+                                <a
+                                    key={id}
+                                    className={styles.sheetItem}
+                                    href={Paths.getSheetDownloadPath(
+                                        letter,
+                                        authorAlias,
+                                        id.toString(),
+                                    )}
+                                    target="blank_"
+                                >
+                                    <span>{name}</span>
                                     {logged && (
                                         <Button
                                             className={cn(
@@ -223,7 +229,7 @@ const AuthorPageFC: React.FC<Props> = ({
                                                 favorite && styles.favoriteBtn_active,
                                             )}
                                             use="link"
-                                            onClick={() => addSheetToFavorite(id, !favorite)}
+                                            onClick={(e) => handleSheetToFavorite(e, id, !favorite)}
                                             title={
                                                 favorite
                                                     ? 'Убрать из избранных'
@@ -234,7 +240,7 @@ const AuthorPageFC: React.FC<Props> = ({
                                             <FavoriteIcon active={favorite} />
                                         </Button>
                                     )}
-                                </div>
+                                </a>
                             ))}
                         </>
                     ) : (

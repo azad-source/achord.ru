@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styles from './FavoriteIcon.scss';
 
 interface Props {
     className?: string;
@@ -10,12 +11,13 @@ export const FavoriteIcon: React.FC<Props> = ({ className, active = false }) => 
         <svg
             version="1.1"
             viewBox="0 0 35 35"
-            width="18"
-            height="18"
+            width="24"
+            height="24"
             xmlns="http://www.w3.org/2000/svg"
             className={className}
         >
             <path
+                className={styles.active}
                 fill={active ? '#ffd000' : '#fff'}
                 strokeWidth={active ? 0 : 2}
                 stroke="#3d446b"

@@ -14,6 +14,10 @@
   &:hover {
     transition: 0.2s;
     box-shadow: 0 0 6px 3px rgba(0, 0, 0, 0.3);
+
+    .favoriteBtn {
+      opacity: 1;
+    }
   }
 }
 
@@ -54,6 +58,7 @@
 }
 
 .favoriteBtn {
+  opacity: 0;
   position: absolute;
   z-index: 5;
   top: 50%;
@@ -63,6 +68,7 @@
   margin-right: 0;
 
   &_active {
+    opacity: 1;
     transition: 0.3s;
   }
 }

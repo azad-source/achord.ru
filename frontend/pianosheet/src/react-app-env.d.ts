@@ -95,6 +95,11 @@ declare module '*.ogg' {
     export default src;
 }
 
+declare module '*.pdf' {
+    const src: string;
+    export default src;
+}
+
 declare interface GeneralObject {
     [key: string]: any;
 }

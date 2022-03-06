@@ -9,13 +9,13 @@ import { defaultAuthorItem, defaultSheetItem } from 'store/sheetsReducer';
 import { SiteName } from 'domain/SiteInfo';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { Paths } from 'utils/routes/Paths';
-import { Document, Page as PDFPage, pdfjs } from 'react-pdf';
+// import { Document, Page as PDFPage, pdfjs } from 'react-pdf';
 import { PDFDocumentProxy } from 'pdfjs-dist';
 import { connect } from 'react-redux';
 import { RootState } from 'store/rootReducer';
-import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
-
-pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+// import { Pagination } from 'components/shared/layout/Pagination/Pagination';
+// pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+// import test from './test.pdf';
 
 interface Props {
     isSuperUser?: boolean;
@@ -90,19 +90,25 @@ const SheetDownloadPageFC: React.FC<Props> = ({ isSuperUser = false }) => {
                     <div className={styles.download}>
                         {downloadState.counter < 1 ? (
                             <div>
-                                {isSuperUser && (
+                                {/* {isSuperUser && (
                                     <>
+                                        <p>
+                                            Page {pageNumber} of {pagesCount}
+                                        </p>
                                         <Document
-                                            file={sheet.filename}
+                                            className={styles.pdfViewer}
+                                            file={test}
                                             onLoadSuccess={onDocumentLoadSuccess}
                                         >
                                             <PDFPage pageNumber={pageNumber} />
                                         </Document>
-                                        <p>
-                                            Page {pageNumber} of {pagesCount}
-                                        </p>
+                                        <Pagination
+                                            pageCount={pagesCount}
+                                            pageNumber={pageNumber}
+                                            switchPage={setPageNumber}
+                                        />
                                     </>
-                                )}
+                                )} */}
 
                                 <Button
                                     onClick={download}

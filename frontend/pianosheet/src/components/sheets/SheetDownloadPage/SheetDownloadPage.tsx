@@ -9,10 +9,13 @@ import { defaultAuthorItem, defaultSheetItem } from 'store/sheetsReducer';
 import { SiteName } from 'domain/SiteInfo';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { Paths } from 'utils/routes/Paths';
-import { Document, Page as PDFPage } from 'react-pdf';
+import { Document, Page as PDFPage, pdfjs } from 'react-pdf';
 import { PDFDocumentProxy } from 'pdfjs-dist';
 import { connect } from 'react-redux';
 import { RootState } from 'store/rootReducer';
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
+
+pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 interface Props {
     isSuperUser?: boolean;

@@ -9,10 +9,10 @@ import { defaultAuthorItem, defaultSheetItem } from 'store/sheetsReducer';
 import { SiteName } from 'domain/SiteInfo';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { Paths } from 'utils/routes/Paths';
-// import { Document, Page as PDFPage, pdfjs } from 'react-pdf';
-import { PDFDocumentProxy } from 'pdfjs-dist';
 import { connect } from 'react-redux';
 import { RootState } from 'store/rootReducer';
+// import { Document, Page as PDFPage, pdfjs } from 'react-pdf';
+// import { PDFDocumentProxy } from 'pdfjs-dist';
 // import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 // pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 // import test from './test.pdf';
@@ -75,12 +75,12 @@ const SheetDownloadPageFC: React.FC<Props> = ({ isSuperUser = false }) => {
         }, 1000);
     };
 
-    const [pagesCount, setPagesCount] = React.useState(0);
-    const [pageNumber, setPageNumber] = React.useState(1);
+    // const [pagesCount, setPagesCount] = React.useState(0);
+    // const [pageNumber, setPageNumber] = React.useState(1);
 
-    const onDocumentLoadSuccess = (pdf: PDFDocumentProxy) => {
-        setPagesCount(pdf.numPages);
-    };
+    // const onDocumentLoadSuccess = (pdf: PDFDocumentProxy) => {
+    //     setPagesCount(pdf.numPages);
+    // };
 
     return (
         <Page breadcrumbs={breadcrumbs}>
@@ -89,35 +89,9 @@ const SheetDownloadPageFC: React.FC<Props> = ({ isSuperUser = false }) => {
                 {sheet.filename ? (
                     <div className={styles.download}>
                         {downloadState.counter < 1 ? (
-                            <div>
-                                {/* {isSuperUser && (
-                                    <>
-                                        <p>
-                                            Page {pageNumber} of {pagesCount}
-                                        </p>
-                                        <Document
-                                            className={styles.pdfViewer}
-                                            file={test}
-                                            onLoadSuccess={onDocumentLoadSuccess}
-                                        >
-                                            <PDFPage pageNumber={pageNumber} />
-                                        </Document>
-                                        <Pagination
-                                            pageCount={pagesCount}
-                                            pageNumber={pageNumber}
-                                            switchPage={setPageNumber}
-                                        />
-                                    </>
-                                )} */}
-
-                                <Button
-                                    onClick={download}
-                                    className={styles.downloadButton}
-                                    use="link"
-                                >
-                                    Ссылка на скачивание
-                                </Button>
-                            </div>
+                            <Button onClick={download} className={styles.downloadButton} use="link">
+                                Ссылка на скачивание
+                            </Button>
                         ) : downloadState.started ? (
                             <div className={styles.downloadInfo}>
                                 Через {downloadState.counter} секунд появится ссылка на скачивание

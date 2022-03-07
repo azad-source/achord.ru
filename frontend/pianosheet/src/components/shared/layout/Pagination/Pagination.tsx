@@ -32,10 +32,7 @@ export const Pagination: React.FC<Props> = ({
     return (
         <div className={cn(styles.root, styles[size], className)}>
             <div
-                className={cn(
-                    styles.item,
-                    pageNumber === 1 && styles.currentItem,
-                )}
+                className={cn(styles.item, pageNumber === 1 && styles.currentItem)}
                 onClick={() => handleSwitchPage(pageNumber - 1)}
             >
                 &larr;
@@ -44,10 +41,7 @@ export const Pagination: React.FC<Props> = ({
             {items.map((item) => (
                 <div
                     key={item}
-                    className={cn(
-                        styles.item,
-                        item === pageNumber && styles.currentItem,
-                    )}
+                    className={cn(styles.item, item === pageNumber && styles.currentItem)}
                     onClick={() => handleSwitchPage(item)}
                 >
                     {item}
@@ -55,10 +49,7 @@ export const Pagination: React.FC<Props> = ({
             ))}
 
             <div
-                className={cn(
-                    styles.item,
-                    pageNumber === pageCount && styles.currentItem,
-                )}
+                className={cn(styles.item, pageNumber === pageCount && styles.currentItem)}
                 onClick={() => handleSwitchPage(pageNumber + 1)}
             >
                 &rarr;

@@ -87,7 +87,7 @@ const FavouriteAuthorsFC: React.FC<Props> = ({
             {hasSheets && (
                 <>
                     <div className={styles.title}>Композиции</div>
-                    <ol className={styles.topSheets}>
+                    <div className={styles.topSheets}>
                         {sheets.results.map((sheet, index) => (
                             <SheetRow
                                 key={sheet.id}
@@ -97,7 +97,7 @@ const FavouriteAuthorsFC: React.FC<Props> = ({
                                 addToFavorite={logged ? addSheetToFavorite : undefined}
                             />
                         ))}
-                    </ol>
+                    </div>
                 </>
             )}
 

@@ -1,19 +1,63 @@
 @import 'styles/default.scss';
+@import 'styles/colors.scss';
 
 .root {
   position: relative;
   margin-bottom: 16px;
   padding: 11px 10px 13px;
   box-sizing: border-box;
-  border-radius: 15px;
   transition: 0.3s;
-
   cursor: pointer;
   user-select: none;
 
+  &_main {
+    border-radius: 15px;
+
+    .caption {
+      color: #fff;
+    }
+
+    &:hover {
+      box-shadow: 0 0 6px 3px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  &_second {
+    background-color: #eee;
+    box-shadow: 1px 2px 5px 2px rgba(0, 0, 0, 0.15);
+
+    .caption {
+      color: $linkColor;
+      margin-left: 30px;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      width: 15px;
+      height: 15px;
+      background-color: $defaultBg;
+    }
+
+    &:hover {
+      box-shadow: none;
+      background-color: $defaultBg;
+
+      .caption {
+        color: #fff;
+      }
+
+      &:before {
+        background-color: #fff;
+      }
+    }
+  }
+
   &:hover {
     transition: 0.2s;
-    box-shadow: 0 0 6px 3px rgba(0, 0, 0, 0.3);
 
     .favoriteBtn {
       opacity: 1;
@@ -22,10 +66,8 @@
 }
 
 .caption {
-  width: 95%;
-  color: #fff;
+  width: 93%;
   font-size: 16px;
-  white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
@@ -81,9 +123,20 @@
 
 @media screen and (max-width: $siteWidthMobile) {
   .root {
+    padding: 9px 10px 11px;
+
+    &_main {
+      border-radius: 8px;
+    }
+
     &_item {
       width: 100%;
       height: 135px;
     }
+  }
+
+  .caption {
+    width: 90%;
+    font-size: 14px;
   }
 }

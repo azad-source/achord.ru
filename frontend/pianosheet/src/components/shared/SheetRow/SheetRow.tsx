@@ -6,10 +6,14 @@ import cn from 'classnames';
 import { FavoriteIcon } from '../icons/FavoriteIcon';
 import { QueryStatus } from 'domain/QueryStatus';
 
+type SheetRowType = 'main' | 'second';
+
 interface Props {
     sheet: SheetItemJsModel;
     index: number;
     status?: QueryStatus;
+    type?: SheetRowType;
+    hidePosition?: boolean;
     onOpen: (sheet: SheetItemJsModel) => void;
     addToFavorite?: (sheetId: number, isFavorite: boolean) => void;
 }
@@ -18,6 +22,8 @@ export const SheetRow: React.FC<Props> = ({
     sheet,
     index,
     status = QueryStatus.initial(),
+    type = 'main',
+    hidePosition = false,
     onOpen,
     addToFavorite,
 }) => {
@@ -36,9 +42,13 @@ export const SheetRow: React.FC<Props> = ({
     };
 
     return (
-        <div className={styles.root} onClick={() => onOpen(sheet)} style={style}>
+        <div
+            className={cn(styles.root, styles[`root_${type}`])}
+            onClick={() => onOpen(sheet)}
+            style={type === 'main' ? style : undefined}
+        >
             <div className={styles.caption}>
-                {index + 1}. {sheet.name}
+                {!hidePosition && <span>{index + 1}. </span>} {sheet.name}
             </div>
             {!!addToFavorite && (
                 <Button

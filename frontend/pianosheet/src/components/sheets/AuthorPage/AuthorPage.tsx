@@ -7,7 +7,12 @@ import { connect } from 'react-redux';
 import { RootState } from 'store/rootReducer';
 import { bindActionCreators, Dispatch } from 'redux';
 import { sheetsAction } from 'store/sheetsActions';
-import { AuthorItemJsModel, AuthorRequestModel, SheetJsModel } from 'domain/api/JsModels';
+import {
+    AuthorItemJsModel,
+    AuthorRequestModel,
+    SheetItemJsModel,
+    SheetJsModel,
+} from 'domain/api/JsModels';
 import { QueryStatus } from 'domain/QueryStatus';
 import { AddIcon } from 'components/shared/icons/AddIcon';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
@@ -21,6 +26,7 @@ import { EditIcon } from 'components/shared/icons/EditIcon';
 import { SiteName } from 'domain/SiteInfo';
 import { FavoriteIcon } from 'components/shared/icons/FavoriteIcon';
 import { LikeIcon } from 'components/shared/icons/LikeIcon';
+import { SheetRow } from 'components/shared/SheetRow/SheetRow';
 
 interface Props {
     author: AuthorItemJsModel;
@@ -129,10 +135,9 @@ const AuthorPageFC: React.FC<Props> = ({
         likeAuthor(author.id, !author.like);
     };
 
-    const handleSheetToFavorite = (e: React.MouseEvent, id: number, favorite: boolean) => {
-        e.stopPropagation();
-        e.preventDefault();
-        addSheetToFavorite(id, favorite);
+    const openDownloadPage = (sheet: SheetItemJsModel) => {
+        const path = Paths.getSheetDownloadPath(letter, authorAlias, sheet.id.toString());
+        window.open(path, '_blank');
     };
 
     return (
@@ -210,37 +215,16 @@ const AuthorPageFC: React.FC<Props> = ({
                 <div className={styles.sheets}>
                     {sheets.results && sheets.results.length > 0 ? (
                         <>
-                            {sheets.results.map(({ name, id, favorite }) => (
-                                <a
-                                    key={id}
-                                    className={styles.sheetItem}
-                                    href={Paths.getSheetDownloadPath(
-                                        letter,
-                                        authorAlias,
-                                        id.toString(),
-                                    )}
-                                    target="blank_"
-                                >
-                                    <span>{name}</span>
-                                    {logged && (
-                                        <Button
-                                            className={cn(
-                                                styles.favoriteBtn,
-                                                favorite && styles.favoriteBtn_active,
-                                            )}
-                                            use="link"
-                                            onClick={(e) => handleSheetToFavorite(e, id, !favorite)}
-                                            title={
-                                                favorite
-                                                    ? 'Убрать из избранных'
-                                                    : 'Добавить в избранное'
-                                            }
-                                            disabled={status.isRequest()}
-                                        >
-                                            <FavoriteIcon active={favorite} />
-                                        </Button>
-                                    )}
-                                </a>
+                            {sheets.results.map((sheet, index) => (
+                                <SheetRow
+                                    key={sheet.id}
+                                    sheet={sheet}
+                                    index={index}
+                                    onOpen={openDownloadPage}
+                                    addToFavorite={logged ? addSheetToFavorite : undefined}
+                                    type="second"
+                                    hidePosition
+                                />
                             ))}
                         </>
                     ) : (

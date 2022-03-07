@@ -77,7 +77,7 @@ const RandomAuthorsFC: React.FC<Props> = ({
                 ))}
             </div>
             <div className={styles.title}>Композиции</div>
-            <ol className={styles.topSheets}>
+            <div className={styles.topSheets}>
                 {sheets.results.map((sheet, index) => (
                     <SheetRow
                         key={sheet.id}
@@ -87,7 +87,7 @@ const RandomAuthorsFC: React.FC<Props> = ({
                         addToFavorite={logged ? addSheetToFavorite : undefined}
                     />
                 ))}
-            </ol>
+            </div>
         </Page>
     );
 };

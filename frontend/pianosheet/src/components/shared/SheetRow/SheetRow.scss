@@ -9,6 +9,7 @@
   transition: 0.3s;
   cursor: pointer;
   user-select: none;
+  overflow: hidden;
 
   &_main {
     border-radius: 15px;
@@ -70,6 +71,7 @@
   font-size: 16px;
   text-overflow: ellipsis;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .likeBtn,
@@ -138,5 +140,6 @@
   .caption {
     width: 90%;
     font-size: 14px;
+    white-space: unset;
   }
 }

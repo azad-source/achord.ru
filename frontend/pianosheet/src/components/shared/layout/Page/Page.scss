@@ -27,8 +27,8 @@
 
 .addAuthor {
   position: absolute;
-  top: 5px;
-  right: 20px;
+  top: 3px;
+  right: 35px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -37,8 +37,8 @@
   justify-self: center;
   box-sizing: border-box;
   transition: 0.1s;
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   border: 1px solid $defaultBg;
   background-color: #eee;
   border-radius: 8px;
@@ -56,8 +56,8 @@
     top: 50%;
     left: 50%;
     background-color: $defaultBg;
-    width: 70%;
-    height: 3px;
+    width: 55%;
+    height: 2px;
     border-radius: 4px;
   }
 

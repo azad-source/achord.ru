@@ -171,6 +171,10 @@
   .root {
     filter: unset;
   }
+
+  .favoriteBtn {
+    opacity: 1;
+  }
 }
 
 @media screen and (max-width: $siteWidthMobile) {

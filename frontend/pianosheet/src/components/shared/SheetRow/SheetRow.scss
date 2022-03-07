@@ -73,6 +73,12 @@
   }
 }
 
+@media screen and (max-width: $siteWidthTab) {
+  .favoriteBtn {
+    opacity: 1;
+  }
+}
+
 @media screen and (max-width: $siteWidthMobile) {
   .root {
     &_item {

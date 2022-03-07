@@ -241,6 +241,10 @@
   .photo {
     height: 300px;
   }
+
+  .favoriteBtn {
+    opacity: 1;
+  }
 }
 
 @media screen and (max-width: $siteWidthMobile) {

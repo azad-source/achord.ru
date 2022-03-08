@@ -1,6 +1,10 @@
-.active {
-  &:hover {
-    fill: #ffd000;
-    stroke-width: 0.5;
+@import 'styles/default.scss';
+
+@media screen and (min-width: $siteWidth) {
+  .active {
+    &:hover {
+      fill: #ffd000;
+      stroke-width: 0.5;
+    }
   }
 }

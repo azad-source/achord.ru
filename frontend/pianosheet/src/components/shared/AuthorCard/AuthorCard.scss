@@ -167,13 +167,15 @@
   }
 }
 
+@media screen and (max-width: $siteWidth) {
+  .favoriteBtn {
+    opacity: 1;
+  }
+}
+
 @media screen and (max-width: $siteWidthTab) {
   .root {
     filter: unset;
-  }
-
-  .favoriteBtn {
-    opacity: 1;
   }
 }
 

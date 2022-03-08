@@ -17,7 +17,7 @@ export const FavoriteIcon: React.FC<Props> = ({ className, active = false }) => 
             className={className}
         >
             <path
-                className={styles.active}
+                className={styles.root}
                 fill={active ? '#ffd000' : '#fff'}
                 strokeWidth={active ? 0 : 2}
                 stroke="#3d446b"

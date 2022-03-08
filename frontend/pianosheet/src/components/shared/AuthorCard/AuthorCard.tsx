@@ -102,18 +102,22 @@ export const AuthorCard: React.FC<Props> = ({
         if (showEditMenu) setShowEditMenu(false);
     });
 
+    const menuEnable = !!editAuthor || !!removeAuthor;
+
     return (
         <>
             <NavLink className={cn(styles.root, className)} to={authorPath}>
                 {!!addAuthorToFavorite && (
                     <>
-                        <span className={styles.edit} onClick={openEditMenu}>
-                            <div className={styles.edit_icon}>
-                                <span className={styles.edit_icon_dot} />
-                                <span className={styles.edit_icon_dot} />
-                                <span className={styles.edit_icon_dot} />
-                            </div>
-                        </span>
+                        {menuEnable && (
+                            <span className={styles.edit} onClick={openEditMenu}>
+                                <div className={styles.edit_icon}>
+                                    <span className={styles.edit_icon_dot} />
+                                    <span className={styles.edit_icon_dot} />
+                                    <span className={styles.edit_icon_dot} />
+                                </div>
+                            </span>
+                        )}
                         {showEditMenu && (
                             <div className={styles.editMenu}>
                                 {!!editAuthor && (
@@ -132,7 +136,7 @@ export const AuthorCard: React.FC<Props> = ({
                                         Удалить
                                     </div>
                                 )}
-                                {(!!editAuthor || !!removeAuthor) && (
+                                {menuEnable && (
                                     <div className={styles.editMenu_item} onClick={closeEditMenu}>
                                         Отмена
                                     </div>

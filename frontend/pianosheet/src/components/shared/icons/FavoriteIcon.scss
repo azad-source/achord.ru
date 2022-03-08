@@ -1,7 +1,7 @@
 @import 'styles/default.scss';
 
 @media screen and (min-width: $siteWidth) {
-  .active {
+  .root {
     &:hover {
       fill: #ffd000;
       stroke-width: 0.5;

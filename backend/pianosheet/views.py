@@ -1,6 +1,8 @@
 from core.permissions import IsOwnerOrReadOnly
+from django.contrib.postgres.search import SearchVector
 from django.core.exceptions import FieldError
 from django.contrib.auth import get_user_model
+from django.db.models import Prefetch, Count, Q
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
@@ -9,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from .models import Author, Genre, Note, AuthorStat, NoteStat
 from .serializers import AuthorSerializer, NoteSerializer, GenreListSerializer, FavoriteNoteSerializer, FavoriteAuthorSerializer, LikeAuthorSerializer, LikeNoteSerializer
-from django.db.models import Prefetch, Count, Q
+from .managers import complex_filter
 from .pagination import GenrePagination, AuthorPagination, NotePagination
 User = get_user_model()
 
@@ -232,15 +234,19 @@ class NoteViewSet(CustomModelViewSet):
         return self.make_ordering(queryset)
 
 
+
 class SearchAuthorViewSet(StatMixin, ReadOnlyModelViewSet):
     stats_model = AuthorStat
     serializer_class = AuthorSerializer
     def get_queryset(self):
         query = self.request.GET.get("query")
         if query:
-            return Author.objects.complex_search(query, 'name')\
-                .annotate(**self.like_count)\
-                .prefetch_related(*self.all_prefetch)
+            return Author.objects\
+            .prefetch_related(*self.all_prefetch)\
+            .annotate(**self.like_count)\
+            .annotate(search=SearchVector('name'))\
+            .filter(complex_filter(query, 'name'))\
+            .distinct()
         else:
             return Author.objects.none()
 
@@ -251,8 +257,12 @@ class SearchNoteViewSet(StatMixin, ReadOnlyModelViewSet):
     def get_queryset(self):
         query = self.request.GET.get("query")
         if query:
-            return Note.objects.complex_search(query, 'name')\
-                .annotate(**self.like_count)\
-                .prefetch_related(*self.all_prefetch)
+            return Note.objects\
+            .prefetch_related(*self.all_prefetch)\
+            .annotate(**self.like_count)\
+            .annotate(search=SearchVector('name'))\
+            .filter(complex_filter(query, 'name'))\
+            .select_related("author")\
+            .distinct()
         else:
             return Note.objects.none()

@@ -30,11 +30,11 @@ export const AuthorCard: React.FC<Props> = ({
     const [showRemoveModal, setShowRemoveModal] = React.useState<boolean>(false);
     const [showEditMenu, setShowEditMenu] = React.useState<boolean>(false);
 
-    const { id, preview, alias, name, favorite } = author;
-    const authorImage = preview || defaultImg;
+    const { id, preview_s, alias, name, favorite } = author;
+    const authorImage = preview_s || defaultImg;
     const authorPath = alias ? Paths.getAuthorPath(author.name.charAt(0), alias) : '';
 
-    const hasPreview = preview && !preview.includes('default.png');
+    const hasPreview = preview_s && !preview_s.includes('default.png');
 
     const openEditMenu = (e: React.MouseEvent) => {
         e.preventDefault();

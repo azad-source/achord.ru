@@ -14,6 +14,8 @@ from .serializers import AuthorSerializer, NoteSerializer, GenreListSerializer, 
 from .managers import complex_filter
 from .pagination import GenrePagination, AuthorPagination, NotePagination
 User = get_user_model()
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
 class StatMixin:
@@ -49,6 +51,7 @@ class CustomModelViewSet(StatMixin, ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    @method_decorator(cache_page(60))
     @action(detail=False, methods=['get'])
     def random(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset().order_by('?'))

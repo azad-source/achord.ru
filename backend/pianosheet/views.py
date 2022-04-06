@@ -16,6 +16,7 @@ from .pagination import GenrePagination, AuthorPagination, NotePagination
 User = get_user_model()
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie, vary_on_headers
 
 
 class StatMixin:
@@ -50,8 +51,14 @@ class CustomModelViewSet(StatMixin, ModelViewSet):
             return self.get_paginated_response(serializer.data)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+        
+    @method_decorator(cache_page(60))
+    @method_decorator(vary_on_headers("Authorization",))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
     @method_decorator(cache_page(60))
+    @method_decorator(vary_on_headers("Authorization",))
     @action(detail=False, methods=['get'])
     def random(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset().order_by('?'))

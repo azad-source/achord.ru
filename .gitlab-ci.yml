@@ -23,19 +23,19 @@ deploy-prod:
   only:
     - master
   script:
-    - ssh $ACHORD_HOST_CONNECT "cd /var/www/prod/achord.ru; git pull origin master; docker-compose -f docker-compose.yml -p pianosheet restart; exit;"
+    - ssh $SSH_CONNECT "cd /var/www/prod/achord.ru; git pull origin master; docker-compose -f docker-compose.yml -p pianosheet restart; exit;"
     - cd frontend/pianosheet/
     - npm install
     - npm run build
-    - rsync -avz --del -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" ./build/ $ACHORD_HOST_CONNECT:$FRONTEND_BUILD_FOLDER_FULLPATH
+    - rsync -avz --del -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" ./build/ $SSH_CONNECT:$BUILD_FOLDER_PROD
 
 deploy-dev:
   stage: deploy-dev
   only:
     - dev
   script:
-    - ssh $ACHORD_HOST_CONNECT "cd /var/www/dev/achord.ru; git pull origin dev; docker-compose -f docker-compose.yml -p pianosheet_dev restart; exit;"
+    - ssh $SSH_CONNECT "cd /var/www/dev/achord.ru; git pull origin dev; docker-compose -f docker-compose.yml -p pianosheet_dev restart; exit;"
     - cd frontend/pianosheet/
     - npm install
     - npm run build
-    - rsync -avz --del -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" ./build/ $ACHORD_HOST_CONNECT:$FRONTEND_BUILD_FOLDER_FULLPATH_DEV
+    - rsync -avz --del -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" ./build/ $SSH_CONNECT:$BUILD_FOLDER_DEV

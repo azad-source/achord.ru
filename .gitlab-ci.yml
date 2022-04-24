@@ -23,7 +23,7 @@ deploy-prod:
   only:
     - master
   script:
-    - ssh $ACHORD_HOST_CONNECT "cd /var/www/prod/achord.ru; git pull origin master; docker-compose restart; exit;"
+    - ssh $ACHORD_HOST_CONNECT "cd /var/www/prod/achord.ru; git pull origin master; docker-compose -f docker-compose.yml -p pianosheet restart; exit;"
     - cd frontend/pianosheet/
     - npm install
     - npm run build
@@ -34,7 +34,7 @@ deploy-dev:
   only:
     - dev
   script:
-    - ssh $ACHORD_HOST_CONNECT "cd /var/www/dev/achord.ru; git pull origin dev; docker-compose restart; exit;"
+    - ssh $ACHORD_HOST_CONNECT "cd /var/www/dev/achord.ru; git pull origin dev; docker-compose -f docker-compose.yml -p pianosheet_dev restart; exit;"
     - cd frontend/pianosheet/
     - npm install
     - npm run build

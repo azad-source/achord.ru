@@ -76,7 +76,7 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     'vary',
     'x-frame-options',
     'Access-Control-Allow-Origin',
-]
+] 
 
 
 CORS_EXPOSE_HEADERS = [

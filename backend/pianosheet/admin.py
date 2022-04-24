@@ -2,7 +2,7 @@ from django.contrib import admin
 from . import models
 from django.utils.html import format_html
 
-admin.site.site_header = "PianoSheet.ru admin"
+admin.site.site_header = "achord.ru панель администратора"
 
 
 def img_html(url):

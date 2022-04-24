@@ -13,15 +13,29 @@ before_script:
   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -  
   - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
+
 stages:
   - deploy-prod
+  - deploy-dev
+
 deploy-prod:
   stage: deploy-prod
   only:
     - master
   script:
+    - ssh $ACHORD_HOST_CONNECT "cd /var/www/pianosheet; git pull origin master; docker-compose restart; exit;"
     - cd frontend/pianosheet/
     - npm install
     - npm run build
     - rsync -avz --del -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" ./build/ $ACHORD_HOST_CONNECT:$FRONTEND_BUILD_FOLDER_FULLPATH
-    - ssh $ACHORD_HOST_CONNECT "cd /var/www/pianosheet; git pull origin master; docker-compose restart; exit;"
+
+deploy-dev:
+  stage: deploy-dev
+  only:
+    - dev
+  script:
+    - ssh $ACHORD_HOST_CONNECT "cd /var/www/pianosheet; git pull origin dev; docker-compose restart; exit;"
+    - cd frontend/pianosheet/
+    - npm install
+    - npm run build
+    - rsync -avz --del -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" ./build/ $ACHORD_HOST_CONNECT:$FRONTEND_BUILD_FOLDER_FULLPATH_DEV

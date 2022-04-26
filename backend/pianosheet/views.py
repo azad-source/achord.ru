@@ -61,10 +61,10 @@ class CustomModelViewSet(StatMixin, ModelViewSet):
     def random(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-    def perform_like_favorite(self, request, *args, **kwargs):
+    def perform_like_favorite(self):
         if self.action in ('like', 'favorite'):
             field = self.action
-            serializer = self.get_serializer(data=request.data)
+            serializer = self.get_serializer(data=self.request.data)
             serializer.is_valid(raise_exception=True)
             data = serializer.validated_data
             self.stats_model.objects.update_or_create(
@@ -79,7 +79,7 @@ class CustomModelViewSet(StatMixin, ModelViewSet):
         if self.request.method == 'GET':
             return super().list(request, *args, **kwargs)
         if self.request.method == 'POST':
-            self.perform_like_favorite(self, request, *args, **kwargs)
+            self.perform_like_favorite()
             return Response({'result': 'OK'})
 
     @action(detail=False, methods=['get','post'])
@@ -87,7 +87,7 @@ class CustomModelViewSet(StatMixin, ModelViewSet):
         if request.method == 'GET':
             return super().list(request, *args, **kwargs)        
         if request.method == 'POST':
-            self.perform_like_favorite(self, request, *args, **kwargs)
+            self.perform_like_favorite()
             return Response({'result': 'OK'})
 
     def get_object(self):

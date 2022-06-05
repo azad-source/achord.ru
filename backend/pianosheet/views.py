@@ -1,6 +1,8 @@
 from core.permissions import IsOwnerOrReadOnly
+from django.contrib.postgres.search import SearchVector
 from django.core.exceptions import FieldError
 from django.contrib.auth import get_user_model
+from django.db.models import Prefetch, Count, Q
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
@@ -9,9 +11,13 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from .models import Author, Genre, Note, AuthorStat, NoteStat
 from .serializers import AuthorSerializer, NoteSerializer, GenreListSerializer, FavoriteNoteSerializer, FavoriteAuthorSerializer, LikeAuthorSerializer, LikeNoteSerializer
-from django.db.models import Prefetch, Count, Q
+from .managers import complex_filter
 from .pagination import GenrePagination, AuthorPagination, NotePagination
+from . import filters
 User = get_user_model()
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie, vary_on_headers
 
 
 class StatMixin:
@@ -38,48 +44,50 @@ class CustomModelViewSet(StatMixin, ModelViewSet):
             return [permission() for permission in self.permission_dict[self.action]]
         except KeyError:
             return [permission() for permission in self.permission_classes]
-    
-    def list_response(self, queryset):
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        
+    def get_queryset(self):
+        if self.action == 'random':
+            return super().get_queryset().order_by('?')
+        if self.action == 'favorite':
+            return super().get_queryset().filter(stats=self.request.user, itemstat__favorite=True)
+        if self.action == 'like':
+            return super().get_queryset().filter(stats=self.request.user, itemstat__like=True)
+        return super().get_queryset()
 
+
+    @method_decorator(cache_page(60))
+    @method_decorator(vary_on_headers("Authorization",))
     @action(detail=False, methods=['get'])
     def random(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset().order_by('?'))
-        return self.list_response(queryset)
+        return super().list(request, *args, **kwargs)
+
+    def perform_like_favorite(self):
+        if self.action in ('like', 'favorite'):
+            field = self.action
+            serializer = self.get_serializer(data=self.request.data)
+            serializer.is_valid(raise_exception=True)
+            data = serializer.validated_data
+            self.stats_model.objects.update_or_create(
+                user=self.request.user, 
+                item=data.get('item'),
+                defaults={field: data.get(field, False)})
+        else: 
+            raise Exception('Недопустимый action')
 
     @action(detail=False, methods=['get','post'])
     def favorite(self, request, *args, **kwargs):
-        if request.method == 'GET':
-            queryset = self.get_queryset().filter(stats=self.request.user, itemstat__favorite=True)
-            return self.list_response(queryset)
-        
-        if request.method == 'POST':
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            data = serializer.validated_data
-            self.stats_model.objects.update_or_create(user=self.request.user, item=data.get('item'),
-                defaults={'favorite': data.get('favorite', False)},
-            )
+        if self.request.method == 'GET':
+            return super().list(request, *args, **kwargs)
+        if self.request.method == 'POST':
+            self.perform_like_favorite()
             return Response({'result': 'OK'})
 
     @action(detail=False, methods=['get','post'])
     def like(self, request, *args, **kwargs):
         if request.method == 'GET':
-            queryset = self.get_queryset().filter(stats=self.request.user, itemstat__like=True)
-            return self.list_response(queryset)
-        
+            return super().list(request, *args, **kwargs)        
         if request.method == 'POST':
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            data = serializer.validated_data
-            self.stats_model.objects.update_or_create(user=self.request.user, item=data.get('item'),
-                defaults={'like': data.get('like', False)},
-            )
+            self.perform_like_favorite()
             return Response({'result': 'OK'})
 
     def get_object(self):
@@ -155,6 +163,13 @@ class AuthorViewSet(CustomModelViewSet):
     queryset = Author.objects.all()
     permission_classes = (IsAdminUser,)
     pagination_class = AuthorPagination
+    filter_backends = [filters.SimpleFilter]
+    filter_config = {
+        'letter': 'name__istartswith',
+        'alias': 'alias',
+        'genre_alias': 'genres__alias',
+    }
+
     stats_model = AuthorStat
     permission_dict = {
         'list': (AllowAny, ),
@@ -177,18 +192,7 @@ class AuthorViewSet(CustomModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset()\
             .annotate(**self.like_count)\
-            .prefetch_related(*self.all_prefetch)
-        letter = self.request.GET.get("letter")
-        alias = self.request.GET.get("alias")
-        genre_alias = self.request.GET.get("genre_alias")
-
-        if letter:
-            queryset = queryset.filter(name__istartswith=letter)
-        elif alias:
-            queryset = queryset.filter(alias=alias)
-        elif genre_alias:
-            queryset = queryset.filter(genres__alias=genre_alias).prefetch_related('genres')
-            # self.up_rate_list(queryset)
+            .prefetch_related(*self.all_prefetch).prefetch_related('genres')
         return self.make_ordering(queryset)
 
 
@@ -207,7 +211,12 @@ class NoteViewSet(CustomModelViewSet):
         'like': (IsAuthenticated,),
         'favorite': (IsAuthenticated,),
     }
-
+    filter_backends = [filters.SimpleFilter]
+    filter_config = {
+        'author_id': 'author__id',
+        'author_alias': 'author__alias',
+        'genre_alias': 'author__genres__alias',
+    }
     def get_serializer_class(self):
         if self.action == 'favorite' and self.request.method == 'POST':
             return FavoriteNoteSerializer
@@ -220,16 +229,8 @@ class NoteViewSet(CustomModelViewSet):
             .select_related("author")\
             .annotate(**self.like_count)\
             .prefetch_related(*self.all_prefetch)
-        author_id = self.request.GET.get("author_id")
-        author_alias = self.request.GET.get("author_alias")
-        genre_alias = self.request.GET.get("genre_alias")
-        if author_id:
-            queryset = queryset.filter(author__id=author_id)
-        elif author_alias:
-            queryset = queryset.filter(author__alias=author_alias)
-        elif genre_alias:
-            queryset = queryset.filter(author__genres__alias=genre_alias)
         return self.make_ordering(queryset)
+
 
 
 class SearchAuthorViewSet(StatMixin, ReadOnlyModelViewSet):
@@ -238,9 +239,12 @@ class SearchAuthorViewSet(StatMixin, ReadOnlyModelViewSet):
     def get_queryset(self):
         query = self.request.GET.get("query")
         if query:
-            return Author.objects.complex_search(query, 'name')\
-                .annotate(**self.like_count)\
-                .prefetch_related(*self.all_prefetch)
+            return Author.objects\
+            .prefetch_related(*self.all_prefetch)\
+            .annotate(**self.like_count)\
+            .annotate(search=SearchVector('name'))\
+            .filter(complex_filter(query, 'name'))\
+            .distinct()
         else:
             return Author.objects.none()
 
@@ -251,8 +255,12 @@ class SearchNoteViewSet(StatMixin, ReadOnlyModelViewSet):
     def get_queryset(self):
         query = self.request.GET.get("query")
         if query:
-            return Note.objects.complex_search(query, 'name')\
-                .annotate(**self.like_count)\
-                .prefetch_related(*self.all_prefetch)
+            return Note.objects\
+            .prefetch_related(*self.all_prefetch)\
+            .annotate(**self.like_count)\
+            .annotate(search=SearchVector('name'))\
+            .filter(complex_filter(query, 'name'))\
+            .select_related("author")\
+            .distinct()
         else:
             return Note.objects.none()

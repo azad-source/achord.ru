@@ -4,7 +4,6 @@ import { Page } from 'components/shared/layout/Page/Page';
 import styles from './AuthPage.scss';
 import { Registration } from 'components/shared/layout/Auth/Registration';
 import { logout, useAuth, UsersClient } from 'api/UsersClient';
-import { Button } from 'components/shared/Button/Button';
 import { SiteName } from 'domain/SiteInfo';
 import { connect } from 'react-redux';
 import { RootState } from 'store/rootReducer';

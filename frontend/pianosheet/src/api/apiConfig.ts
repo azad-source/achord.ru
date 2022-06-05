@@ -1,8 +1,8 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { arrToString } from 'utils/arrayTransform';
 import { getAuthToken } from 'utils/tokenHelper';
 import { buildSearchString } from '../utils/urlHelpers';
-import { headers } from './UsersClient';
+import { headers, logout } from './UsersClient';
 
 const baseURL = 'https://achord.ru';
 
@@ -88,14 +88,11 @@ if (getAuthToken()?.access) {
 
 const withoutHeader = ['/auth/users/'];
 
-function axiosInterceptor(config: AxiosRequestConfig): AxiosRequestConfig {
+api.interceptors.request.use((config) => {
     const url = config.url || '';
 
     if ((config.method !== 'get' || withHeader.includes(url)) && !withoutHeader.includes(url)) {
-        config.headers = {
-            'Content-Type': 'multipart/form-data',
-            ...headers(),
-        };
+        config.headers = { 'Content-Type': 'multipart/form-data', ...headers() };
     }
 
     if (process.env.NODE_ENV === 'development') {
@@ -103,6 +100,14 @@ function axiosInterceptor(config: AxiosRequestConfig): AxiosRequestConfig {
     }
 
     return config;
-}
+});
 
-api.interceptors.request.use((req) => axiosInterceptor(req));
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (getAuthToken()?.access && error.response.status === 401) {
+            logout();
+        }
+        return Promise.reject(error);
+    },
+);

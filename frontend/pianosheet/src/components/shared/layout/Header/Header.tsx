@@ -6,32 +6,38 @@ import { logout, useAuth } from 'api/UsersClient';
 import { SearchField } from 'components/shared/layout/SearchField/SearchField';
 import { SiteName } from 'domain/SiteInfo';
 import { Menu } from 'components/shared/layout/Menu/Menu';
-import { MenuMobile } from '../Menu/MenuMobile';
 import { Paths } from 'utils/routes/Paths';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { usersAction } from 'store/usersActions';
 import { SwitchThemeToggle } from 'components/shared/SwitchThemeToggle/SwitchThemeToggle';
-
-interface Props {
-    getUser: (logged: boolean) => void;
-    clearUser: () => void;
-}
+import cn from 'classnames';
+import { RootState } from 'store/rootReducer';
+import { appAction } from 'store/appActions';
+import { MenuMobile } from '../Menu/MenuMobile';
 
 export type MenuItemType = { caption: React.ReactNode; link?: string; handler?: () => void };
 
-const HeaderFC: React.FC<Props> = ({ getUser, clearUser }) => {
+export const Header = () => {
     const [logged] = useAuth();
+
     const location = useLocation();
+
+    const dispatch = useDispatch();
+
+    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+
+    const themeTogglerHandler = () => {
+        dispatch(appAction.switchTheme(isDark ? 'light' : 'dark'));
+    };
 
     React.useEffect(() => {
         document.title = SiteName;
-        getUser(logged);
+        dispatch(usersAction.getCurrentUser(logged));
     }, [location]);
 
     const logoutHandler = () => {
         logout();
-        clearUser();
+        dispatch(usersAction.clearCurrentUser());
         window.location.pathname = '/sign-in';
     };
 
@@ -50,34 +56,28 @@ const HeaderFC: React.FC<Props> = ({ getUser, clearUser }) => {
             handler: logged ? logoutHandler : undefined,
         },
         {
-            caption: <SwitchThemeToggle className={styles.switchTheme} />,
+            caption: (
+                <SwitchThemeToggle
+                    className={styles.switchTheme}
+                    isDark={isDark}
+                    themeToggler={themeTogglerHandler}
+                />
+            ),
         },
     ];
 
     return (
-        <header className={styles.backplate}>
+        <header className={cn(styles.backplate, isDark && styles.backplate__dark)}>
             <div className={styles.root}>
                 <NavLink className={styles.logo} to="/">
                     <div className={styles.logoIcon}>
                         <Logo className={styles.svg} />
                     </div>
                 </NavLink>
-                <SearchField className={styles.search} />
-                <Menu items={menuItems} />
-                <MenuMobile items={menuItems} />
+                <SearchField className={styles.search} isDark={isDark} />
+                <Menu items={menuItems} isDark={isDark} />
+                <MenuMobile items={menuItems} isDark={isDark} />
             </div>
         </header>
     );
 };
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return bindActionCreators(
-        {
-            getUser: usersAction.getCurrentUser,
-            clearUser: usersAction.clearCurrentUser,
-        },
-        dispatch,
-    );
-};
-
-export const Header = connect(null, mapDispatchToProps)(HeaderFC);

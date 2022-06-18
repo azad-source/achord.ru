@@ -1,4 +1,5 @@
 @import 'styles/colors.scss';
+@import 'styles/default.scss';
 
 .root {
   display: flex;
@@ -45,5 +46,18 @@
     background-color: $defaultBg;
     border-radius: 30px;
     transition: flex 0.3s ease;
+  }
+
+  &__dark {
+    .root__checkbox {
+      background: $darkBg;
+      @include themeSwitchTransition;
+    }
+
+    .root__right,
+    .root__left {
+      color: $darkBg;
+      @include themeSwitchTransition;
+    }
   }
 }

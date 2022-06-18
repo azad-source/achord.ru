@@ -2,14 +2,16 @@ import * as React from 'react';
 import { NavLink } from 'react-router-dom';
 import { MenuItemType } from '../Header/Header';
 import styles from './Menu.module.scss';
+import cn from 'classnames';
 
 interface Props {
     items: MenuItemType[];
+    isDark?: boolean;
 }
 
-export const Menu: React.FC<Props> = ({ items }) => {
+export const Menu: React.FC<Props> = ({ items, isDark = false }) => {
     return (
-        <div className={styles.root}>
+        <div className={cn(styles.root, isDark && styles.root__dark)}>
             {items.length > 0 &&
                 items.map(({ caption, link, handler }, idx) => {
                     if (link || handler) {

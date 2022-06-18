@@ -5,11 +5,11 @@ import { appActionTypes } from './appActions';
 export type ThemeType = 'light' | 'dark';
 
 export interface AppState {
-    theme: ThemeType;
+    theme: Nullable<ThemeType>;
 }
 
 const appDefaultState: AppState = {
-    theme: 'light',
+    theme: window.localStorage.getItem('theme') as ThemeType,
 };
 
 const { SWITCH_THEME, switchTheme } = appActionTypes;
@@ -19,8 +19,11 @@ export function appReducer(state: AppState = appDefaultState, action: Action): A
         case SWITCH_THEME: {
             const { payload: mode } = action as ReturnType<typeof switchTheme>;
 
+            const theme = mode ?? (window.localStorage.getItem('theme') as ThemeType);
+            window.localStorage.setItem('theme', theme);
+
             return produce(state, (draft) => {
-                draft.theme = mode;
+                draft.theme = theme;
             });
         }
 

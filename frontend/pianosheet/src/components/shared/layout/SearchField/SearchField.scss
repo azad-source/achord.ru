@@ -8,6 +8,23 @@
   justify-content: flex-end;
   height: 40px;
   align-items: center;
+
+  &__dark {
+    .loupe {
+      color: $darkTextColor;
+      @include themeSwitchTransition;
+    }
+
+    .input {
+      color: $darkBg;
+      @include themeSwitchTransition;
+
+      &:focus + .loupe {
+        color: $darkBg;
+        @include themeSwitchTransition;
+      }
+    }
+  }
 }
 
 .input {

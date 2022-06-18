@@ -4,6 +4,13 @@
 .root {
   display: flex;
   flex-direction: row;
+
+  &__dark {
+    a.menuItem {
+      color: $darkTextColor;
+      @include themeSwitchTransition;
+    }
+  }
 }
 
 .menuItem {

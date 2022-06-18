@@ -20,37 +20,54 @@ import { GenrePage } from 'components/sheets/GenrePage/GenrePage';
 import { ContactsPage } from 'components/contacts/ContactsPage';
 import { PrivacyPage } from 'components/privacy/PrivacyPage';
 import { CopyrightHolders } from 'components/rights/CopyrightHolders';
+import { useDispatch } from 'react-redux';
+import { appAction } from 'store/appActions';
 
-const AppRouter = () => (
-    <div className={styles.root}>
-        <React.Suspense fallback={<Spinner />}>
-            <BrowserRouter>
-                <Header />
-                <Switch>
-                    <Route path={Paths.sheetsPage} component={SheetsPage} exact />
-                    <Route path={Paths.genrePage} component={GenrePage} exact />
-                    <Route path={Paths.letterPage} component={LetterPage} exact />
-                    <Route path={Paths.authorPage} component={AuthorPage} exact />
-                    <Route path={Paths.sheetDownloadPage} component={SheetDownloadPage} exact />
-                    <Route path={Paths.authPage} component={AuthPage} exact />
-                    <Route path={Paths.authVKPage} component={AuthPageVk} exact />
-                    <Route
-                        path={Paths.successConfirmEmailPage}
-                        component={SuccessRegistrationPage}
-                        exact
-                    />
-                    <Route path={Paths.changePasswordPage} component={ChangePasswordPage} exact />
-                    <Route path={Paths.virtPianoPage} component={PlayOnlinePage} exact />
-                    <Route path={Paths.contactsPage} component={ContactsPage} exact />
-                    <Route path={Paths.privacyPage} component={PrivacyPage} exact />
-                    <Route path={Paths.copyrightHoldersPage} component={CopyrightHolders} exact />
-                    <Route path={Paths.mainPage} component={MainPage} exact />
-                    <Route component={NotFoundPage} />
-                </Switch>
-                <Footer />
-            </BrowserRouter>
-        </React.Suspense>
-    </div>
-);
+const AppRouter = () => {
+    const dispatch = useDispatch();
+    React.useEffect(() => {
+        dispatch(appAction.switchTheme());
+    }, []);
+
+    return (
+        <div className={styles.root}>
+            <React.Suspense fallback={<Spinner />}>
+                <BrowserRouter>
+                    <Header />
+                    <Switch>
+                        <Route path={Paths.sheetsPage} component={SheetsPage} exact />
+                        <Route path={Paths.genrePage} component={GenrePage} exact />
+                        <Route path={Paths.letterPage} component={LetterPage} exact />
+                        <Route path={Paths.authorPage} component={AuthorPage} exact />
+                        <Route path={Paths.sheetDownloadPage} component={SheetDownloadPage} exact />
+                        <Route path={Paths.authPage} component={AuthPage} exact />
+                        <Route path={Paths.authVKPage} component={AuthPageVk} exact />
+                        <Route
+                            path={Paths.successConfirmEmailPage}
+                            component={SuccessRegistrationPage}
+                            exact
+                        />
+                        <Route
+                            path={Paths.changePasswordPage}
+                            component={ChangePasswordPage}
+                            exact
+                        />
+                        <Route path={Paths.virtPianoPage} component={PlayOnlinePage} exact />
+                        <Route path={Paths.contactsPage} component={ContactsPage} exact />
+                        <Route path={Paths.privacyPage} component={PrivacyPage} exact />
+                        <Route
+                            path={Paths.copyrightHoldersPage}
+                            component={CopyrightHolders}
+                            exact
+                        />
+                        <Route path={Paths.mainPage} component={MainPage} exact />
+                        <Route component={NotFoundPage} />
+                    </Switch>
+                    <Footer />
+                </BrowserRouter>
+            </React.Suspense>
+        </div>
+    );
+};
 
 export default AppRouter;

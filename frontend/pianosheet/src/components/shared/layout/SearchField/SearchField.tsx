@@ -13,6 +13,7 @@ interface Props {
     className?: string;
     status: QueryStatus;
     searchQuery: string;
+    isDark?: boolean;
     searchSheets: (query: string) => void;
     dropSearch: () => void;
 }
@@ -21,6 +22,7 @@ const SearchFieldFC: React.FC<Props> = ({
     className,
     status,
     searchQuery,
+    isDark = false,
     searchSheets,
     dropSearch,
 }) => {
@@ -57,7 +59,7 @@ const SearchFieldFC: React.FC<Props> = ({
     }, [searchQuery]);
 
     return (
-        <div className={cn(styles.root, className)}>
+        <div className={cn(styles.root, isDark && styles.root__dark, className)}>
             <label className={styles.label}>
                 <input
                     type="text"

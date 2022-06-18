@@ -1,22 +1,25 @@
-import { useDarkMode } from 'hooks/useDarkMode';
 import * as React from 'react';
 import { Toggle } from '../Toggle/Toggle';
 import styles from './SwitchThemeToggle.module.scss';
 import cn from 'classnames';
 
 interface Props {
+    isDark?: boolean;
     className?: string;
+    themeToggler: () => void;
 }
 
-export const SwitchThemeToggle: React.FC<Props> = ({ className }) => {
-    const { theme, themeToggler, mountedComponent } = useDarkMode();
+export const SwitchThemeToggle: React.FC<Props> = ({ isDark = false, className, themeToggler }) => {
+
+    console.log('isDark', isDark);
 
     return (
         <Toggle
             onChange={themeToggler}
-            position={theme === 'light' ? 'right' : 'left'}
+            position={isDark ? 'left' : 'right'}
             items={['light', 'dark']}
             className={cn(styles.toggle, className)}
+            isDark={isDark}
         />
     );
 };

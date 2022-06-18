@@ -4,12 +4,14 @@ import styles from './MenuMobile.module.scss';
 import { Toggle } from 'components/shared/Toggle/Toggle';
 import { SheetsNav } from '../SheetsNav/SheetsNav';
 import { MenuItemType } from '../Header/Header';
+import cn from 'classnames';
 
 interface Props {
     items: MenuItemType[];
+    isDark?: boolean;
 }
 
-export const MenuMobile: React.FC<Props> = ({ items }) => {
+export const MenuMobile: React.FC<Props> = ({ items, isDark = false }) => {
     const [menu, setMenu] = React.useState({
         main: { transform: 'translateY(-150%)' },
         burger: { transform: 'none' },
@@ -72,7 +74,7 @@ export const MenuMobile: React.FC<Props> = ({ items }) => {
 
     return (
         <div
-            className={styles.root}
+            className={cn(styles.root, isDark && styles.root__dark)}
             onTouchStart={handleMenuTouchStart}
             onTouchEnd={handleMenuTouchEnd}
         >
@@ -113,6 +115,7 @@ export const MenuMobile: React.FC<Props> = ({ items }) => {
                         onChange={handleChangeNavLang}
                         position={navLang === 'en' ? 'right' : 'left'}
                         items={['EN', 'RU']}
+                        isDark={isDark}
                     />
                     <SheetsNav isMenu hideEn={navLang != 'en'} hideRu={navLang != 'ru'} />
                 </div>

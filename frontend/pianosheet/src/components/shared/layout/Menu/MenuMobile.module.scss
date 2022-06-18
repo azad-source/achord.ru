@@ -9,6 +9,13 @@
   z-index: 200;
   width: 100%;
   touch-action: none;
+
+  &__dark {
+    .menuWrapper {
+      background: $darkBg;
+      @include themeSwitchTransition;
+    }
+  }
 }
 
 .overlay {

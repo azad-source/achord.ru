@@ -10,3 +10,7 @@ $authorGridColCount: 4;
 
 // 480px size
 $sideSpace_480: 18px;
+
+@mixin themeSwitchTransition {
+  transition: 0.3s ease-in;
+}

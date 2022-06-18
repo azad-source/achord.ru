@@ -11,17 +11,26 @@ export const Menu: React.FC<Props> = ({ items }) => {
     return (
         <div className={styles.root}>
             {items.length > 0 &&
-                items.map(({ caption, link, handler }) => (
-                    <NavLink
-                        key={caption}
-                        className={styles.menuItem}
-                        to={link || ''}
-                        onClick={handler}
-                        exact
-                    >
-                        {caption}
-                    </NavLink>
-                ))}
+                items.map(({ caption, link, handler }, idx) => {
+                    if (link || handler) {
+                        return (
+                            <NavLink
+                                key={`idx_${idx}`}
+                                className={styles.menuItem}
+                                to={link || ''}
+                                onClick={handler}
+                                exact
+                            >
+                                {caption}
+                            </NavLink>
+                        );
+                    }
+                    return (
+                        <div key={`idx_${idx}`} className={styles.menuItem}>
+                            {caption}
+                        </div>
+                    );
+                })}
         </div>
     );
 };

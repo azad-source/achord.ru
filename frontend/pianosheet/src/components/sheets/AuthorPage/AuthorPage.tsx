@@ -149,16 +149,13 @@ const AuthorPageFC: React.FC<Props> = ({
                         {isSuperUser && (
                             <Button
                                 className={styles.editBtn}
-                                use="link"
                                 onClick={openEditModal}
                                 disabled={status.isRequest()}
-                            >
-                                <EditIcon />
-                            </Button>
+                                icon={<EditIcon />}
+                            />
                         )}
                         <Button
                             className={cn(styles.likeBtn, author.like && styles.likeBtn_active)}
-                            use="link"
                             onClick={swithLikeAuthor}
                             title={author.like ? 'Убрать лайк' : 'Поставить лайк'}
                             disabled={status.isRequest()}
@@ -172,7 +169,6 @@ const AuthorPageFC: React.FC<Props> = ({
                                 author.favorite && styles.favoriteBtn_active,
                                 styles.favoriteBtn_showAlways,
                             )}
-                            use="link"
                             onClick={swithFavoriteAuthor}
                             title={author.favorite ? 'Убрать из избранных' : 'Добавить в избранное'}
                             disabled={status.isRequest()}

@@ -86,17 +86,27 @@ export const MenuMobile: React.FC<Props> = ({ items }) => {
                 <div className={styles.closeMenu} onClick={closeMenu}></div>
                 <div className={styles.menuitems}>
                     {items.length > 0 &&
-                        items.map(({ caption, link, handler }) => (
-                            <NavLink
-                                key={caption}
-                                className={styles.menuItem}
-                                to={link || ''}
-                                exact
-                                onClick={handler}
-                            >
-                                {caption}
-                            </NavLink>
-                        ))}
+                        items.map(({ caption, link, handler }, idx) => {
+                            if (link || handler) {
+                                return (
+                                    <NavLink
+                                        key={`idx_${idx}`}
+                                        className={styles.menuItem}
+                                        to={link || ''}
+                                        exact
+                                        onClick={handler}
+                                    >
+                                        {caption}
+                                    </NavLink>
+                                );
+                            }
+
+                            return (
+                                <div key={`idx_${idx}`} className={styles.menuItem}>
+                                    {caption}
+                                </div>
+                            );
+                        })}
                 </div>
                 <div className={styles.sheetNav}>
                     <Toggle

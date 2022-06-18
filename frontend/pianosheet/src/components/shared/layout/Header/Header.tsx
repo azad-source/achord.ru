@@ -11,13 +11,14 @@ import { Paths } from 'utils/routes/Paths';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { usersAction } from 'store/usersActions';
+import { SwitchThemeToggle } from 'components/shared/SwitchThemeToggle/SwitchThemeToggle';
 
 interface Props {
     getUser: (logged: boolean) => void;
     clearUser: () => void;
 }
 
-export type MenuItemType = { caption: string; link?: string; handler?: () => void };
+export type MenuItemType = { caption: React.ReactNode; link?: string; handler?: () => void };
 
 const HeaderFC: React.FC<Props> = ({ getUser, clearUser }) => {
     const [logged] = useAuth();
@@ -48,10 +49,9 @@ const HeaderFC: React.FC<Props> = ({ getUser, clearUser }) => {
             link: !logged ? '/sign-in' : undefined,
             handler: logged ? logoutHandler : undefined,
         },
-        // {
-        //     caption: 'Piano',
-        //     link: Paths.virtPianoPage,
-        // },
+        {
+            caption: <SwitchThemeToggle className={styles.switchTheme} />,
+        },
     ];
 
     return (

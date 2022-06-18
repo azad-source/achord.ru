@@ -5,12 +5,13 @@ import cn from 'classnames';
 interface Props {
     position: 'left' | 'right';
     items: string[];
+    className?: string;
     onChange: () => void;
 }
 
-export const Toggle: React.FC<Props> = ({ position, items, onChange }) => {
+export const Toggle: React.FC<Props> = ({ position, items, className, onChange }) => {
     return (
-        <div className={cn(styles.root)} onClick={onChange}>
+        <div className={cn(styles.root, className)} onClick={onChange}>
             <div className={styles[`root_${position}`]}></div>
             <div className={styles.root__right}>{items[0]}</div>
             <div className={styles.root__checkbox}></div>

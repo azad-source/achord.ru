@@ -12,6 +12,7 @@
   position: relative;
   cursor: pointer;
   user-select: none;
+  font-size: 12px;
 
   &_right {
     flex-grow: 1;
@@ -31,15 +32,15 @@
   }
 
   &__right {
-    left: 6px;
+    left: 8px;
   }
 
   &__left {
-    right: 6px;
+    right: 8px;
   }
 
   &__checkbox {
-    width: 26px;
+    width: 50%;
     height: 26px;
     background-color: $defaultBg;
     border-radius: 30px;

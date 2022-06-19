@@ -75,11 +75,11 @@ const AuthPageFC: React.FC<Props> = ({
                 {logged ? (
                     <div className={styles.successAuth}>
                         {regEvent.isSuccessRegistration ? (
-                            <div className={styles.successAuthMsg}>
+                            <TextPlain className={styles.successAuthMsg}>
                                 Регистрация прошла успешно! <br />
                                 На <a href={`mailto:${regEvent.email}`}>{regEvent.email}</a>{' '}
                                 отправлено письмо со сылкой для подтверждения Вашей почты.
-                            </div>
+                            </TextPlain>
                         ) : (
                             <TextPlain className={styles.successAuthMsg}>
                                 Вы авторизованы!

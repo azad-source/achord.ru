@@ -3,6 +3,8 @@ import * as React from 'react';
 import { Loader } from '../layout/Loader/Loader';
 import styles from './Modal.scss';
 import cn from 'classnames';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/rootReducer';
 
 interface Props {
     title: string;
@@ -22,8 +24,10 @@ export const Modal: React.FC<Props> = ({
     className,
     onClose,
 }) => {
+    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+
     return (
-        <div className={styles.root}>
+        <div className={cn(styles.root, isDark && styles.root__dark)}>
             <div className={styles.overlay}></div>
             <div className={cn(styles.modal, setScroll && styles.modal_onScroll, className)}>
                 <div className={styles.scrollWrapper}>

@@ -5,6 +5,8 @@ import styles from './SheetRow.scss';
 import cn from 'classnames';
 import { FavoriteIcon } from '../icons/FavoriteIcon';
 import { QueryStatus } from 'domain/QueryStatus';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/rootReducer';
 
 type SheetRowType = 'main' | 'second';
 
@@ -27,6 +29,8 @@ export const SheetRow: React.FC<Props> = ({
     onOpen,
     addToFavorite,
 }) => {
+    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+
     const style = {
         background: `rgba(61, 68, 107, ${(11 - Math.ceil((index + 1) / 2)) / 10})`,
     };
@@ -43,7 +47,7 @@ export const SheetRow: React.FC<Props> = ({
 
     return (
         <div
-            className={cn(styles.root, styles[`root_${type}`])}
+            className={cn(styles.root, styles[`root_${type}`], isDark && styles.root__dark)}
             onClick={() => onOpen(sheet)}
             style={type === 'main' ? style : undefined}
         >

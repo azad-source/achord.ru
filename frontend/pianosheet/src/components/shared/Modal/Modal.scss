@@ -7,6 +7,39 @@
   display: block;
   overflow: hidden;
   box-sizing: border-box;
+
+  &__dark {
+    .modal {
+      background: $darkBg;
+      color: $darkTextColor;
+
+      &_title,
+      &_bottomPanel {
+        background: $darkBg;
+        color: $darkTextColor;
+      }
+
+      &_close {
+        background: $darkBg;
+
+        &::after,
+        &::before {
+          background: $darkTextColor;
+        }
+
+        &:hover {
+          background-color: $darkTextColor;
+          transition: 0.25s;
+    
+          &::after,
+          &::before {
+            background: $darkBg;
+            transition: 0.25s;
+          }
+        }
+      }
+    }
+  }
 }
 
 .overlay {

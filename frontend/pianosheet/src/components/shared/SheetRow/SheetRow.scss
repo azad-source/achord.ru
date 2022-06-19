@@ -64,6 +64,28 @@
       opacity: 1;
     }
   }
+
+  &__dark#{&}_second {
+    background: $darkBgContent;
+    border-bottom: 1px solid $darkBorderColor;
+    opacity: 1;
+
+    .caption {
+      color: $darkTextColor;
+    }
+
+    &::before {
+      background: $darkBorderColor;
+    }
+  }
+
+  &__dark#{&}_main {
+    background: $darkBgContent !important;
+
+    .caption {
+      color: $darkTextColor;
+    }
+  }
 }
 
 .caption {

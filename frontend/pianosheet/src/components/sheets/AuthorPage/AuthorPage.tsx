@@ -27,6 +27,7 @@ import { SiteName } from 'domain/SiteInfo';
 import { FavoriteIcon } from 'components/shared/icons/FavoriteIcon';
 import { LikeIcon } from 'components/shared/icons/LikeIcon';
 import { SheetRow } from 'components/shared/SheetRow/SheetRow';
+import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 
 interface Props {
     author: AuthorItemJsModel;
@@ -143,7 +144,7 @@ const AuthorPageFC: React.FC<Props> = ({
     return (
         <Page breadcrumbs={breadcrumbs} status={status}>
             <div className={styles.title}>
-                <div className={styles.authorName}>{author.name}</div>
+                <TextPlain className={styles.authorName}>{author.name}</TextPlain>
                 {logged && (
                     <div className={styles.actions}>
                         {isSuperUser && (
@@ -199,7 +200,7 @@ const AuthorPageFC: React.FC<Props> = ({
                     </div>
                     <div className={styles.authorInfo}>{author.info}</div>
                 </div>
-                <div className={styles.sheetTitle}>НОТЫ</div>
+                <TextPlain className={styles.sheetTitle}>НОТЫ</TextPlain>
                 {sheets.page_count > 1 && (
                     <Pagination
                         pageNumber={pageNumber}

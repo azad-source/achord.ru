@@ -25,6 +25,26 @@
       opacity: 1;
     }
   }
+
+  &__dark {
+    box-shadow: none;
+
+    .name {
+      background: $darkBgContent;
+    }
+
+    .edit {
+      background: $darkBgContent;
+
+      &_icon_dot {
+        background: $darkTextColor;
+      }
+
+      &:hover {
+        background: $darkTextColor;
+      }
+    }
+  }
 }
 
 .edit {

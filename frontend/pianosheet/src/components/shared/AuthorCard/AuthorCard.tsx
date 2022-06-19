@@ -9,6 +9,8 @@ import { AuthorItemJsModel, AuthorRequestModel } from 'domain/api/JsModels';
 import { RemoveModal } from '../RemoveModal/RemoveModal';
 import { FavoriteIcon } from '../icons/FavoriteIcon';
 import { Button } from '../Button/Button';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/rootReducer';
 
 interface Props {
     className?: string;
@@ -29,6 +31,8 @@ export const AuthorCard: React.FC<Props> = ({
     const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
     const [showRemoveModal, setShowRemoveModal] = React.useState<boolean>(false);
     const [showEditMenu, setShowEditMenu] = React.useState<boolean>(false);
+
+    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
 
     const { id, preview_s, alias, name, favorite } = author;
     const authorImage = preview_s || defaultImg;
@@ -106,7 +110,10 @@ export const AuthorCard: React.FC<Props> = ({
 
     return (
         <>
-            <NavLink className={cn(styles.root, className)} to={authorPath}>
+            <NavLink
+                className={cn(styles.root, isDark && styles.root__dark, className)}
+                to={authorPath}
+            >
                 {!!addAuthorToFavorite && (
                     <>
                         {menuEnable && (

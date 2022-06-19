@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styles from './Pagination.scss';
 import cn from 'classnames';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/rootReducer';
 
 interface Props {
     className?: string;
@@ -19,6 +21,8 @@ export const Pagination: React.FC<Props> = ({
 }) => {
     let items: number[] = [];
 
+    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+
     for (let i = 1; i <= pageCount; i++) {
         items.push(i);
     }
@@ -30,7 +34,7 @@ export const Pagination: React.FC<Props> = ({
     };
 
     return (
-        <div className={cn(styles.root, styles[size], className)}>
+        <div className={cn(styles.root, styles[size], isDark && styles.root__dark, className)}>
             <div
                 className={cn(styles.item, pageNumber === 1 && styles.currentItem)}
                 onClick={() => handleSwitchPage(pageNumber - 1)}

@@ -14,6 +14,7 @@ import { Paths } from 'utils/routes/Paths';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { useAuth } from 'api/UsersClient';
+import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 
 interface Props {
     authors: AuthorJsModel;
@@ -64,7 +65,7 @@ const LetterPageFC: React.FC<Props> = ({
 
     return (
         <Page breadcrumbs={breadcrumbs} showAddAuthorBtn status={status}>
-            <div className={styles.title}>{letter.toUpperCase()}</div>
+            <TextPlain className={styles.title}>{letter.toUpperCase()}</TextPlain>
             <div className={styles.authors}>
                 {authors.results.map((author, index) => (
                     <AuthorCard

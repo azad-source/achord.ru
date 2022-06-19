@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styles from './Input.module.scss';
 import cn from 'classnames';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/rootReducer';
 
 interface Props {
     value?: string;
@@ -56,9 +58,10 @@ export const Input: React.FC<Props> = ({
     ...props
 }) => {
     const rootStyles = { width };
+    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
 
     return (
-        <div className={styles.root} style={rootStyles}>
+        <div className={cn(styles.root, isDark && styles.root__dark)} style={rootStyles}>
             <span className={cn(required && styles.required)} title="Это поле обязательное" />
             <input
                 type={type}

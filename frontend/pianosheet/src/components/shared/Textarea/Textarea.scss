@@ -1,4 +1,18 @@
 @import 'styles/default.scss';
+@import 'styles/colors.scss';
+
+.root {
+  &__dark {
+    .textarea {
+      background: $darkBgInput;
+      color: $darkBgInputText;
+
+      &::placeholder {
+        color: $darkBgInputPlaceholder;
+      }
+    }
+  }
+}
 
 .textarea {
   width: 100%;

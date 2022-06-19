@@ -3,7 +3,7 @@ import styles from './AuthorPage.scss';
 import cn from 'classnames';
 import { Page } from 'components/shared/layout/Page/Page';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { RootState } from 'store/rootReducer';
 import { bindActionCreators, Dispatch } from 'redux';
 import { sheetsAction } from 'store/sheetsActions';
@@ -63,6 +63,8 @@ const AuthorPageFC: React.FC<Props> = ({
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const [showSheetAddModal, setShowSheetAddModal] = React.useState<boolean>(false);
     const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
+
+    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
 
     const location = useLocation();
     const history = useHistory();
@@ -146,13 +148,14 @@ const AuthorPageFC: React.FC<Props> = ({
             <div className={styles.title}>
                 <TextPlain className={styles.authorName}>{author.name}</TextPlain>
                 {logged && (
-                    <div className={styles.actions}>
+                    <div className={cn(styles.actions, isDark && styles.actions__dark)}>
                         {isSuperUser && (
                             <Button
                                 className={styles.editBtn}
                                 onClick={openEditModal}
                                 disabled={status.isRequest()}
                                 icon={<EditIcon />}
+                                use="link"
                             />
                         )}
                         <Button
@@ -160,6 +163,7 @@ const AuthorPageFC: React.FC<Props> = ({
                             onClick={swithLikeAuthor}
                             title={author.like ? 'Убрать лайк' : 'Поставить лайк'}
                             disabled={status.isRequest()}
+                            use="link"
                         >
                             {author.like_count}{' '}
                             <LikeIcon className={styles.likeIcon} active={author.like} />
@@ -173,6 +177,7 @@ const AuthorPageFC: React.FC<Props> = ({
                             onClick={swithFavoriteAuthor}
                             title={author.favorite ? 'Убрать из избранных' : 'Добавить в избранное'}
                             disabled={status.isRequest()}
+                            use="link"
                         >
                             <FavoriteIcon active={author.favorite} />
                         </Button>
@@ -180,7 +185,7 @@ const AuthorPageFC: React.FC<Props> = ({
                 )}
             </div>
 
-            <div className={styles.content}>
+            <div className={cn(styles.content, isDark && styles.content__dark)}>
                 <div className={styles.description}>
                     <div>
                         <div className={styles.photo}>
@@ -198,7 +203,7 @@ const AuthorPageFC: React.FC<Props> = ({
                             ))}
                         </div>
                     </div>
-                    <div className={styles.authorInfo}>{author.info}</div>
+                    <TextPlain className={styles.authorInfo}>{author.info}</TextPlain>
                 </div>
                 <TextPlain className={styles.sheetTitle}>НОТЫ</TextPlain>
                 {sheets.page_count > 1 && (
@@ -211,21 +216,21 @@ const AuthorPageFC: React.FC<Props> = ({
                 )}
                 <div className={styles.sheets}>
                     {sheets.results && sheets.results.length > 0 ? (
-                        <>
-                            {sheets.results.map((sheet, index) => (
-                                <SheetRow
-                                    key={sheet.id}
-                                    sheet={sheet}
-                                    index={index}
-                                    onOpen={openDownloadPage}
-                                    addToFavorite={logged ? addSheetToFavorite : undefined}
-                                    type="second"
-                                    hidePosition
-                                />
-                            ))}
-                        </>
+                        sheets.results.map((sheet, index) => (
+                            <SheetRow
+                                key={sheet.id}
+                                sheet={sheet}
+                                index={index}
+                                onOpen={openDownloadPage}
+                                addToFavorite={logged ? addSheetToFavorite : undefined}
+                                type="second"
+                                hidePosition
+                            />
+                        ))
                     ) : (
-                        <div className={styles.notYetSheets}>Тут скоро появятся ноты</div>
+                        <TextPlain className={styles.notYetSheets}>
+                            Тут скоро появятся ноты
+                        </TextPlain>
                     )}
                     {sheets.page_count > 1 && (
                         <Pagination
@@ -236,10 +241,14 @@ const AuthorPageFC: React.FC<Props> = ({
                         />
                     )}
                     {logged && (
-                        <div className={cn(styles.sheetItemAdd)} onClick={openSheetAddModal}>
-                            <AddIcon className={styles.addSheetIcon} />
+                        <Button
+                            onClick={openSheetAddModal}
+                            icon={<AddIcon className={styles.addSheetIcon} />}
+                            use="transparent"
+                            className={styles.sheetItemAdd}
+                        >
                             Добавить ноты
-                        </div>
+                        </Button>
                     )}
                 </div>
             </div>

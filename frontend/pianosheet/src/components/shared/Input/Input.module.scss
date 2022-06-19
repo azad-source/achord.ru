@@ -4,6 +4,30 @@
   position: relative;
   display: flex;
   flex-direction: row;
+
+  &__dark {
+    .input {
+      color: $darkBgInputText;
+      border-color: $darkBorderColor;
+
+      &::placeholder {
+        color: $darkBgInputPlaceholder;
+      }
+
+      &.text {
+        background: $darkBgInput;
+      }
+
+      &.file {
+        background: transparent;
+        color: $darkTextColor;
+      }
+    }
+
+    .required::before {
+      color: $darkTextColor;
+    }
+  }
 }
 
 .input {
@@ -40,7 +64,7 @@
     position: relative;
     content: '*';
     color: $errorMessage;
-    margin-right: 2px;
+    margin-right: 6px;
   }
 }
 

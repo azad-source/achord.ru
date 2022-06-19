@@ -1,3 +1,5 @@
+@import 'styles/colors.scss';
+
 .formItem {
   min-width: 100%;
   margin: 0 12px 12px 0;
@@ -48,6 +50,28 @@
 
       &:hover {
         background-color: #333;
+      }
+    }
+  }
+
+  &__dark {
+    border-color: $darkBorderColor !important;
+  }
+
+  &__dark &_item {
+    border-color: $darkBorderColor !important;
+    color: $darkTextColor;
+
+    &:hover {
+      background-color: $darkBg;
+    }
+
+    &__selected {
+      color: $darkBg;
+      background: $darkTextColor;
+
+      &:hover {
+        background-color: $darkTextColor;
       }
     }
   }

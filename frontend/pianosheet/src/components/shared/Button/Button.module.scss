@@ -21,6 +21,10 @@
 
     &.link {
       color: $darkTextColor;
+
+      .icon {
+        color: $darkTextColor;
+      }
     }
 
     &.transparent {
@@ -30,7 +34,19 @@
       &:hover {
         background-color: $darkTextColor;
         color: $darkBg;
+
+        .icon {
+          color: $darkBg;
+        }
       }
+
+      .icon {
+        color: $darkTextColor;
+      }
+    }
+
+    .icon {
+      color: $darkBg;
     }
   }
 }
@@ -87,5 +103,5 @@
 
 .icon {
   height: 15px;
-  margin-right: 6px;
+  margin-right: 8px;
 }

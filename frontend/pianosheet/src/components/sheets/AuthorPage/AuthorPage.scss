@@ -22,8 +22,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 16px;
-  background-color: $defaultBg;
+  background: $defaultBg;
   border-radius: 16px;
+
+  &__dark {
+    background: $darkBgContent;
+  }
 }
 
 .editBtn,
@@ -73,6 +77,14 @@
   position: relative;
   display: flex;
   flex-direction: column;
+
+  &__dark {
+    .photo {
+      background: transparent;
+      box-shadow: none;
+      border: 1px solid $darkBorderColor;
+    }
+  }
 }
 
 .description {
@@ -128,35 +140,12 @@
 }
 
 .sheetItemAdd {
-  width: 100%;
-  cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background-color: #333;
-  box-sizing: border-box;
-  color: #fff;
-  padding: 3px;
-  border-radius: 4px;
-  transition: 0.2s;
+  width: fit-content;
 }
 
 .addSheetIcon {
-  margin-right: 20px;
-  width: 24px;
+  width: 18px;
   height: auto;
-  color: #fff;
-  transition: 0.2s;
-}
-
-.sheetItemAdd:hover {
-  color: #333;
-  background-color: transparent;
-  transition: 0.2s;
-}
-
-.sheetItemAdd:hover .addSheetIcon {
-  color: #333;
   transition: 0.2s;
 }
 

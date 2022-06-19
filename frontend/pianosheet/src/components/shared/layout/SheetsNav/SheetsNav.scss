@@ -22,10 +22,13 @@
     .letter {
       color: $darkTextColor;
       @include themeSwitchTransition;
-      
+
       &:hover {
         background-color: $darkTextColor;
         color: $darkBg;
+      }
+      &_active {
+        background: $darkBgContent;
       }
     }
   }

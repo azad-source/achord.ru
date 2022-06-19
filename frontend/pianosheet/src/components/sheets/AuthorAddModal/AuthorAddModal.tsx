@@ -13,6 +13,8 @@ import {
 import { SheetsClient } from 'api/SheetsClient';
 import cn from 'classnames';
 import { useToast } from 'components/shared/Toast/Toast';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/rootReducer';
 
 interface Props {
     closeModal: () => void;
@@ -23,6 +25,8 @@ export const AuthorAddModal: React.FC<Props> = ({ closeModal, addAuthor }) => {
     const [form, setForm] = React.useState<AuthorRequestModel>(defaultAuthorRequestModel);
     const [tempImage, setTempImage] = React.useState<string | ArrayBuffer | null>('');
     const [allGenres, setAllGenres] = React.useState<GenreItemJsModel[]>([]);
+
+    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
 
     const { push } = useToast();
 
@@ -98,7 +102,7 @@ export const AuthorAddModal: React.FC<Props> = ({ closeModal, addAuthor }) => {
                     required
                 />
             </div>
-            <div className={cn(styles.formItem, styles.genres)}>
+            <div className={cn(styles.formItem, styles.genres, isDark && styles.genres__dark)}>
                 {allGenres.length > 0 &&
                     allGenres.map((genre) => (
                         <div

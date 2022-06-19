@@ -28,28 +28,8 @@
   display: flex;
   margin-top: 20px;
 
-  .link {
-    font-size: 16px;
-    text-align: center;
-    border: 1px solid $defaultBg;
-    border-radius: 6px;
-    padding: 6px 30px 8px;
-    text-decoration: none;
-    color: $mainText;
-
-    &:visited,
-    &:active {
-      color: $mainText;
-    }
-
-    &:hover {
-      color: #fff;
-      background: $defaultBg;
-    }
-
-    &:nth-child(2n) {
-      margin-left: 20px;
-    }
+  .button {
+    margin-right: 30px;
   }
 }
 

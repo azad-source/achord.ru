@@ -9,20 +9,30 @@ interface Props {
     isMenu?: boolean;
     hideEn?: boolean;
     hideRu?: boolean;
+    isDark?: boolean;
 }
 
-export const SheetsNav: React.FC<Props> = ({ isMenu = false, hideEn = false, hideRu = false }) => (
+export const SheetsNav: React.FC<Props> = ({
+    isMenu = false,
+    hideEn = false,
+    hideRu = false,
+    isDark = false,
+}) => (
     <div className={cn(styles.root, isMenu && styles.root_isMenu)}>
-        {!hideEn && <Letters items={abcEn} isMenu={isMenu} />}
-        {!hideRu && <Letters items={abcRu} isMenu={isMenu} />}
+        {!hideEn && <Letters items={abcEn} isMenu={isMenu} isDark={isDark} />}
+        {!hideRu && <Letters items={abcRu} isMenu={isMenu} isDark={isDark} />}
     </div>
 );
 
-const Letters: React.FC<{ items: string[]; isMenu: boolean }> = ({ items, isMenu }) => {
+const Letters: React.FC<{ items: string[]; isMenu: boolean; isDark?: boolean }> = ({
+    items,
+    isMenu,
+    isDark = false,
+}) => {
     const { letter } = useParams<{ letter: string }>();
     const isActive = (l: string) => letter === l;
     return (
-        <div className={styles.wrapper}>
+        <div className={cn(styles.wrapper, isDark && styles.wrapper__dark)}>
             {items.map((l) => (
                 <Link
                     key={l}

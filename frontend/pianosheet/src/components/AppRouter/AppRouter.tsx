@@ -20,17 +20,21 @@ import { GenrePage } from 'components/sheets/GenrePage/GenrePage';
 import { ContactsPage } from 'components/contacts/ContactsPage';
 import { PrivacyPage } from 'components/privacy/PrivacyPage';
 import { CopyrightHolders } from 'components/rights/CopyrightHolders';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { appAction } from 'store/appActions';
+import { RootState } from 'store/rootReducer';
+import cn from 'classnames';
 
 const AppRouter = () => {
     const dispatch = useDispatch();
+    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+
     React.useEffect(() => {
         dispatch(appAction.switchTheme());
     }, []);
 
     return (
-        <div className={styles.root}>
+        <div className={cn(styles.root, isDark && styles.root__dark)}>
             <React.Suspense fallback={<Spinner />}>
                 <BrowserRouter>
                     <Header />
@@ -63,7 +67,7 @@ const AppRouter = () => {
                         <Route path={Paths.mainPage} component={MainPage} exact />
                         <Route component={NotFoundPage} />
                     </Switch>
-                    <Footer />
+                    <Footer isDark={isDark} />
                 </BrowserRouter>
             </React.Suspense>
         </div>

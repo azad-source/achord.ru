@@ -1,45 +1,55 @@
-import { Link } from 'components/shared/Link/Link';
+import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 import { SiteName } from 'domain/SiteInfo';
 import * as React from 'react';
 import styles from './Footer.module.scss';
 import cn from 'classnames';
+import { Button } from 'components/shared/Button/Button';
+import { useHistory } from 'react-router-dom';
 
-export const Footer = () => {
+interface Props {
+    isDark?: boolean;
+}
+
+export const Footer: React.FC<Props> = ({ isDark = false }) => {
     const year = new Date().getFullYear();
+
+    const history = useHistory();
+
     return (
-        <footer className={styles.backplate}>
+        <footer className={cn(styles.backplate, isDark && styles.backplate__dark)}>
             <div className={styles.root}>
                 <div className={styles.item}>
-                    <Link className={styles.link} href="/">
+                    <Button onClick={() => history.push('/')} use="link">
                         Главная
-                    </Link>
+                    </Button>
                 </div>
                 <div className={styles.item}>
-                    <Link className={styles.link} href="/privacy">
+                    <Button onClick={() => history.push('/privacy')} use="link">
                         Политика конфиденциальности
-                    </Link>
+                    </Button>
                 </div>
                 <div className={cn(styles.item, styles.copyright)}>
-                    Copyright © {SiteName} {year}
+                    <TextPlain>
+                        Copyright © {SiteName} {year}
+                    </TextPlain>
                 </div>
                 <div className={styles.item}>
-                    <Link className={styles.link} href="/contacts">
+                    <Button onClick={() => history.push('/contacts')} use="link">
                         Контактная информация
-                    </Link>
+                    </Button>
                 </div>
                 <div className={styles.item}>
-                    <Link className={styles.link} href="/copyright-holders">
+                    <Button onClick={() => history.push('/copyright-holders')} use="link">
                         Правовая информация
-                    </Link>
+                    </Button>
                 </div>
                 <div className={styles.item}>
-                    <Link
-                        className={styles.link}
-                        href="https://vk.com/piano_music_sheet"
-                        target="_blank"
+                    <Button
+                        onClick={() => window.open('https://vk.com/piano_music_sheet', '_blank')}
+                        use="link"
                     >
                         Сообщество VK
-                    </Link>
+                    </Button>
                 </div>
             </div>
         </footer>

@@ -1,7 +1,17 @@
+@import 'styles/colors.scss';
+
 .root {
   display: block;
   margin-bottom: 25px;
   user-select: none;
+
+  &__dark {
+    color: $darkTextColor;
+
+    .item {
+      color: $darkTextColor;
+    }
+  }
 }
 
 .items {

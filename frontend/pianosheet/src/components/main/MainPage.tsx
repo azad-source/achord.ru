@@ -28,7 +28,7 @@ const MainPageFC = () => {
     };
 
     return (
-        <Page>
+        <Page >
             <Tabs items={tabs} value={tab} onValueChange={handleChangeTab} />
             {tab === 0 ? <RandomAuthors /> : tab === 1 ? <TopAuthors /> : <FavouriteAuthors />}
         </Page>

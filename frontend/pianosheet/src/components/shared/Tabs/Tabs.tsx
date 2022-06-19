@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styles from './Tabs.module.scss';
 import cn from 'classnames';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/rootReducer';
 
 interface Props {
     items: string[];
@@ -10,8 +12,10 @@ interface Props {
 }
 
 export const Tabs: React.FC<Props> = ({ items, value, className, onValueChange }) => {
+    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+
     return (
-        <div className={cn(styles.root, className)}>
+        <div className={cn(styles.root, isDark && styles.root__dark, className)}>
             <div className={styles.tabs}>
                 {items.map((caption, index) => (
                     <div

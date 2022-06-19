@@ -1,5 +1,5 @@
-@import '../../../../styles/default.scss';
-@import '../../../../styles/colors.scss';
+@import 'styles/default.scss';
+@import 'styles/colors.scss';
 
 .backplate {
   width: 100%;
@@ -10,6 +10,11 @@
   display: flex;
   justify-content: center;
   position: relative;
+
+  &__dark {
+    background: $darkBgFooter;
+    @include themeSwitchTransition;
+  }
 }
 
 .root {
@@ -23,13 +28,11 @@
 }
 
 .item {
-  color: $mainText;
   font-size: 14px;
   letter-spacing: 1px;
 }
 
 .link {
-  color: $mainText;
   font-size: 16px;
 }
 

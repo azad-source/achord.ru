@@ -17,6 +17,18 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
+
+  &__dark {
+    .letter {
+      color: $darkTextColor;
+      @include themeSwitchTransition;
+      
+      &:hover {
+        background-color: $darkTextColor;
+        color: $darkBg;
+      }
+    }
+  }
 }
 
 .letter {

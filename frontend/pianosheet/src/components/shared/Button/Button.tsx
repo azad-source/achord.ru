@@ -2,6 +2,8 @@ import * as React from 'react';
 import cn from 'classnames';
 import styles from './Button.module.scss';
 import { MouseEvent } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/rootReducer';
 
 type ButtonUse = 'link' | 'default' | 'transparent';
 
@@ -12,6 +14,7 @@ interface Props {
     type?: 'button' | 'submit' | 'reset' | undefined;
     icon?: React.ReactNode;
     title?: string;
+    size?: 'small' | 'middle' | 'large';
     onClick?: (e: MouseEvent) => void;
 }
 
@@ -22,12 +25,22 @@ export const Button: React.FC<Props> = ({
     disabled,
     icon,
     title,
+    size = 'middle',
     ...props
 }) => {
+    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+
     return (
         <button
             disabled={disabled}
-            className={cn(styles.root, styles[use], disabled && styles.disabled, className)}
+            className={cn(
+                styles.root,
+                styles[use],
+                disabled && styles.disabled,
+                styles[size],
+                isDark && styles.root__dark,
+                className,
+            )}
             title={title}
             {...props}
         >

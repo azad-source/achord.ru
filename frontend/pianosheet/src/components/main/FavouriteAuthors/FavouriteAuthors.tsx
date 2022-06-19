@@ -17,6 +17,7 @@ import { Page } from 'components/shared/layout/Page/Page';
 import { QueryStatus } from 'domain/QueryStatus';
 import { SheetRow } from 'components/shared/SheetRow/SheetRow';
 import { useAuth } from 'api/UsersClient';
+import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 
 interface Props {
     authors: AuthorJsModel;
@@ -68,7 +69,7 @@ const FavouriteAuthorsFC: React.FC<Props> = ({
         <Page hideSheetsNav status={status}>
             {hasAuthors && (
                 <>
-                    <div className={styles.title}>Авторы</div>
+                    <TextPlain className={styles.title}>Авторы</TextPlain>
                     <div className={styles.topAuthors}>
                         {authors.results.map((author) => (
                             <AuthorCard
@@ -86,7 +87,7 @@ const FavouriteAuthorsFC: React.FC<Props> = ({
 
             {hasSheets && (
                 <>
-                    <div className={styles.title}>Композиции</div>
+                    <TextPlain className={styles.title}>Композиции</TextPlain>
                     <div className={styles.topSheets}>
                         {sheets.results.map((sheet, index) => (
                             <SheetRow

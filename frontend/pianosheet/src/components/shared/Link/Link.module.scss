@@ -4,6 +4,20 @@
   position: relative;
   display: inline-flex;
   flex-direction: row;
+
+  &__dark {
+    .link {
+      color: $darkTextColor;
+
+      &:active {
+        color: $darkTextColor;
+      }
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
 }
 
 .link {

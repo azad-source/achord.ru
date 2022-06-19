@@ -11,7 +11,9 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { usersAction } from 'store/usersActions';
 import { QueryStatus } from 'domain/QueryStatus';
 import { SocialAuthParams } from 'domain/api/JsModels';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { TextPlain } from 'components/shared/TextPlain/TextPlain';
+import { Button } from 'components/shared/Button/Button';
 
 interface Props {
     status: QueryStatus;
@@ -28,6 +30,8 @@ const AuthPageFC: React.FC<Props> = ({
     dropError,
     resetPassword,
 }) => {
+    const history = useHistory();
+
     const [logged] = useAuth();
     const [isRegForm, setIsRegForm] = React.useState<boolean>(false);
     const [regEvent, setRegEvent] = React.useState<{
@@ -77,16 +81,28 @@ const AuthPageFC: React.FC<Props> = ({
                                 отправлено письмо со сылкой для подтверждения Вашей почты.
                             </div>
                         ) : (
-                            <div className={styles.successAuthMsg}>Вы авторизованы!</div>
+                            <TextPlain className={styles.successAuthMsg}>
+                                Вы авторизованы!
+                            </TextPlain>
                         )}
 
                         <div className={styles.linkWrapper}>
-                            <Link to="/" className={styles.link}>
+                            <Button
+                                onClick={() => history.push('/')}
+                                className={styles.button}
+                                use="transparent"
+                            >
                                 Главная
-                            </Link>
-                            <Link to="/sign-in" onClick={logout} className={styles.link}>
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    logout();
+                                    history.push('/sign-in');
+                                }}
+                                use="transparent"
+                            >
                                 Выйти
-                            </Link>
+                            </Button>
                         </div>
                     </div>
                 ) : isRegForm ? (

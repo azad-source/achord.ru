@@ -10,9 +10,41 @@
   border-radius: 4px;
   color: #fff;
   padding: 14px;
-  font-size: 16px;
   line-height: 1;
   min-width: 130px;
+
+  &__dark {
+    &.default {
+      color: $darkBg;
+      background-color: $darkTextColor;
+    }
+
+    &.link {
+      color: $darkTextColor;
+    }
+
+    &.transparent {
+      border: 1px solid $darkTextColor;
+      color: $darkTextColor;
+
+      &:hover {
+        background-color: $darkTextColor;
+        color: $darkBg;
+      }
+    }
+  }
+}
+
+.small {
+  font-size: 14px;
+}
+
+.middle {
+  font-size: 16px;
+}
+
+.large {
+  font-size: 18px;
 }
 
 .root:hover {
@@ -25,7 +57,11 @@
 
 .link {
   background: none;
-  color: $mainText;
+  color: $linkColor;
+  padding: 0;
+  min-width: unset;
+  line-height: 20px;
+  text-align: left;
 }
 
 .link:hover {
@@ -42,11 +78,11 @@
   background: unset;
   border: 1px solid $defaultButtonBg;
   color: $mainText;
-}
 
-.transparent:hover {
-  background-color: $defaultButtonBg;
-  color: #fff;
+  &:hover {
+    background-color: $defaultButtonBg;
+    color: #fff;
+  }
 }
 
 .icon {

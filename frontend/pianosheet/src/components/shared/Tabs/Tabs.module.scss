@@ -8,6 +8,17 @@ $baseColor: rgb(217, 226, 255);
 .root {
   display: block;
   margin: 0 auto;
+
+  &__dark {
+    .tabs {
+      &__item {
+        color: $darkTextColor;
+        &_active {
+          border-color: $darkTextColor;
+        }
+      }
+    }
+  }
 }
 
 .tabs {

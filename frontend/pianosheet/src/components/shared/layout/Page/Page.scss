@@ -11,6 +11,12 @@
   flex-grow: 1;
   position: relative;
   padding: 16px 0;
+
+  &__dark {
+    background: $darkBg;
+    @include themeSwitchTransition;
+
+  }
 }
 
 .root {
@@ -19,10 +25,6 @@
   box-sizing: border-box;
   position: relative;
   height: 100%;
-
-  &_dark {
-    background: rgb(26, 28, 46);
-  }
 }
 
 .addAuthor {

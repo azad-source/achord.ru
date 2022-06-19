@@ -8,6 +8,7 @@ import { QueryStatus } from 'domain/QueryStatus';
 import cn from 'classnames';
 import { AuthGoogle } from 'components/auth/AuthGoogle';
 import { SocialAuthParams } from 'domain/api/JsModels';
+import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 
 interface Props {
     status: QueryStatus;
@@ -42,7 +43,7 @@ export const Authorization: React.FC<Props> = ({
 
     return (
         <div className={styles.root}>
-            <div className={styles.title}>Авторизация на сайте {SiteName}</div>
+            <TextPlain className={styles.title}>Авторизация на сайте {SiteName}</TextPlain>
             <form onSubmit={(e) => loginHandler(email.auth, password, e)}>
                 <Input
                     placeholder={'E-mail'}

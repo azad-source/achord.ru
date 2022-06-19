@@ -11,4 +11,9 @@
   background-attachment: fixed;
   background: rgb(225, 232, 255);
   background: linear-gradient(135deg, rgb(249, 251, 255) 0%, rgba(255, 255, 255, 1) 100%);
+
+  &__dark {
+    background: $darkBg;
+    @include themeSwitchTransition;
+  }
 }

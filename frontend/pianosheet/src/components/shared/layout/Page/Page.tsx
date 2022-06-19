@@ -4,7 +4,7 @@ import styles from './Page.scss';
 import { QueryStatus } from 'domain/QueryStatus';
 import { Spinner } from 'components/shared/Spinner/Spinner';
 import { RootState } from 'store/rootReducer';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { sheetsAction } from 'store/sheetsActions';
 import { SheetsNav } from '../SheetsNav/SheetsNav';
@@ -29,7 +29,6 @@ interface Props {
     breadcrumbs?: BreadcrumbProps[];
     isSuperUser?: boolean;
     showAddAuthorBtn?: boolean;
-    darkTheme?: boolean;
     addAuthor: (author: FormData) => Promise<AuthorItemJsModel | false>;
 }
 
@@ -45,10 +44,12 @@ const PageFC: React.FC<Props> = ({
     breadcrumbs,
     isSuperUser = false,
     showAddAuthorBtn = false,
-    darkTheme = false,
     addAuthor,
 }) => {
     const [showAddAuthorModal, setShowAddAuthorModal] = React.useState<boolean>(false);
+
+    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+
     const history = useHistory();
 
     const { pathname } = useLocation();
@@ -89,9 +90,9 @@ const PageFC: React.FC<Props> = ({
     };
 
     return (
-        <div className={cn(styles.backplate, darkTheme && styles.root_dark)}>
+        <div className={cn(styles.backplate, isDark && styles.backplate__dark)}>
             <ErrorBoundary>
-                {!hideSheetsNav && <SheetsNav />}
+                {!hideSheetsNav && <SheetsNav isDark={isDark} />}
                 <div className={cn(styles.root, className)}>
                     {!!breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
                     {isSuperUser && showAddAuthorBtn && !searchApplied && (
@@ -115,24 +116,25 @@ const PageFC: React.FC<Props> = ({
     );
 };
 
-type OwnProps = Pick<Props, 'className' | 'children' | 'status' | 'darkTheme'>;
+type OwnProps = Pick<Props, 'className' | 'children' | 'status'>;
 
 const mapStateToProps = (
     {
         sheets: { search, localStatus, warning },
         users: { currentUser, status: userStatus },
+        app: { theme },
     }: RootState,
-    { className, children, status, darkTheme }: OwnProps,
+    { className, children, status }: OwnProps,
 ) => ({
     className,
     sheetStatus: localStatus,
     userStatus,
     status,
     children,
-    darkTheme,
     searchApplied: search.applied,
     warning: warning,
     isSuperUser: currentUser.is_superuser,
+    isDark: theme === 'dark',
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {

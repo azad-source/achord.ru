@@ -1,5 +1,6 @@
 import { Page } from 'components/shared/layout/Page/Page';
 import { Link } from 'components/shared/Link/Link';
+import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 import * as React from 'react';
 import styles from './CopyrightHolders.scss';
 
@@ -12,8 +13,8 @@ export const CopyrightHolders = () => {
 
     return (
         <Page hideSheetsNav>
-            <div className={styles.title}>Правообладателям</div>
-            <div className={styles.content}>
+            <TextPlain className={styles.title}>Правообладателям</TextPlain>
+            <TextPlain className={styles.content}>
                 <p>
                     Текстовые, фото-, видео и иные материалы опубликованный на сайте носят
                     исключительно ознакомительных характер, получены редакцией сайта из источников
@@ -97,7 +98,7 @@ export const CopyrightHolders = () => {
                     косвенными, и (или) требования не имеющие правовых оснований для содействия
                     будут игнорироваться.
                 </p>
-            </div>
+            </TextPlain>
         </Page>
     );
 };

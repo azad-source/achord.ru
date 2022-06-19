@@ -14,6 +14,7 @@ import { Paths } from 'utils/routes/Paths';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { useAuth } from 'api/UsersClient';
+import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 
 interface Props {
     genre: GenreItemJsModel;
@@ -77,7 +78,7 @@ const GenrePageFC: React.FC<Props> = ({
 
     return (
         <Page breadcrumbs={breadcrumbs} showAddAuthorBtn status={status}>
-            <div className={styles.title}>{genre.name.toUpperCase()}</div>
+            <TextPlain className={styles.title}>{genre.name.toUpperCase()}</TextPlain>
             <div className={styles.authors}>
                 {authors.results.map((author, index) => (
                     <AuthorCard

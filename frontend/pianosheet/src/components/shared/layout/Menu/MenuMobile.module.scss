@@ -15,6 +15,14 @@
       background: $darkBg;
       @include themeSwitchTransition;
     }
+
+    .burgerMenu {
+      border-color: $darkBgContent;
+
+      &_line {
+        background-color: $darkBgContent;
+      }
+    }
   }
 }
 

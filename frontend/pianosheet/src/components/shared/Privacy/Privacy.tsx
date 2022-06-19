@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link } from '../Link/Link';
+import { TextPlain } from '../TextPlain/TextPlain';
 import styles from './Privacy.module.scss';
 
 export const Privacy = () => {
@@ -11,8 +12,8 @@ export const Privacy = () => {
 
     return (
         <>
-            <div className={styles.title}>Политика обработки персональных данных</div>
-            <div className={styles.content}>
+            <TextPlain className={styles.title}>Политика обработки персональных данных</TextPlain>
+            <TextPlain className={styles.content}>
                 <div className={styles.head1}>1. Общие положения</div>
                 Настоящая политика обработки персональных данных составлена в соответствии с
                 требованиями Федерального закона от 27.07.2006. №152-ФЗ «О персональных данных»
@@ -545,7 +546,7 @@ export const Privacy = () => {
                     </Link>
                     .
                 </p>
-            </div>
+            </TextPlain>
         </>
     );
 };

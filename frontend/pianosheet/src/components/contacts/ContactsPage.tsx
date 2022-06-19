@@ -10,6 +10,7 @@ import { VkIcon } from 'components/shared/icons/VkIcon';
 import { InstagramIcon } from 'components/shared/icons/InstagramIcon';
 import ava_chinzhin from 'images/chinzhin.png';
 import ava_mamedov from 'images/mamedov.png';
+import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 
 export const ContactsPage = () => {
     React.useEffect(() => {
@@ -18,8 +19,8 @@ export const ContactsPage = () => {
 
     return (
         <Page hideSheetsNav>
-            <div className={styles.title}>Добро пожаловать на сайт achord.ru !</div>
-            <div className={styles.aboutUs}>
+            <TextPlain className={styles.title}>Добро пожаловать на сайт achord.ru !</TextPlain>
+            <TextPlain className={styles.aboutUs}>
                 <p>
                     Здесь вы найдете ноты известных отечественных и зарубежных композиторов, ноты на
                     музыку многих музыкальных групп и певцов, по различным направлениям и эпохам. На
@@ -36,8 +37,8 @@ export const ContactsPage = () => {
                     <a href="mailto:achord.ru@gmail.com">achord.ru@gmail.com</a> или связаться по
                     указанным ниже контактам.
                 </p>
-            </div>
-            <div className={styles.contacts}>
+            </TextPlain>
+            <TextPlain className={styles.contacts}>
                 {Contact({
                     avatar: ava_chinzhin,
                     name: 'Дмитрий ЧИНЖИН',
@@ -55,7 +56,7 @@ export const ContactsPage = () => {
                     facebook: 'azad.mamedov.338',
                     // webPage: 'https://azad-source.github.io/CV/dist/',
                 })}
-            </div>
+            </TextPlain>
         </Page>
     );
 };
@@ -90,8 +91,8 @@ const Contact: React.FC<ContactProps> = ({
             <img src={avatar} alt={name} className={styles.img} />
         </div>
         <div className={styles.infos}>
-            <div className={styles.infos__name}>{name}</div>
-            <div className={styles.infos__role}>{role}</div>
+            <TextPlain className={styles.infos__name}>{name}</TextPlain>
+            <TextPlain className={styles.infos__role}>{role}</TextPlain>
             <div className={styles.infos__socials}>
                 {!!email && (
                     <a className={styles.social} href={`mailto:${email}`} title="email">

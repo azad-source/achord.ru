@@ -28,6 +28,7 @@
 
   &__dark {
     box-shadow: none;
+    background: $darkBg;
 
     .name {
       background: $darkBgContent;

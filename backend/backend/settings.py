@@ -248,3 +248,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'auth_app.User'
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis_achord:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND", "redis://redis_achord:6379/0")
+CELERY_BROCKER_HEARTBEAT = 0
+CELERY_TASK_DEFAULT_QUEUE = 'achord'
+
+CELERY_BEAT_SCHEDULE = {
+    "parse_notes": {
+        "task": "parsers.tasks.parse_notes",
+        "schedule": datetime.timedelta(minutes=1),
+        "options": {"queue": "achord"},
+    },
+}

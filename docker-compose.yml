@@ -1,6 +1,20 @@
 version: "3.7"
 
 services: 
+    celery:
+        build: .
+        command: bash -c "celery -A backend worker -l info -f logs/celery.log & celery -A backend beat -l info"
+        volumes: 
+            - .:/usr/src/pianosheet
+        env_file: .env
+        depends_on:
+        - web
+        - redis_achord
+        restart: always
+
+    redis_achord:
+        image: redis:5-alpine
+        restart: always
     db:
         image: postgres:12
         volumes: 
@@ -10,11 +24,8 @@ services:
         restart: always
     web:
         build: .
-        command: bash -c "python /usr/src/pianosheet/backend/manage.py collectstatic --noinput && 
-                python /usr/src/pianosheet/backend/manage.py migrate --noinput &&
-                cd ../../backend &&
+        command: bash -c "python manage.py collectstatic --noinput && python manage.py migrate --noinput &&
                 gunicorn backend.wsgi:application --reload --bind 0.0.0.0:9001 --workers=3 --log-level debug"
-
         volumes: 
             - .:/usr/src/pianosheet
         ports: 

@@ -37,3 +37,5 @@ secrets/user
 docker/postgres/backups/*
 .env
 pg_data/
+backend/celerybeat-schedule
+backend/logs/celery.log

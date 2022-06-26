@@ -104,7 +104,7 @@ export const MenuMobile: React.FC<Props> = ({ items, isDark = false }) => {
                             }
 
                             return (
-                                <div key={`idx_${idx}`} className={styles.menuItem}>
+                                <div key={`idx_${idx}`} className={(styles.toggle)}>
                                     {caption}
                                 </div>
                             );

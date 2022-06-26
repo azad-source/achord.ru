@@ -14,6 +14,8 @@ import {
 import cn from 'classnames';
 import { useToast } from 'components/shared/Toast/Toast';
 import { SheetsClient } from 'api/SheetsClient';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/rootReducer';
 
 interface Props {
     author: AuthorItemJsModel;
@@ -27,6 +29,8 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
     const [allGenres, setAllGenres] = React.useState<GenreItemJsModel[]>([]);
 
     const { push } = useToast();
+
+    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
 
     React.useEffect(() => {
         if (allGenres.length < 1) SheetsClient.getGenres().then((r) => setAllGenres(r.results));
@@ -99,6 +103,7 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
                     </Button>
                 </>
             }
+            className={cn(styles.root, isDark && styles.root__dark)}
         >
             <div className={styles.formItem}>
                 <Input

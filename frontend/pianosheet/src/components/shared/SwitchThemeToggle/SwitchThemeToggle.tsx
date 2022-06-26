@@ -11,8 +11,6 @@ interface Props {
 
 export const SwitchThemeToggle: React.FC<Props> = ({ isDark = false, className, themeToggler }) => {
 
-    console.log('isDark', isDark);
-
     return (
         <Toggle
             onChange={themeToggler}

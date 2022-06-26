@@ -1,3 +1,30 @@
+@import 'styles/colors.scss';
+
+.root {
+  &__dark {
+    .genres {
+      &_item {
+        color: $darkTextColor;
+        background: #666;
+
+        &:hover {
+          color: $darkTextColor;
+          background: unset;
+        }
+
+        &__selected {
+          background: #222;
+
+          &:hover {
+            color: $darkTextColor;
+            background: #222;
+          }
+        }
+      }
+    }
+  }
+}
+
 .formItem {
   min-width: 100%;
   margin: 0 12px 12px 0;

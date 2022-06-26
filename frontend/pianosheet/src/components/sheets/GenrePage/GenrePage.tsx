@@ -99,7 +99,7 @@ const GenrePageFC: React.FC<Props> = ({
                 />
             )}
             {authors.count === 0 && !status.isRequest() && (
-                <div className={styles.empty}>Раздел пока пустой</div>
+                <TextPlain className={styles.empty}>Раздел пока пустой</TextPlain>
             )}
         </Page>
     );

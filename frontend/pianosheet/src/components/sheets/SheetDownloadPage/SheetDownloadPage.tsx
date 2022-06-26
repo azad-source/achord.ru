@@ -9,8 +9,10 @@ import { defaultAuthorItem, defaultSheetItem } from 'store/sheetsReducer';
 import { SiteName } from 'domain/SiteInfo';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { Paths } from 'utils/routes/Paths';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { RootState } from 'store/rootReducer';
+import cn from 'classnames';
+import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 // import { Document, Page as PDFPage, pdfjs } from 'react-pdf';
 // import { PDFDocumentProxy } from 'pdfjs-dist';
 // import { Pagination } from 'components/shared/layout/Pagination/Pagination';
@@ -35,6 +37,8 @@ const SheetDownloadPageFC: React.FC<Props> = ({ isSuperUser = false }) => {
             started: false,
         },
     );
+
+    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
 
     React.useEffect(() => {
         SheetsClient.getSheetById(sheetId).then((res) => {
@@ -84,8 +88,8 @@ const SheetDownloadPageFC: React.FC<Props> = ({ isSuperUser = false }) => {
 
     return (
         <Page breadcrumbs={breadcrumbs}>
-            <div className={styles.root}>
-                <div className={styles.fileName}>{sheet.name}</div>
+            <div className={cn(styles.root, isDark && styles.root__dark)}>
+                <TextPlain className={styles.fileName}>{sheet.name}</TextPlain>
                 {sheet.filename ? (
                     <div className={styles.download}>
                         {downloadState.counter < 1 ? (
@@ -93,9 +97,9 @@ const SheetDownloadPageFC: React.FC<Props> = ({ isSuperUser = false }) => {
                                 Ссылка на скачивание
                             </Button>
                         ) : downloadState.started ? (
-                            <div className={styles.downloadInfo}>
+                            <TextPlain className={styles.downloadInfo}>
                                 Через {downloadState.counter} секунд появится ссылка на скачивание
-                            </div>
+                            </TextPlain>
                         ) : (
                             <Button onClick={startCounter} className={styles.downloadButton}>
                                 Скачать

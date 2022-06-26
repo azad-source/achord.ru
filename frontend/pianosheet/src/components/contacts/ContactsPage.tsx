@@ -11,6 +11,7 @@ import { InstagramIcon } from 'components/shared/icons/InstagramIcon';
 import ava_chinzhin from 'images/chinzhin.png';
 import ava_mamedov from 'images/mamedov.png';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
+import { Link } from 'components/shared/Link/Link';
 
 export const ContactsPage = () => {
     React.useEffect(() => {
@@ -34,8 +35,8 @@ export const ContactsPage = () => {
                     Проект Achord реализован и продолжает развиваться благодаря нашим усилиям. Мы
                     будем рады обратной связи от вас. Все предложения и идеи можете отправлять на
                     электронную почту сайта{' '}
-                    <a href="mailto:achord.ru@gmail.com">achord.ru@gmail.com</a> или связаться по
-                    указанным ниже контактам.
+                    <Link href="mailto:achord.ru@gmail.com">achord.ru@gmail.com</Link> или связаться
+                    по указанным ниже контактам.
                 </p>
             </TextPlain>
             <TextPlain className={styles.contacts}>
@@ -95,75 +96,65 @@ const Contact: React.FC<ContactProps> = ({
             <TextPlain className={styles.infos__role}>{role}</TextPlain>
             <div className={styles.infos__socials}>
                 {!!email && (
-                    <a className={styles.social} href={`mailto:${email}`} title="email">
+                    <Link href={`mailto:${email}`} title="email">
                         <EmailIcon />
-                    </a>
+                    </Link>
                 )}
                 {!!telegram && (
-                    <a
-                        className={styles.social}
+                    <Link
                         href={`https://t.me/${telegram}`}
                         target="_blank"
                         rel="noreferrer"
                         title="telegram"
                     >
                         <TelegramIcon />
-                    </a>
+                    </Link>
                 )}
                 {!!whatsapp && (
-                    <a
-                        className={styles.social}
+                    <Link
                         href={`https://wa.me/${whatsapp}`}
                         target="_blank"
                         rel="noreferrer"
                         title="whatsapp"
                     >
                         <WhatsAppIcon />
-                    </a>
+                    </Link>
                 )}
                 {!!facebook && (
-                    <a
-                        className={styles.social}
+                    <Link
                         href={`https://www.facebook.com/${facebook}`}
                         target="_blank"
                         rel="noreferrer"
                         title="facebook"
                     >
                         <FacebookIcon />
-                    </a>
+                    </Link>
                 )}
                 {!!vk && (
-                    <a
-                        className={styles.social}
-                        href={`https://vk.com/${vk}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        title="vk"
-                    >
+                    <Link href={`https://vk.com/${vk}`} target="_blank" rel="noreferrer" title="vk">
                         <VkIcon />
-                    </a>
+                    </Link>
                 )}
                 {!!instagram && (
-                    <a
-                        className={styles.social}
+                    <Link
                         href={`http://instagram.com/_u/${instagram}/`}
                         target="_blank"
                         rel="noreferrer"
                         title="instagram"
                     >
                         <InstagramIcon />
-                    </a>
+                    </Link>
                 )}
             </div>
             {!!webPage && (
-                <a
-                    className={styles.webPage}
+                <Link
                     href={`https://${webPage}`}
                     target="_blank"
                     rel="noreferrer"
+                    className={styles.webPage}
                 >
                     {webPage}
-                </a>
+                </Link>
             )}
         </div>
     </div>

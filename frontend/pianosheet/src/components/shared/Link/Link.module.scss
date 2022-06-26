@@ -22,6 +22,7 @@
 
 .link {
   color: $linkColor;
+  justify-content: center;
 
   &:active {
     color: $linkColor;
@@ -33,17 +34,17 @@
 }
 
 .xsmall {
-  font-size: 10px;
-}
-
-.small {
   font-size: 12px;
 }
 
-.medium {
+.small {
   font-size: 14px;
 }
 
-.large {
+.medium {
   font-size: 16px;
+}
+
+.large {
+  font-size: 18px;
 }

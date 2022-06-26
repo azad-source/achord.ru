@@ -1,6 +1,21 @@
 @import 'styles/colors.scss';
 @import 'styles/default.scss';
 
+.root {
+  &__dark {
+    .searchTitle {
+      background: $darkBgContent;
+      @include themeSwitchTransition;
+    }
+
+    .closeIcon::after,
+    .closeIcon::before {
+      background-color: $darkTextColor;
+      @include themeSwitchTransition;
+    }
+  }
+}
+
 .title {
   font-size: 28px;
   font-weight: bold;
@@ -44,7 +59,8 @@
 }
 
 .dropSearch {
-  position: absolute;
+  display: block !important;
+  position: absolute !important;
   top: 40px;
   right: 50px;
   cursor: pointer;

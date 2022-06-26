@@ -10,13 +10,14 @@ interface Props
         HTMLAnchorElement
     > {
     size?: 'xsmall' | 'small' | 'medium' | 'large';
+    className?: string;
 }
 
-export const Link: React.FC<Props> = ({ size = 'medium', ...props }) => {
+export const Link: React.FC<Props> = ({ size = 'medium', className, ...props }) => {
     const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
 
     return (
-        <div className={cn(styles.root, isDark && styles.root__dark)}>
+        <div className={cn(styles.root, isDark && styles.root__dark, className)}>
             <a className={cn(styles.link, styles[size])} {...props}>
                 {props.children}
             </a>

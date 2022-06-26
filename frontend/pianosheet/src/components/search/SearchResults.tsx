@@ -10,11 +10,14 @@ import { Paths } from 'utils/routes/Paths';
 import { AuthorItemJsModel, SheetItemJsModel } from 'domain/api/JsModels';
 import { SheetsClient } from 'api/SheetsClient';
 import { SiteName } from 'domain/SiteInfo';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { sheetsAction } from 'store/sheetsActions';
 import { RootState } from 'store/rootReducer';
 import { useAuth } from 'api/UsersClient';
+import { TextPlain } from 'components/shared/TextPlain/TextPlain';
+import { Link } from 'components/shared/Link/Link';
+import { SheetRow } from 'components/shared/SheetRow/SheetRow';
 
 interface Props {
     search: SearchApiResults;
@@ -25,6 +28,7 @@ interface Props {
     editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
     removeAuthor: (authorId: number) => void;
     addAuthorToFavorite: (authorId: number, isFavorite: boolean) => void;
+    addSheetToFavorite: (sheetId: number, isFavorite: boolean) => void;
 }
 
 const SearchResultsFC: React.FC<Props> = ({
@@ -36,6 +40,7 @@ const SearchResultsFC: React.FC<Props> = ({
     searchSheets,
     searchAuthors,
     addAuthorToFavorite,
+    addSheetToFavorite,
 }) => {
     let output: React.ReactNode;
     const [pageNumberSheet, setPageNumberSheet] = React.useState<number>(1);
@@ -43,6 +48,8 @@ const SearchResultsFC: React.FC<Props> = ({
     const location = useLocation();
 
     const [logged] = useAuth();
+
+    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
 
     const getSheetsByPage = (page: number) => {
         searchSheets(search.query, page);
@@ -78,27 +85,30 @@ const SearchResultsFC: React.FC<Props> = ({
         output = search.status.isRequest() ? (
             <Spinner />
         ) : (
-            <>
-                <div className={styles.title}>Результаты поиска</div>
-                <a className={styles.dropSearch} onClick={skipSearch}>
+            <div className={cn(styles.root, isDark && styles.root__dark)}>
+                <TextPlain className={styles.title}>Результаты поиска</TextPlain>
+                <Link className={styles.dropSearch} onClick={skipSearch}>
                     Сбросить поиск
-                    <span className={styles.closeIcon}></span>
-                </a>
+                    <span className={styles.closeIcon} />
+                </Link>
 
                 {search.sheets.results.length > 0 && (
                     <>
-                        <div className={styles.searchTitle}>Найденные ноты</div>
+                        <TextPlain className={styles.searchTitle}>Найденные ноты</TextPlain>
                         <div className={styles.searchItems}>
-                            {search.sheets.results.map((sheet) => (
-                                <div
+                            {search.sheets.results.map((sheet, index) => (
+                                <SheetRow
                                     key={sheet.id}
-                                    className={styles.searchItem}
-                                    onClick={() => openDownloadPage(sheet)}
-                                >
-                                    {sheet.name}
-                                </div>
+                                    type="second"
+                                    sheet={sheet}
+                                    index={index}
+                                    onOpen={openDownloadPage}
+                                    addToFavorite={logged ? addSheetToFavorite : undefined}
+                                    
+                                />
                             ))}
                         </div>
+
                         {search.sheets.page_count > 1 && (
                             <Pagination
                                 pageNumber={pageNumberSheet}
@@ -135,7 +145,7 @@ const SearchResultsFC: React.FC<Props> = ({
                         )}
                     </>
                 )}
-            </>
+            </div>
         );
     } else {
         output = <>По запросу &laquo;{search.query}&raquo; ничего не найдено</>;
@@ -158,6 +168,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
             editAuthor: sheetsAction.editAuthor,
             removeAuthor: sheetsAction.removeAuthor,
             addAuthorToFavorite: sheetsAction.addAuthorToFavorite,
+            addSheetToFavorite: sheetsAction.addSheetToFavorite,
         },
         dispatch,
     );

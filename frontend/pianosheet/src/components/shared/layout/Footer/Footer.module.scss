@@ -1,0 +1,53 @@
+@import 'styles/default.scss';
+@import 'styles/colors.scss';
+
+.backplate {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgb(80, 109, 200);
+  background: $footerBg;
+  box-shadow: 0px -3px 10px rgba(0, 0, 0, 0.19);
+  display: flex;
+  justify-content: center;
+  position: relative;
+
+  &__dark {
+    background: $darkBgFooter;
+    @include themeSwitchTransition;
+  }
+}
+
+.root {
+  width: $siteWidth;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-row-gap: 20px;
+  padding: 30px $sideSpace;
+  margin-top: auto;
+}
+
+.item {
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.link {
+  font-size: 16px;
+}
+
+@media screen and (max-width: $siteWidth) {
+  .root {
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+  }
+  .copyright {
+    order: 100;
+  }
+}
+
+@media screen and (max-width: $siteWidthTab) {
+  .root {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

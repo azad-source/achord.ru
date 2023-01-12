@@ -1,0 +1,42 @@
+@import 'styles/default.scss';
+@import 'styles/colors.scss';
+
+.root {
+  &__dark {
+    .textarea {
+      background: $darkBgInput;
+      color: $darkBgInputText;
+
+      &::placeholder {
+        color: $darkBgInputPlaceholder;
+      }
+    }
+  }
+}
+
+.textarea {
+  width: 100%;
+  display: block;
+  padding: 14px;
+  border: none;
+  border-bottom: 1px solid #dedede;
+  background-color: #fff;
+  font-size: 18px;
+  color: #666;
+  letter-spacing: 1px;
+  margin: 0 12px 12px 0;
+  outline: none;
+  resize: none;
+
+  &::placeholder {
+    color: #999;
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: $siteWidthMobile) {
+  .textarea {
+    font-size: 14px;
+    letter-spacing: unset;
+  }
+}

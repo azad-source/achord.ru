@@ -1,0 +1,63 @@
+@import 'styles/colors.scss';
+@import 'styles/default.scss';
+
+.root {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 60px;
+  height: 30px;
+  background-color: #fff;
+  border-radius: 30px;
+  padding: 2px;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  font-size: 12px;
+
+  &_right {
+    flex-grow: 1;
+    transition: flex 0.3s ease;
+  }
+
+  &_left {
+    transition: flex 0.3s ease;
+  }
+
+  &__right,
+  &__left {
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &__right {
+    left: 8px;
+  }
+
+  &__left {
+    right: 8px;
+  }
+
+  &__checkbox {
+    width: 50%;
+    height: 26px;
+    background-color: $defaultBg;
+    border-radius: 30px;
+    transition: flex 0.3s ease;
+  }
+
+  &__dark {
+    .root__checkbox {
+      background: $darkBg;
+      @include themeSwitchTransition;
+    }
+
+    .root__right,
+    .root__left {
+      color: $darkBg;
+      @include themeSwitchTransition;
+    }
+  }
+}

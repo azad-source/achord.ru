@@ -1,0 +1,74 @@
+@import 'styles/default.scss';
+@import 'styles/colors.scss';
+
+.root {
+  display: flex;
+  flex-direction: row;
+
+  &__dark {
+    a.menuItem {
+      color: $darkTextColor;
+      @include themeSwitchTransition;
+    }
+  }
+}
+
+.menuItem {
+  display: block;
+  padding: 0 20px;
+  line-height: 1;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-decoration: none;
+}
+
+a.menuItem {
+  color: $topMenuLink;
+  line-height: 1;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+.menuItemSign {
+  min-width: 85px;
+  font-size: 14px;
+  border-left: 1px solid #aaa;
+  margin-left: 15px !important;
+  padding-left: 15px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+a.menuItemSign {
+  color: #aaa;
+  line-height: 1.4;
+}
+
+.logoutLink {
+  padding: 0 15px;
+  min-width: unset;
+  color: $mainText;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.menuItemSignLink {
+  font-size: 14px;
+  color: $topMenuLink;
+  line-height: 1.5;
+  letter-spacing: 1px;
+  text-decoration: none;
+}
+
+@media screen and (max-width: $siteWidthMobile) {
+  .root {
+    display: none;
+  }
+}

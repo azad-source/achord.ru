@@ -1,0 +1,92 @@
+@import 'styles/colors.scss';
+@import 'styles/default.scss';
+
+.root {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  height: 40px;
+  align-items: center;
+
+  &__dark {
+    .loupe {
+      color: $darkTextColor;
+      @include themeSwitchTransition;
+    }
+
+    .input {
+      color: $darkBg;
+      @include themeSwitchTransition;
+
+      &:focus + .loupe {
+        color: $darkBg;
+        @include themeSwitchTransition;
+      }
+    }
+  }
+}
+
+.input {
+  width: 100%;
+  flex-grow: 1;
+  background: #fff;
+  box-shadow: inset 0px 10px 10px rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(202, 202, 202, 0.55);
+  border-radius: 18px;
+  transition: 0.3s;
+  margin: 0 !important;
+  box-sizing: border-box;
+  padding: 8px 15px 10px !important;
+  font-size: 16px;
+  opacity: 0;
+  outline: none;
+  color: $mainText;
+
+  &:focus {
+    transition: 0.3s;
+    opacity: 1;
+  }
+
+  &::placeholder {
+    font-size: 16px !important;
+  }
+}
+
+.label {
+  width: 100%;
+  position: relative;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  transition: 0.3s ease-in;
+}
+
+.loupe {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $mainText;
+  cursor: pointer;
+  transition: 0.2s;
+  box-sizing: border-box;
+  padding: 5px 13px;
+  width: 48px;
+  height: calc(100% - 2px);
+
+  &:hover {
+    transition: 0.2s;
+  }
+}
+
+@media screen and (max-width: $siteWidthMobile) {
+  .input {
+    opacity: 1;
+
+    & + .loupe {
+      color: #222;
+    }
+  }
+}

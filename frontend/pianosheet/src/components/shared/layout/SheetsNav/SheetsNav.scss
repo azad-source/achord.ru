@@ -1,0 +1,76 @@
+@import 'styles/colors.scss';
+@import 'styles/default.scss';
+
+.root {
+  display: block;
+  border-bottom: 1px solid #ccc;
+  padding: 15px $sideSpace;
+  margin-bottom: 10px;
+
+  &_isMenu {
+    padding: 15px 0;
+  }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  &__dark {
+    .letter {
+      color: $darkTextColor;
+      @include themeSwitchTransition;
+
+      &:hover {
+        background-color: $darkTextColor;
+        color: $darkBg;
+      }
+      &_active {
+        background: $darkBgContent;
+      }
+    }
+  }
+}
+
+.letter {
+  margin: 1px 1px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: $mainText;
+  font-size: 16px;
+  text-transform: uppercase;
+  border-radius: 50%;
+
+  &_inversion {
+    color: #fff;
+  }
+
+  &:hover {
+    background-color: $defaultBg;
+    color: #fff;
+    transition: 0.25s;
+  }
+
+  &_active {
+    background-color: $defaultBg;
+    color: #fff;
+  }
+}
+
+@media screen and (max-width: $siteWidthMobile) {
+  .root {
+    display: none;
+    padding: 15px $sideSpace_480;
+
+    &_isMenu {
+      display: block;
+      padding: 15px 0;
+    }
+  }
+}

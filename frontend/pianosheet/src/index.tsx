@@ -1,29 +1,21 @@
-import * as React from 'react';
-import ReactDOM from 'react-dom';
-import './styles/app.scss';
-import { createBrowserHistory } from 'history';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { App } from './components/App';
-import { applyMiddleware, createStore } from 'redux';
-import { rootReducer } from './store/rootReducer';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { store } from './app/store';
+import App from './App';
 import reportWebVitals from './reportWebVitals';
-import thunk from 'redux-thunk';
+import './index.css';
 
-const root = document.getElementById('root');
-const history = createBrowserHistory();
-const store = createStore(
-    rootReducer(history),
-    composeWithDevTools(applyMiddleware(thunk)),
-);
+const container = document.getElementById('root')!;
+const root = createRoot(container);
 
-const app = (
+root.render(
+  <React.StrictMode>
     <Provider store={store}>
-        <App />
+      <App />
     </Provider>
+  </React.StrictMode>
 );
-
-ReactDOM.render(app, root);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styles from './Pagination.scss';
 import cn from 'classnames';
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/rootReducer';
+import { useAppSelector } from 'redux/hooks';
+import { isDarkTheme } from 'redux/slices/app';
 
 interface Props {
     className?: string;
@@ -21,7 +21,7 @@ export const Pagination: React.FC<Props> = ({
 }) => {
     let items: number[] = [];
 
-    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+    const isDark = useAppSelector(isDarkTheme);
 
     for (let i = 1; i <= pageCount; i++) {
         items.push(i);

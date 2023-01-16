@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import styles from './Breadcrumbs.module.scss';
 import cn from 'classnames';
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/rootReducer';
+import { useAppSelector } from 'redux/hooks';
+import { isDarkTheme } from 'redux/slices/app';
 
 export interface BreadcrumbProps {
     caption: string;
@@ -15,12 +15,12 @@ interface Props {
 }
 
 export const Breadcrumbs: React.FC<Props> = ({ items }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
 
-    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+    const isDark = useAppSelector(isDarkTheme);
 
     const goToPage = (link?: string) => {
-        if (link) history.push(link);
+        if (link) navigate(link);
     };
 
     return (

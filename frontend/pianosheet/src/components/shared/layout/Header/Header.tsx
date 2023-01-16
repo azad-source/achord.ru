@@ -2,18 +2,17 @@ import React from 'react';
 import styles from './Header.module.scss';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Logo } from 'components/shared/icons/Logo';
-import { logout, useAuth } from 'api/UsersClient';
+import { logout, useAuth } from 'redux/api/UserClient';
 import { SearchField } from 'components/shared/layout/SearchField/SearchField';
 import { SiteName } from 'domain/SiteInfo';
 import { Menu } from 'components/shared/layout/Menu/Menu';
 import { Paths } from 'utils/routes/Paths';
-import { useDispatch, useSelector } from 'react-redux';
-import { usersAction } from 'store/usersActions';
 import { SwitchThemeToggle } from 'components/shared/SwitchThemeToggle/SwitchThemeToggle';
 import cn from 'classnames';
-import { RootState } from 'store/rootReducer';
-import { appAction } from 'store/appActions';
-import { MenuMobile } from '../Menu/MenuMobile';
+import { MenuMobile } from 'components/shared/layout/Menu/MenuMobile';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+import { isDarkTheme, switchTheme } from 'redux/slices/app';
+import { clearCurrentUser, getCurrentUser } from 'redux/slices/user';
 
 export type MenuItemType = { caption: React.ReactNode; link?: string; handler?: () => void };
 
@@ -22,22 +21,22 @@ export const Header = () => {
 
     const location = useLocation();
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+    const isDark = useAppSelector(isDarkTheme);
 
     const themeTogglerHandler = () => {
-        dispatch(appAction.switchTheme(isDark ? 'light' : 'dark'));
+        dispatch(switchTheme(isDark ? 'light' : 'dark'));
     };
 
     React.useEffect(() => {
         document.title = SiteName;
-        dispatch(usersAction.getCurrentUser(logged));
+        dispatch(getCurrentUser(logged));
     }, [location]);
 
     const logoutHandler = () => {
         logout();
-        dispatch(usersAction.clearCurrentUser());
+        dispatch(clearCurrentUser());
         window.location.pathname = '/sign-in';
     };
 

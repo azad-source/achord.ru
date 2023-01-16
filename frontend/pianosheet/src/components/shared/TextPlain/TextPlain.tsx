@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styles from './TextPlain.module.scss';
 import cn from 'classnames';
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/rootReducer';
+import { useAppSelector } from 'redux/hooks';
+import { isDarkTheme } from 'redux/slices/app';
 
 interface Props {
     children: React.ReactNode;
@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const TextPlain: React.FC<Props> = ({ children, size = 'middle', style, className }) => {
-    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+    const isDark = useAppSelector(isDarkTheme);
 
     return (
         <div

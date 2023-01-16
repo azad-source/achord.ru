@@ -1,15 +1,15 @@
 import * as React from 'react';
 import styles from './Spinner.scss';
 import cn from 'classnames';
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/rootReducer';
+import { isDarkTheme } from 'redux/slices/app';
+import { useAppSelector } from 'redux/hooks';
 
 interface Props {
     withBackground?: boolean;
 }
 
 export const Spinner: React.FC<Props> = ({ withBackground = false }) => {
-    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+    const isDark = useAppSelector(isDarkTheme);
 
     return (
         <div

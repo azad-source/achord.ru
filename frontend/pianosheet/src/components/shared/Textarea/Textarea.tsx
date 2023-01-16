@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styles from './Textarea.scss';
 import cn from 'classnames';
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/rootReducer';
+import { isDarkTheme } from 'redux/slices/app';
+import { useAppSelector } from 'redux/hooks';
 
 interface Props {
     value?: string;
@@ -41,7 +41,7 @@ interface Props {
 }
 
 export const Textarea: React.FC<Props> = ({ className, width, ...props }) => {
-    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+    const isDark = useAppSelector(isDarkTheme);
     const rootStyles = { width };
 
     return (

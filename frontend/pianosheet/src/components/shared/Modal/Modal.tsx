@@ -3,11 +3,12 @@ import * as React from 'react';
 import { Loader } from '../layout/Loader/Loader';
 import styles from './Modal.scss';
 import cn from 'classnames';
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/rootReducer';
+import { isDarkTheme } from 'redux/slices/app';
+import { useAppSelector } from 'redux/hooks';
 
 interface Props {
     title: string;
+    children: React.ReactNode;
     loadStatus?: QueryStatus;
     bottomPanel?: React.ReactNode;
     setScroll?: boolean;
@@ -24,7 +25,7 @@ export const Modal: React.FC<Props> = ({
     className,
     onClose,
 }) => {
-    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+    const isDark = useAppSelector(isDarkTheme);
 
     return (
         <div className={cn(styles.root, isDark && styles.root__dark)}>

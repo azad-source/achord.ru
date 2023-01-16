@@ -95,7 +95,7 @@ export const MenuMobile: React.FC<Props> = ({ items, isDark = false }) => {
                                         key={`idx_${idx}`}
                                         className={styles.menuItem}
                                         to={link || ''}
-                                        exact
+                                        // exact
                                         onClick={handler}
                                     >
                                         {caption}
@@ -104,7 +104,7 @@ export const MenuMobile: React.FC<Props> = ({ items, isDark = false }) => {
                             }
 
                             return (
-                                <div key={`idx_${idx}`} className={(styles.toggle)}>
+                                <div key={`idx_${idx}`} className={styles.toggle}>
                                     {caption}
                                 </div>
                             );

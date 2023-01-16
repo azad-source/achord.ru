@@ -2,13 +2,14 @@ import * as React from 'react';
 import cn from 'classnames';
 import styles from './Button.module.scss';
 import { MouseEvent } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/rootReducer';
+import { useAppSelector } from 'redux/hooks';
+import { isDarkTheme } from 'redux/slices/app';
 
 type ButtonUse = 'link' | 'default' | 'transparent';
 
 interface Props {
     className?: string;
+    children?: React.ReactNode;
     disabled?: boolean;
     use?: ButtonUse;
     type?: 'button' | 'submit' | 'reset' | undefined;
@@ -28,7 +29,7 @@ export const Button: React.FC<Props> = ({
     size = 'middle',
     ...props
 }) => {
-    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+    const isDark = useAppSelector(isDarkTheme);
 
     return (
         <button

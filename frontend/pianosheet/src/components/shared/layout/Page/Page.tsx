@@ -3,54 +3,54 @@ import cn from 'classnames';
 import styles from './Page.scss';
 import { QueryStatus } from 'domain/QueryStatus';
 import { Spinner } from 'components/shared/Spinner/Spinner';
-import { RootState } from 'store/rootReducer';
-import { connect, useSelector } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import { sheetsAction } from 'store/sheetsActions';
 import { SheetsNav } from '../SheetsNav/SheetsNav';
 import { SearchResults } from 'components/search/SearchResults';
 import { useToast } from 'components/shared/Toast/Toast';
 import { BreadcrumbProps, Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
-import { useHistory, useLocation } from 'react-router-dom';
-import { AuthorItemJsModel, AuthorRequestModel } from 'domain/api/JsModels';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { AuthorRequestModel } from 'domain/api/JsModels';
 import { Paths } from 'utils/routes/Paths';
 import { AuthorAddModal } from 'components/sheets/AuthorAddModal/AuthorAddModal';
 import { ErrorBoundary } from 'components/shared/ErrorBoundary/ErrorBoundary';
+import { isDarkTheme } from 'redux/slices/app';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+import { addAuthor } from 'redux/slices/author';
+import { RootState } from 'redux/store';
 
 interface Props {
     className?: string;
-    status?: QueryStatus;
-    sheetStatus?: QueryStatus;
-    userStatus?: QueryStatus;
+    loading?: boolean;
     children: React.ReactNode;
-    searchApplied: boolean;
     hideSheetsNav?: boolean;
-    warning?: string;
     breadcrumbs?: BreadcrumbProps[];
-    isSuperUser?: boolean;
     showAddAuthorBtn?: boolean;
-    addAuthor: (author: FormData) => Promise<AuthorItemJsModel | false>;
 }
 
-const PageFC: React.FC<Props> = ({
+export const Page: React.FC<Props> = ({
     className,
     children,
-    status = QueryStatus.initial(),
-    sheetStatus = QueryStatus.initial(),
-    userStatus = QueryStatus.initial(),
-    searchApplied,
+    loading = false,
     hideSheetsNav = false,
-    warning,
     breadcrumbs,
-    isSuperUser = false,
     showAddAuthorBtn = false,
-    addAuthor,
 }) => {
+    const dispatch = useAppDispatch();
     const [showAddAuthorModal, setShowAddAuthorModal] = React.useState<boolean>(false);
 
-    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+    const isDark = useAppSelector(isDarkTheme);
+    const { search, user, app } = useAppSelector(({ search, user, app }: RootState) => ({
+        search,
+        user,
+        app,
+    }));
+    const {
+        status: userStatus,
+        currentUser: { is_superuser: isSuperUser },
+    } = user;
+    const searchApplied = search.applied;
+    const appStatus = app.status;
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const { pathname } = useLocation();
 
@@ -68,9 +68,10 @@ const PageFC: React.FC<Props> = ({
 
     const { toast, push } = useToast();
 
-    React.useEffect(() => {
-        if (warning) push(warning);
-    }, [warning]);
+    // TODO: доделать
+    // React.useEffect(() => {
+    //     if (warning) push(warning);
+    // }, [warning]);
 
     const closeAddAuthorModal = () => setShowAddAuthorModal(false);
     const openAddAuthorModal = () => setShowAddAuthorModal(true);
@@ -81,11 +82,13 @@ const PageFC: React.FC<Props> = ({
         formData.append('name', options.name);
         formData.append('info', options.info);
         formData.append('genres', JSON.stringify(options.genres.map(({ id }) => id)));
-        addAuthor(formData).then((res) => {
-            if (res) {
-                history.push(Paths.getAuthorPath(res.name.charAt(0), res.alias));
-            }
-        });
+        dispatch(addAuthor(formData))
+            .unwrap()
+            .then((res) => {
+                if (res) {
+                    navigate(Paths.getAuthorPath(res.name.charAt(0), res.alias));
+                }
+            });
         closeAddAuthorModal();
     };
 
@@ -102,8 +105,8 @@ const PageFC: React.FC<Props> = ({
                             title="Добавить автора"
                         />
                     )}
-                    {status.isRequest() ? <Spinner /> : output}
-                    {(sheetStatus.isRequest() || userStatus.isRequest()) && (
+                    {loading ? <Spinner /> : output}
+                    {(appStatus.isRequest() || userStatus.isRequest()) && (
                         <Spinner withBackground />
                     )}
                 </div>
@@ -116,34 +119,23 @@ const PageFC: React.FC<Props> = ({
     );
 };
 
-type OwnProps = Pick<Props, 'className' | 'children' | 'status'>;
+// type OwnProps = Pick<Props, 'className' | 'children' | 'status'>;
 
-const mapStateToProps = (
-    {
-        sheets: { search, localStatus, warning },
-        users: { currentUser, status: userStatus },
-        app: { theme },
-    }: RootState,
-    { className, children, status }: OwnProps,
-) => ({
-    className,
-    sheetStatus: localStatus,
-    userStatus,
-    status,
-    children,
-    searchApplied: search.applied,
-    warning: warning,
-    isSuperUser: currentUser.is_superuser,
-    isDark: theme === 'dark',
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return bindActionCreators(
-        {
-            addAuthor: sheetsAction.addAuthor,
-        },
-        dispatch,
-    );
-};
-
-export const Page = connect(mapStateToProps, mapDispatchToProps)(PageFC);
+// const mapStateToProps = (
+//     {
+//         sheets: { search, localStatus, warning },
+//         users: { currentUser, status: userStatus },
+//         app: { theme },
+//     }: RootState,
+//     { className, children, status }: OwnProps,
+// ) => ({
+//     // className,
+//     sheetStatus: localStatus,
+//     userStatus,
+//     status,
+//     children,
+//     searchApplied: search.applied,
+//     warning: warning,
+//     isSuperUser: currentUser.is_superuser,
+//     isDark: theme === 'dark',
+// });

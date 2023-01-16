@@ -2,41 +2,31 @@ import * as React from 'react';
 import styles from './SearchField.scss';
 import cn from 'classnames';
 import { Loupe } from 'components/shared/icons/Loupe';
-import { bindActionCreators, Dispatch } from 'redux';
-import { connect } from 'react-redux';
-import { sheetsAction } from 'store/sheetsActions';
-import { RootState } from 'store/rootReducer';
-import { QueryStatus } from 'domain/QueryStatus';
 import { useLocation } from 'react-router';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+import { RootState } from 'redux/store';
+import { dropSearch, searchSheets } from 'redux/slices/search';
 
 interface Props {
     className?: string;
-    status: QueryStatus;
-    searchQuery: string;
     isDark?: boolean;
-    searchSheets: (query: string) => void;
-    dropSearch: () => void;
 }
 
-const SearchFieldFC: React.FC<Props> = ({
-    className,
-    status,
-    searchQuery,
-    isDark = false,
-    searchSheets,
-    dropSearch,
-}) => {
+export const SearchField: React.FC<Props> = ({ className, isDark = false }) => {
     const [input, setInput] = React.useState<string>('');
     let location = useLocation();
 
+    const dispatch = useAppDispatch();
+    const { status, query: searchQuery } = useAppSelector(({ search }: RootState) => search);
+
     function skipSearch() {
-        dropSearch();
+        dispatch(dropSearch());
         setInput('');
     }
 
     function searchHandler() {
         if (input && input.length > 2) {
-            searchSheets(input);
+            dispatch(searchSheets(input));
         }
     }
 
@@ -75,20 +65,3 @@ const SearchFieldFC: React.FC<Props> = ({
         </div>
     );
 };
-
-const mapStateToProps = (state: RootState) => ({
-    status: state.sheets.search.status,
-    searchQuery: state.sheets.search.query,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return bindActionCreators(
-        {
-            searchSheets: sheetsAction.searchSheets,
-            dropSearch: sheetsAction.dropSearch,
-        },
-        dispatch,
-    );
-};
-
-export const SearchField = connect(mapStateToProps, mapDispatchToProps)(SearchFieldFC);

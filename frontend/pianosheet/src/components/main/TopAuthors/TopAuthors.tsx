@@ -1,58 +1,34 @@
-import { SheetsClient } from 'api/SheetsClient';
-import {
-    AuthorItemJsModel,
-    AuthorJsModel,
-    SheetItemJsModel,
-    SheetJsModel,
-} from 'domain/api/JsModels';
+import { SheetItemJsModel } from 'domain/api/JsModels';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import { RootState } from 'store/rootReducer';
 import styles from './TopAuthors.scss';
 import { Paths } from 'utils/routes/Paths';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
-import { sheetsAction } from 'store/sheetsActions';
 import { Page } from 'components/shared/layout/Page/Page';
-import { QueryStatus } from 'domain/QueryStatus';
 import { SheetRow } from 'components/shared/SheetRow/SheetRow';
-import { useAuth } from 'api/UsersClient';
+import { useAuth } from 'redux/api/UserClient';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
+import { AuthorClient } from 'redux/api/AuthorClient';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+import { addAuthorToFavorite, editAuthor, getTopAuthors, removeAuthor } from 'redux/slices/author';
+import { addSheetToFavorite, getTopSheets } from 'redux/slices/sheet';
 
-interface Props {
-    authors: AuthorJsModel;
-    sheets: SheetJsModel;
-    status: QueryStatus;
-    isSuperUser?: boolean;
-    getAuthors: () => void;
-    getSheets: () => void;
-    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
-    removeAuthor: (authorId: number) => void;
-    addAuthorToFavorite: (authorId: number, isFavorite: boolean) => void;
-    addSheetToFavorite: (sheetId: number, isFavorite: boolean) => void;
-}
+export const TopAuthors = () => {
+    const dispatch = useAppDispatch();
 
-const TopAuthorsFC: React.FC<Props> = ({
-    authors,
-    sheets,
-    status,
-    isSuperUser = false,
-    getAuthors,
-    getSheets,
-    editAuthor,
-    removeAuthor,
-    addAuthorToFavorite,
-    addSheetToFavorite,
-}) => {
+    const { author, sheet, user } = useAppSelector((state) => state);
+    const { status: authorStatus, list: authors } = author;
+    const { status: sheetStatus, list: sheets } = sheet;
+    const isSuperUser = user.currentUser.is_superuser;
+
     React.useEffect(() => {
-        getAuthors();
-        getSheets();
+        dispatch(getTopAuthors());
+        dispatch(getTopSheets());
     }, []);
 
     const [logged] = useAuth();
 
     const openDownloadPage = (sheet: SheetItemJsModel) => {
-        SheetsClient.getAuthorById(sheet.author).then((author) => {
+        AuthorClient.getAuthorById(sheet.author).then((author) => {
             const path = Paths.getSheetDownloadPath(
                 author.name.charAt(0),
                 author.alias,
@@ -62,8 +38,24 @@ const TopAuthorsFC: React.FC<Props> = ({
         });
     };
 
+    const editAuthorHandler = (authorId: number, author: FormData) => {
+        return dispatch(editAuthor({ authorId, author })).unwrap();
+    };
+
+    const removeAuthorHandler = (authorId: number) => {
+        return dispatch(removeAuthor(authorId)).unwrap();
+    };
+
+    const addAuthorToFavHandler = (authorId: number, isFavorite: boolean) => {
+        return dispatch(addAuthorToFavorite({ authorId, isFavorite })).unwrap();
+    };
+
+    const addSheetToFavHandler = (sheetId: number, isFavorite: boolean) => {
+        return dispatch(addSheetToFavorite({ sheetId, isFavorite })).unwrap();
+    };
+
     return (
-        <Page hideSheetsNav status={status}>
+        <Page hideSheetsNav loading={authorStatus.isRequest() || sheetStatus.isRequest()}>
             <TextPlain className={styles.title}>Авторы</TextPlain>
             <div className={styles.topAuthors}>
                 {authors.results.map((author) => (
@@ -71,9 +63,9 @@ const TopAuthorsFC: React.FC<Props> = ({
                         key={author.id}
                         author={author}
                         className={styles.topAuthors_item}
-                        editAuthor={isSuperUser ? editAuthor : undefined}
-                        removeAuthor={isSuperUser ? removeAuthor : undefined}
-                        addAuthorToFavorite={logged ? addAuthorToFavorite : undefined}
+                        editAuthor={isSuperUser ? editAuthorHandler : undefined}
+                        removeAuthor={isSuperUser ? removeAuthorHandler : undefined}
+                        addAuthorToFavorite={logged ? addAuthorToFavHandler : undefined}
                     />
                 ))}
             </div>
@@ -85,36 +77,10 @@ const TopAuthorsFC: React.FC<Props> = ({
                         sheet={sheet}
                         index={index}
                         onOpen={openDownloadPage}
-                        addToFavorite={logged ? addSheetToFavorite : undefined}
+                        addToFavorite={logged ? addSheetToFavHandler : undefined}
                     />
                 ))}
             </div>
         </Page>
     );
 };
-
-const mapStateToProps = ({
-    sheets: { authors, sheets, status },
-    users: { currentUser },
-}: RootState) => ({
-    authors,
-    sheets,
-    status,
-    isSuperUser: currentUser.is_superuser,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return bindActionCreators(
-        {
-            getAuthors: sheetsAction.getTopAuthors,
-            getSheets: sheetsAction.getTopSheets,
-            editAuthor: sheetsAction.editAuthor,
-            removeAuthor: sheetsAction.removeAuthor,
-            addAuthorToFavorite: sheetsAction.addAuthorToFavorite,
-            addSheetToFavorite: sheetsAction.addSheetToFavorite,
-        },
-        dispatch,
-    );
-};
-
-export const TopAuthors = connect(mapStateToProps, mapDispatchToProps)(TopAuthorsFC);

@@ -5,7 +5,7 @@ import { QueryStatus } from 'domain/QueryStatus';
 import { errorData } from 'redux/api/apiConfig';
 import { AuthorClient } from 'redux/api/AuthorClient';
 import { blankAuthorItem, blankPagedResult } from 'utils/constants';
-import { getSheets, sheetSlice } from './sheet';
+import { getSheets } from './sheet';
 
 export interface AuthorState {
     list: AuthorJsModel;

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import cn from 'classnames';
 import styles from './Page.module.scss';
-import { QueryStatus } from 'domain/QueryStatus';
 import { Spinner } from 'components/shared/Spinner/Spinner';
 import { SheetsNav } from '../SheetsNav/SheetsNav';
 import { SearchResults } from 'components/search/SearchResults';
@@ -15,7 +14,6 @@ import { ErrorBoundary } from 'components/shared/ErrorBoundary/ErrorBoundary';
 import { isDarkTheme } from 'redux/slices/app';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { addAuthor } from 'redux/slices/author';
-import { RootState } from 'redux/store';
 
 interface Props {
     className?: string;
@@ -38,17 +36,13 @@ export const Page: React.FC<Props> = ({
     const [showAddAuthorModal, setShowAddAuthorModal] = React.useState<boolean>(false);
 
     const isDark = useAppSelector(isDarkTheme);
-    const { search, user, app } = useAppSelector(({ search, user, app }: RootState) => ({
-        search,
-        user,
-        app,
-    }));
+    const { search, user, app } = useAppSelector((state) => state);
     const {
         status: userStatus,
         currentUser: { is_superuser: isSuperUser },
     } = user;
     const searchApplied = search.applied;
-    const appStatus = app.status;
+    const { status: appStatus, warning } = app;
 
     const navigate = useNavigate();
 
@@ -68,10 +62,9 @@ export const Page: React.FC<Props> = ({
 
     const { toast, push } = useToast();
 
-    // TODO: доделать
-    // React.useEffect(() => {
-    //     if (warning) push(warning);
-    // }, [warning]);
+    React.useEffect(() => {
+        if (warning) push(warning);
+    }, [warning]);
 
     const closeAddAuthorModal = () => setShowAddAuthorModal(false);
     const openAddAuthorModal = () => setShowAddAuthorModal(true);
@@ -118,24 +111,3 @@ export const Page: React.FC<Props> = ({
         </div>
     );
 };
-
-// type OwnProps = Pick<Props, 'className' | 'children' | 'status'>;
-
-// const mapStateToProps = (
-//     {
-//         sheets: { search, localStatus, warning },
-//         users: { currentUser, status: userStatus },
-//         app: { theme },
-//     }: RootState,
-//     { className, children, status }: OwnProps,
-// ) => ({
-//     // className,
-//     sheetStatus: localStatus,
-//     userStatus,
-//     status,
-//     children,
-//     searchApplied: search.applied,
-//     warning: warning,
-//     isSuperUser: currentUser.is_superuser,
-//     isDark: theme === 'dark',
-// });

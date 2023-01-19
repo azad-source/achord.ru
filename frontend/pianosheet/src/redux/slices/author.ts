@@ -5,6 +5,7 @@ import { QueryStatus } from 'domain/QueryStatus';
 import { errorData } from 'redux/api/apiConfig';
 import { AuthorClient } from 'redux/api/AuthorClient';
 import { blankAuthorItem, blankPagedResult } from 'utils/constants';
+import { getSheets, sheetSlice } from './sheet';
 
 export interface AuthorState {
     list: AuthorJsModel;
@@ -98,9 +99,11 @@ export const getAuthorsByGenreAlias = createAsyncThunk<
 
 export const getAuthor = createAsyncThunk<AuthorJsModel, string, { rejectValue: AxiosError }>(
     'author/getAuthor',
-    async (alias) => {
+    async (alias, { dispatch }) => {
         try {
             const response = await AuthorClient.getAuthorByAlias(alias);
+            const author_alias = response.results[0].alias;
+            dispatch(getSheets({ author_alias }));
             return response;
         } catch (err: any) {
             return err;

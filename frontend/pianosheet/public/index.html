@@ -1,43 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+    <head>
+        <base href="/" />
+        <meta charset="utf-8" />
+        <link rel="icon" href="/media/favicon.ico" />
+        <link rel="apple-touch-icon" href="/media/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no" />
+        <meta name="theme-color" content="#533d6b" />
+        <meta
+            name="description"
+            content="На сайте представлены ноты современных и классических, отечественных и зарубежных композиторов"
+        />
+        <meta
+            name="keywords"
+            content="ноты, ноты для фортепиано, современные произведения, классика, зарубежные произведения, отечественные произвеения"
+        />
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React Redux App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+        <!-- Facebook Meta Tags -->
+        <meta property="og:url" content="https://achord.ru/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="A-Chord" />
+        <meta
+            property="og:description"
+            content="На сайте представлены ноты современных и классических, отечественных и зарубежных композиторов"
+        />
+        <meta property="og:image" content="https://achord.ru/favicon.png" />
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+        <!-- Twitter Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:domain" content="achord.ru" />
+        <meta property="twitter:url" content="https://achord.ru/" />
+        <meta name="twitter:title" content="A-Chord" />
+        <meta
+            name="twitter:description"
+            content="На сайте представлены ноты современных и классических, отечественных и зарубежных композиторов"
+        />
+        <meta name="twitter:image" content="https://achord.ru/favicon.png" />
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+        <meta name="yandex-verification" content="e2b1bf4e74f464ad" />
+        <!-- Yandex.Metrika counter -->
+        <script type="text/javascript">
+            (function (m, e, t, r, i, k, a) {
+                m[i] =
+                    m[i] ||
+                    function () {
+                        (m[i].a = m[i].a || []).push(arguments);
+                    };
+                m[i].l = 1 * new Date();
+                (k = e.createElement(t)),
+                    (a = e.getElementsByTagName(t)[0]),
+                    (k.async = 1),
+                    (k.src = r),
+                    a.parentNode.insertBefore(k, a);
+            })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym');
+
+            ym(86922372, 'init', {
+                clickmap: true,
+                trackLinks: true,
+                accurateTrackBounce: true,
+            });
+        </script>
+        <noscript
+            ><div>
+                <img
+                    src="https://mc.yandex.ru/watch/86922372"
+                    style="position: absolute; left: -9999px"
+                    alt=""
+                /></div
+        ></noscript>
+        <!-- /Yandex.Metrika counter -->
+        <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+        <title>A-Chord</title>
+    </head>
+    <body>
+        <noscript>You need to enable JavaScript to run this app.</noscript>
+        <div id="root"></div>
+    </body>
 </html>

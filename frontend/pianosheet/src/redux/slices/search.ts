@@ -4,7 +4,7 @@ import { AuthorJsModel, SheetJsModel } from 'domain/api/JsModels';
 import { QueryStatus } from 'domain/QueryStatus';
 import { errorData } from 'redux/api/apiConfig';
 import { SearchClient } from 'redux/api/SearchClient';
-import { blankSearch } from 'utils/constants';
+import { blankPagedResult, blankSearch } from 'utils/constants';
 
 export interface SearchState {
     sheets: SheetJsModel;
@@ -57,7 +57,11 @@ export const searchSlice = createSlice({
     initialState,
     reducers: {
         dropSearch: (state) => {
-            state = { ...blankSearch };
+            state.applied = false;
+            state.authors = { ...blankPagedResult };
+            state.sheets = { ...blankPagedResult };
+            state.query = '';
+            state.status = QueryStatus.initial();
         },
     },
     extraReducers: (builder) => {

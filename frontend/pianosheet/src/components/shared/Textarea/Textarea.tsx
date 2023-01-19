@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styles from './Textarea.scss';
+import styles from './Textarea.module.scss';
 import cn from 'classnames';
 import { isDarkTheme } from 'redux/slices/app';
 import { useAppSelector } from 'redux/hooks';

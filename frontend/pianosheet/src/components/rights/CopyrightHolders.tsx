@@ -2,7 +2,7 @@ import { Page } from 'components/shared/layout/Page/Page';
 import { Link } from 'components/shared/Link/Link';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 import * as React from 'react';
-import styles from './CopyrightHolders.scss';
+import styles from './CopyrightHolders.module.scss';
 
 export const CopyrightHolders = () => {
     const emailLink = (

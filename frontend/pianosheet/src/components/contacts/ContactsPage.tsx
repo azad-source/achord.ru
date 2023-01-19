@@ -1,7 +1,7 @@
 import { Page } from 'components/shared/layout/Page/Page';
 import { SiteName } from 'domain/SiteInfo';
 import * as React from 'react';
-import styles from './ContactsPage.scss';
+import styles from './ContactsPage.module.scss';
 import { EmailIcon } from 'components/shared/icons/EmailIcon';
 import { TelegramIcon } from 'components/shared/icons/TelegramIcon';
 import { WhatsAppIcon } from 'components/shared/icons/WhatsAppIcon';

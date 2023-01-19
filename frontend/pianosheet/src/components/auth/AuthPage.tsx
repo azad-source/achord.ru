@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Authorization } from 'components/shared/layout/Auth/Authorization';
 import { Page } from 'components/shared/layout/Page/Page';
-import styles from './AuthPage.scss';
+import styles from './AuthPage.module.scss';
 import { Registration } from 'components/shared/layout/Auth/Registration';
 import { SiteName } from 'domain/SiteInfo';
 import { SocialAuthParams } from 'domain/api/JsModels';

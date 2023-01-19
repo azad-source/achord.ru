@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styles from './SearchField.scss';
+import styles from './SearchField.module.scss';
 import cn from 'classnames';
 import { Loupe } from 'components/shared/icons/Loupe';
 import { useLocation } from 'react-router';

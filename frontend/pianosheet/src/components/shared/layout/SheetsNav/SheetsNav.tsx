@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { abcEn, abcRu } from 'utils/constants';
 import { Paths } from 'utils/routes/Paths';
 import cn from 'classnames';
-import styles from './SheetsNav.scss';
+import styles from './SheetsNav.module.scss';
 
 interface Props {
     isMenu?: boolean;

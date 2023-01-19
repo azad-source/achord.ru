@@ -4,7 +4,7 @@ import { Paths } from 'utils/routes/Paths';
 import { Spinner } from 'components/shared/Spinner/Spinner';
 import { Header } from 'components/shared/layout/Header/Header';
 import { Footer } from 'components/shared/layout/Footer/Footer';
-import styles from './AppRouter.scss';
+import styles from './AppRouter.module.scss';
 import { SheetsPage } from 'components/sheets/SheetsPage/SheetsPage';
 import { MainPage } from 'components/main/MainPage';
 import { AuthPage } from 'components/auth/AuthPage';

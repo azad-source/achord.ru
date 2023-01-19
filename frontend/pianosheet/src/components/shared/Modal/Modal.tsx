@@ -1,7 +1,7 @@
 import { QueryStatus } from 'domain/QueryStatus';
 import * as React from 'react';
 import { Loader } from '../layout/Loader/Loader';
-import styles from './Modal.scss';
+import styles from './Modal.module.scss';
 import cn from 'classnames';
 import { isDarkTheme } from 'redux/slices/app';
 import { useAppSelector } from 'redux/hooks';

@@ -1,7 +1,7 @@
 import { SheetItemJsModel } from 'domain/api/JsModels';
 import * as React from 'react';
 import { Button } from '../Button/Button';
-import styles from './SheetRow.scss';
+import styles from './SheetRow.module.scss';
 import cn from 'classnames';
 import { FavoriteIcon } from '../icons/FavoriteIcon';
 import { QueryStatus } from 'domain/QueryStatus';

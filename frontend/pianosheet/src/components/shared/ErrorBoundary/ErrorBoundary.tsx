@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styles from './ErrorBoundary.scss';
+import styles from './ErrorBoundary.module.scss';
 
 interface State {
     hasError: boolean;

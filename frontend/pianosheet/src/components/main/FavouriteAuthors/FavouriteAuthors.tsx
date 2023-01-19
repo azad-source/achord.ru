@@ -1,6 +1,6 @@
 import { SheetItemJsModel } from 'domain/api/JsModels';
 import * as React from 'react';
-import styles from './FavouriteAuthors.scss';
+import styles from './FavouriteAuthors.module.scss';
 import { Paths } from 'utils/routes/Paths';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { Page } from 'components/shared/layout/Page/Page';

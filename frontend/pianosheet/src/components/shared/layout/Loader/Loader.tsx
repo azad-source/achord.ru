@@ -1,6 +1,6 @@
 import * as React from 'react';
 import cn from 'classnames';
-import styles from './Loader.scss';
+import styles from './Loader.module.scss';
 import { QueryStatus } from 'domain/QueryStatus';
 import { Spinner } from 'components/shared/Spinner/Spinner';
 

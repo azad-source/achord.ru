@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styles from './Pagination.scss';
+import styles from './Pagination.module.scss';
 import cn from 'classnames';
 import { useAppSelector } from 'redux/hooks';
 import { isDarkTheme } from 'redux/slices/app';

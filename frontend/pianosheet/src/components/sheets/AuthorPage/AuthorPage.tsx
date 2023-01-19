@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styles from './AuthorPage.scss';
+import styles from './AuthorPage.module.scss';
 import cn from 'classnames';
 import { Page } from 'components/shared/layout/Page/Page';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';

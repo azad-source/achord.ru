@@ -1,6 +1,6 @@
 import { Spinner } from 'components/shared/Spinner/Spinner';
 import * as React from 'react';
-import styles from './SearchResults.scss';
+import styles from './SearchResults.module.scss';
 import cn from 'classnames';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';

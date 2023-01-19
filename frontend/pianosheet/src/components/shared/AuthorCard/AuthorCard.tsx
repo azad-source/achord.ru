@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styles from './AuthorCard.scss';
+import styles from './AuthorCard.module.scss';
 import cn from 'classnames';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';

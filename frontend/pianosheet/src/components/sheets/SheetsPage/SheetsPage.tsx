@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styles from './SheetsPage.scss';
+import styles from './SheetsPage.module.scss';
 import { Page } from 'components/shared/layout/Page/Page';
 import { SiteName } from 'domain/SiteInfo';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';

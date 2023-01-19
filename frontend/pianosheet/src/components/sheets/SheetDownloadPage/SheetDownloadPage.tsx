@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styles from './SheetDownloadPage.scss';
+import styles from './SheetDownloadPage.module.scss';
 import { useParams } from 'react-router-dom';
 import { Page } from 'components/shared/layout/Page/Page';
 import { Button } from 'components/shared/Button/Button';

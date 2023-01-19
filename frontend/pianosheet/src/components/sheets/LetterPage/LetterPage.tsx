@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Page } from 'components/shared/layout/Page/Page';
 import { useLocation, useParams } from 'react-router-dom';
-import styles from './LetterPage.scss';
+import styles from './LetterPage.module.scss';
 import { SiteName } from 'domain/SiteInfo';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { Paths } from 'utils/routes/Paths';

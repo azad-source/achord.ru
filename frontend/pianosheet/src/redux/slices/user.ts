@@ -155,7 +155,7 @@ export const getCurrentUser = createAsyncThunk<UserJsModel, boolean, { rejectVal
     async (logged, { getState }) => {
         const { currentUser } = getState() as UserState;
         try {
-            if (!currentUser.id && logged) {
+            if (!currentUser?.id && logged) {
                 const response = await UserClient.getUserData();
                 return response;
             }

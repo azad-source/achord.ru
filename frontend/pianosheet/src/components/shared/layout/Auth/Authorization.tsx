@@ -10,6 +10,7 @@ import { AuthGoogle } from 'components/auth/AuthGoogle';
 import { SocialAuthParams } from 'domain/api/JsModels';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 import { AxiosResponse } from 'axios';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 interface Props {
     status: QueryStatus;
@@ -87,8 +88,11 @@ export const Authorization: React.FC<Props> = ({
                         Забыли пароль?
                     </Button>
                 </div>
-                {/* TODO: опчинить компонент AuthGoogle */}
-                {/* {!!googleAuth && <AuthGoogle googleAuth={googleAuth} />} */}
+                {!!googleAuth && (
+                    <GoogleOAuthProvider clientId={googleAuth.clientId}>
+                        <AuthGoogle />
+                    </GoogleOAuthProvider>
+                )}
             </div>
 
             {!!errorMessage && <div className={styles.errorsMsg}>{errorMessage}</div>}

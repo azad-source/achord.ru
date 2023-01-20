@@ -34,17 +34,18 @@ export const getGenres = createAsyncThunk<
     }
 });
 
-export const getGenreByAlias = createAsyncThunk<GenreJsModel, string, { rejectValue: AxiosError }>(
-    'genre/getGenreByAlias',
-    async (alias) => {
-        try {
-            const response = await GenreClient.getGenreByAlias(alias);
-            return response;
-        } catch (err: any) {
-            return err;
-        }
-    },
-);
+export const getGenreByAlias = createAsyncThunk<
+    GenreItemJsModel,
+    string,
+    { rejectValue: AxiosError }
+>('genre/getGenreByAlias', async (alias) => {
+    try {
+        const response = await GenreClient.getGenreByAlias(alias);
+        return response;
+    } catch (err: any) {
+        return err;
+    }
+});
 
 export const genreSlice = createSlice({
     name: 'genre',
@@ -70,7 +71,7 @@ export const genreSlice = createSlice({
             })
             .addCase(getGenreByAlias.fulfilled, (state, action) => {
                 state.status = QueryStatus.success();
-                state.current = action.payload.results[0];
+                state.current = action.payload;
             })
             .addCase(getGenreByAlias.rejected, (state, action) => {
                 const { statusText, reason, error } = errorData(action.payload);

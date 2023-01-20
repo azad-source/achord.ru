@@ -25,12 +25,12 @@ import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { isDarkTheme, switchTheme } from 'redux/slices/app';
 
 const AppRouter = () => {
+    React.useEffect(() => {
+        dispatch(switchTheme());
+    }, []);
+    
     const dispatch = useAppDispatch();
     const isDark = useAppSelector(isDarkTheme);
-
-    React.useEffect(() => {
-        dispatch(switchTheme);
-    }, []);
 
     return (
         <div className={cn(styles.root, isDark && styles.root__dark)}>

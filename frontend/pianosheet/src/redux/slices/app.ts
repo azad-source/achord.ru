@@ -30,7 +30,7 @@ export const appSlice = createSlice({
     name: 'app',
     initialState,
     reducers: {
-        switchTheme: (state, action: PayloadAction<ThemeType>) => {
+        switchTheme: (state, action: PayloadAction<Nullable<ThemeType>>) => {
             const theme = action.payload ?? (window.localStorage.getItem('theme') as ThemeType);
             window.localStorage.setItem('theme', theme);
             state.theme = theme;

@@ -99,7 +99,7 @@ export const Page: React.FC<Props> = ({
                             title="Добавить автора"
                         />
                     )}
-                    {loading ? <SpinnerMusic /> : output}
+                    {loading ? <Spinner withBackground /> : output}
                     {(appStatus.isRequest() || userStatus.isRequest()) && (
                         <Spinner withBackground />
                     )}

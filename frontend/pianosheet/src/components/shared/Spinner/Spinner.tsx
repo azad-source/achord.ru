@@ -9,7 +9,7 @@ interface Props {
     withBackground?: boolean;
 }
 
-export const Spinner: React.FC<Props> = ({ type, ...props }) => {
+export const Spinner: React.FC<Props> = ({ type = 'music', ...props }) => {
     let spinner = <SpinnerGrid />;
 
     switch (type) {

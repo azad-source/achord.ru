@@ -13,7 +13,6 @@ import { ErrorBoundary } from 'components/shared/ErrorBoundary/ErrorBoundary';
 import { isDarkTheme } from 'redux/slices/app';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { addAuthor } from 'redux/slices/author';
-import { SpinnerMusic } from 'components/shared/SpinnerMusic/SpinnerMusic';
 import { Spinner } from 'components/shared/Spinner/Spinner';
 
 interface Props {

@@ -13,7 +13,10 @@ export interface UserState {
     isChangedPassword?: boolean;
 }
 
-const initialState: UserState = { currentUser: { id: null }, status: QueryStatus.initial() };
+const initialState: UserState = {
+    currentUser: { id: null, is_superuser: false },
+    status: QueryStatus.initial(),
+};
 
 interface RegistrationProps {
     email: string;
@@ -173,7 +176,7 @@ export const userSlice = createSlice({
             state.status = QueryStatus.initial();
         },
         clearCurrentUser: (state) => {
-            state.currentUser = { id: null };
+            state.currentUser = { id: null, is_superuser: false };
         },
     },
     extraReducers: (builder) => {
@@ -248,8 +251,9 @@ export const userSlice = createSlice({
             .addCase(getCurrentUser.pending, (state) => {
                 state.status = QueryStatus.request();
             })
-            .addCase(getCurrentUser.fulfilled, (state) => {
+            .addCase(getCurrentUser.fulfilled, (state, action) => {
                 state.status = QueryStatus.success();
+                state.currentUser = action.payload;
             })
             .addCase(getCurrentUser.rejected, (state, action) => {
                 const { statusText, reason, error } = errorData(action.payload);

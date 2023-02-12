@@ -31,7 +31,7 @@ export const Header = () => {
 
     React.useEffect(() => {
         document.title = SiteName;
-        dispatch(getCurrentUser(logged));
+        if (logged) dispatch(getCurrentUser(logged));
     }, [location]);
 
     const logoutHandler = () => {

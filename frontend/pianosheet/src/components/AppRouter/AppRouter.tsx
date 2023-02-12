@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
-import { SpinnerGrid } from 'components/shared/SpinnerGrid/SpinnerGrid';
 import { Header } from 'components/shared/layout/Header/Header';
 import { Footer } from 'components/shared/layout/Footer/Footer';
 import styles from './AppRouter.module.scss';
@@ -23,6 +22,7 @@ import { CopyrightHolders } from 'components/rights/CopyrightHolders';
 import cn from 'classnames';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { isDarkTheme, switchTheme } from 'redux/slices/app';
+import { Spinner } from 'components/shared/Spinner/Spinner';
 
 const AppRouter = () => {
     React.useEffect(() => {
@@ -34,7 +34,7 @@ const AppRouter = () => {
 
     return (
         <div className={cn(styles.root, isDark && styles.root__dark)}>
-            <React.Suspense fallback={<SpinnerGrid />}>
+            <React.Suspense fallback={<Spinner />}>
                 <BrowserRouter>
                     <Header />
                     <Routes>

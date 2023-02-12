@@ -5,7 +5,7 @@ export type TokenJsModel = {
 
 export type UserJsModel = {
     id: Nullable<string>;
-    is_superuser?: boolean;
+    is_superuser: boolean;
     first_name?: string;
     last_name?: string;
     avatar?: string;

@@ -1,35 +1,28 @@
 import * as React from 'react';
-import styles from './Spinner.module.scss';
-import cn from 'classnames';
-import { isDarkTheme } from 'redux/slices/app';
-import { useAppSelector } from 'redux/hooks';
+import { SpinnerEllipsis } from '../SpinnerEllipsis/SpinnerEllipsis';
+import { SpinnerGrid } from '../SpinnerGrid/SpinnerGrid';
+import { SpinnerMusic } from '../SpinnerMusic/SpinnerMusic';
 
+export type SpinnerType = 'grid' | 'ellipsis' | 'music';
 interface Props {
+    type?: SpinnerType;
     withBackground?: boolean;
 }
 
-export const Spinner: React.FC<Props> = ({ withBackground = false }) => {
-    const isDark = useAppSelector(isDarkTheme);
+export const Spinner: React.FC<Props> = ({ type, ...props }) => {
+    let spinner = <SpinnerGrid />;
 
-    return (
-        <div
-            className={cn(
-                styles.root,
-                isDark && styles.root__dark,
-                withBackground && styles.root_bg,
-            )}
-        >
-            <div className={styles.ldsGrid}>
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-            </div>
-        </div>
-    );
+    switch (type) {
+        case 'ellipsis':
+            spinner = <SpinnerEllipsis {...props} />;
+            break;
+        case 'music':
+            spinner = <SpinnerMusic {...props} />;
+            break;
+        case 'grid':
+            spinner = <SpinnerGrid {...props} />;
+            break;
+    }
+
+    return spinner;
 };

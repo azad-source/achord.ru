@@ -9,15 +9,18 @@ import { getSheets } from './sheet';
 
 export interface AuthorState {
     list: AuthorJsModel;
-    current?: AuthorItemJsModel;
+    current: AuthorItemJsModel;
     status: QueryStatus;
+    currentStatus: QueryStatus;
     query: string;
     applied: boolean;
 }
 
 const initialState: AuthorState = {
     list: { ...blankPagedResult },
+    current: { ...blankAuthorItem },
     status: QueryStatus.initial(),
+    currentStatus: QueryStatus.initial(),
     query: '',
     applied: false,
 };
@@ -164,7 +167,7 @@ export const addAuthorToFavorite = createAsyncThunk<
     AddAuthorToFavoriteProps,
     AddAuthorToFavoriteProps,
     { rejectValue: AxiosError }
->('author/addAuthorToFavorite', async (authorId, isFavorite) => {
+>('author/addAuthorToFavorite', async ({ authorId, isFavorite }) => {
     try {
         const favorite = new FormData();
         favorite.append('item', `${authorId}`);
@@ -172,9 +175,7 @@ export const addAuthorToFavorite = createAsyncThunk<
         const response = await AuthorClient.addAuthorToFavorite(favorite);
 
         if (response?.result === 'OK') {
-            setTimeout(() => {
-                return { authorId, isFavorite };
-            }, 100);
+            return { authorId, isFavorite };
         }
     } catch (err: any) {
         return err;
@@ -190,7 +191,7 @@ export const likeAuthor = createAsyncThunk<
     LikeAuthorProps,
     LikeAuthorProps,
     { rejectValue: AxiosError }
->('author/likeAuthor', async (authorId, hasLike) => {
+>('author/likeAuthor', async ({ authorId, hasLike }) => {
     try {
         const like = new FormData();
         like.append('item', `${authorId}`);
@@ -198,9 +199,7 @@ export const likeAuthor = createAsyncThunk<
         const response = await AuthorClient.addLikeToAuthor(like);
 
         if (response?.result === 'OK') {
-            setTimeout(() => {
-                return { authorId, hasLike };
-            }, 100);
+            return { authorId, hasLike };
         }
     } catch (err: any) {
         return err;
@@ -274,16 +273,16 @@ export const authorSlice = createSlice({
                 state.status = QueryStatus.error(statusText, reason, error);
             })
             .addCase(getAuthor.pending, (state) => {
-                state.status = QueryStatus.request();
+                state.currentStatus = QueryStatus.request();
                 state.current = { ...blankAuthorItem };
             })
             .addCase(getAuthor.fulfilled, (state, action) => {
-                state.status = QueryStatus.success();
+                state.currentStatus = QueryStatus.success();
                 state.current = action.payload.results[0];
             })
             .addCase(getAuthor.rejected, (state, action) => {
                 const { statusText, reason, error } = errorData(action.payload);
-                state.status = QueryStatus.error(statusText, reason, error);
+                state.currentStatus = QueryStatus.error(statusText, reason, error);
                 state.current = { ...blankAuthorItem };
             })
             .addCase(addAuthor.pending, (state) => {
@@ -298,19 +297,20 @@ export const authorSlice = createSlice({
                 state.status = QueryStatus.error(statusText, reason, error);
             })
             .addCase(editAuthor.pending, (state) => {
-                state.status = QueryStatus.request();
+                state.currentStatus = QueryStatus.request();
             })
             .addCase(editAuthor.fulfilled, (state, action) => {
-                state.status = QueryStatus.success();
+                state.currentStatus = QueryStatus.success();
                 const { author, authorId } = action.payload;
                 const modifed = state.list.results.map((item) =>
                     item.id === authorId ? author : item,
                 );
+                state.current = author;
                 state.list.results = modifed;
             })
             .addCase(editAuthor.rejected, (state, action) => {
                 const { statusText, reason, error } = errorData(action.payload);
-                state.status = QueryStatus.error(statusText, reason, error);
+                state.currentStatus = QueryStatus.error(statusText, reason, error);
             })
             .addCase(removeAuthor.pending, (state) => {
                 state.status = QueryStatus.request();
@@ -325,16 +325,18 @@ export const authorSlice = createSlice({
                 const { statusText, reason, error } = errorData(action.payload);
                 state.status = QueryStatus.error(statusText, reason, error);
             })
-            .addCase(addAuthorToFavorite.pending, (state) => {
-                state.status = QueryStatus.request();
+            .addCase(addAuthorToFavorite.pending, (state, action) => {
+                state.currentStatus = QueryStatus.request();
+                state.current.id = action.meta.arg.authorId;
             })
             .addCase(addAuthorToFavorite.fulfilled, (state, action) => {
-                state.status = QueryStatus.success();
+                state.currentStatus = QueryStatus.success();
                 const { authorId, isFavorite } = action.payload;
 
                 if (state.current?.id === authorId) {
                     state.current.favorite = isFavorite;
                 }
+
                 state.list.results.forEach(({ id }, index) => {
                     if (id === authorId) {
                         state.list.results[index].favorite = isFavorite;
@@ -343,19 +345,21 @@ export const authorSlice = createSlice({
             })
             .addCase(addAuthorToFavorite.rejected, (state, action) => {
                 const { statusText, reason, error } = errorData(action.payload);
-                state.status = QueryStatus.error(statusText, reason, error);
+                state.currentStatus = QueryStatus.error(statusText, reason, error);
             })
-            .addCase(likeAuthor.pending, (state) => {
-                state.status = QueryStatus.request();
+            .addCase(likeAuthor.pending, (state, action) => {
+                state.currentStatus = QueryStatus.request();
+                state.current.id = action.meta.arg.authorId;
             })
             .addCase(likeAuthor.fulfilled, (state, action) => {
-                state.status = QueryStatus.success();
+                state.currentStatus = QueryStatus.success();
                 const { authorId, hasLike } = action.payload;
 
                 if (state.current?.id === authorId) {
                     state.current.like = hasLike;
                     state.current.like_count = state.current.like_count + (hasLike ? 1 : -1);
                 }
+
                 state.list.results.forEach(({ id }, index) => {
                     if (id === authorId) {
                         state.list.results[index].like = hasLike;
@@ -366,7 +370,7 @@ export const authorSlice = createSlice({
             })
             .addCase(likeAuthor.rejected, (state, action) => {
                 const { statusText, reason, error } = errorData(action.payload);
-                state.status = QueryStatus.error(statusText, reason, error);
+                state.currentStatus = QueryStatus.error(statusText, reason, error);
             });
     },
 });

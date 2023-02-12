@@ -22,13 +22,14 @@ import { isDarkTheme } from 'redux/slices/app';
 import { useAuth } from 'redux/api/UserClient';
 import { addAuthorToFavorite, editAuthor, getAuthor, likeAuthor } from 'redux/slices/author';
 import { addSheet, addSheetToFavorite, getSheets } from 'redux/slices/sheet';
+import { QueryStatus } from 'domain/QueryStatus';
 
 export const AuthorPage = () => {
     const dispatch = useAppDispatch();
     const isDark = useAppSelector(isDarkTheme);
     const { author, user, sheet } = useAppSelector((state) => state);
-    const { current: currentAuthor, status } = author;
-    const { list: sheets } = sheet;
+    const { current: currentAuthor, currentStatus: authorStatus } = author;
+    const { list: sheets, current: currentSheet, status: sheetStatus } = sheet;
     const isSuperUser = user.currentUser.is_superuser;
 
     const [logged] = useAuth();
@@ -140,8 +141,15 @@ export const AuthorPage = () => {
         return dispatch(addSheetToFavorite({ sheetId, isFavorite })).unwrap();
     };
 
+    const getSheetStatus = (sheet: SheetItemJsModel): QueryStatus => {
+        if (sheet.id === currentSheet?.id) {
+            return sheetStatus;
+        }
+        return QueryStatus.initial();
+    };
+
     return (
-        <Page breadcrumbs={breadcrumbs} loading={status.isRequest()}>
+        <Page breadcrumbs={breadcrumbs} loading={authorStatus.isRequest()}>
             <div className={styles.title}>
                 <TextPlain className={styles.authorName}>{currentAuthor?.name}</TextPlain>
                 {logged && (
@@ -150,7 +158,7 @@ export const AuthorPage = () => {
                             <Button
                                 className={styles.editBtn}
                                 onClick={openEditModal}
-                                disabled={status.isRequest()}
+                                disabled={authorStatus.isRequest()}
                                 icon={<EditIcon />}
                                 use="link"
                             />
@@ -162,7 +170,7 @@ export const AuthorPage = () => {
                             )}
                             onClick={swithLikeAuthor}
                             title={currentAuthor?.like ? 'Убрать лайк' : 'Поставить лайк'}
-                            disabled={status.isRequest()}
+                            disabled={authorStatus.isRequest()}
                             use="link"
                         >
                             {currentAuthor?.like_count}{' '}
@@ -180,7 +188,7 @@ export const AuthorPage = () => {
                                     ? 'Убрать из избранных'
                                     : 'Добавить в избранное'
                             }
-                            disabled={status.isRequest()}
+                            disabled={authorStatus.isRequest()}
                             use="link"
                         >
                             <FavoriteIcon active={currentAuthor?.favorite} />
@@ -233,6 +241,7 @@ export const AuthorPage = () => {
                                 addToFavorite={logged ? addSheetToFavHandler : undefined}
                                 type="second"
                                 hidePosition
+                                status={getSheetStatus(sheet)}
                             />
                         ))
                     ) : (

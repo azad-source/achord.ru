@@ -7,13 +7,14 @@ import { FavoriteIcon } from '../icons/FavoriteIcon';
 import { QueryStatus } from 'domain/QueryStatus';
 import { useAppSelector } from 'redux/hooks';
 import { isDarkTheme } from 'redux/slices/app';
+import { Loader } from '../layout/Loader/Loader';
 
 type SheetRowType = 'main' | 'second';
 
 interface Props {
     sheet: SheetItemJsModel;
     index: number;
-    status?: QueryStatus;
+    status: QueryStatus;
     type?: SheetRowType;
     hidePosition?: boolean;
     onOpen: (sheet: SheetItemJsModel) => void;
@@ -23,7 +24,7 @@ interface Props {
 export const SheetRow: React.FC<Props> = ({
     sheet,
     index,
-    status = QueryStatus.initial(),
+    status,
     type = 'main',
     hidePosition = false,
     onOpen,
@@ -46,10 +47,12 @@ export const SheetRow: React.FC<Props> = ({
     };
 
     return (
-        <div
+        <Loader
             className={cn(styles.root, styles[`root_${type}`], isDark && styles.root__dark)}
             onClick={() => onOpen(sheet)}
             style={type === 'main' ? style : undefined}
+            loadStatus={status}
+            spinnerType="ellipsis"
         >
             <div className={styles.caption}>
                 {!hidePosition && <span>{index + 1}. </span>} {sheet.name}
@@ -65,6 +68,6 @@ export const SheetRow: React.FC<Props> = ({
                     <FavoriteIcon active={favorite} />
                 </Button>
             )}
-        </div>
+        </Loader>
     );
 };

@@ -11,11 +11,13 @@ import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 import { useAuth } from 'redux/api/UserClient';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { addAuthorToFavorite, editAuthor, getAuthors, removeAuthor } from 'redux/slices/author';
+import { AuthorItemJsModel } from 'domain/api/JsModels';
+import { QueryStatus } from 'domain/QueryStatus';
 
 export const LetterPage = () => {
     const dispatch = useAppDispatch();
     const { author, user } = useAppSelector((state) => state);
-    const { list: authors, status } = author;
+    const { list: authors, status, currentStatus: currentAuthorStatus, current } = author;
     const isSuperUser = user.currentUser.is_superuser;
 
     const { letter = '' } = useParams<{ letter: string }>();
@@ -58,6 +60,13 @@ export const LetterPage = () => {
         return dispatch(addAuthorToFavorite({ authorId, isFavorite })).unwrap();
     };
 
+    const getCardStatus = (author: AuthorItemJsModel): QueryStatus => {
+        if (author.id === current?.id) {
+            return currentAuthorStatus;
+        }
+        return QueryStatus.initial();
+    };
+
     return (
         <Page breadcrumbs={breadcrumbs} showAddAuthorBtn loading={status.isRequest()}>
             <TextPlain className={styles.title}>{letter.toUpperCase()}</TextPlain>
@@ -70,6 +79,7 @@ export const LetterPage = () => {
                         editAuthor={isSuperUser ? editAuthorHandler : undefined}
                         removeAuthor={isSuperUser ? removeAuthorHandler : undefined}
                         addAuthorToFavorite={logged ? addAuthorToFavHandler : undefined}
+                        status={getCardStatus(author)}
                     />
                 ))}
             </div>

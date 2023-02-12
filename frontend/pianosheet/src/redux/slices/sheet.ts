@@ -4,18 +4,22 @@ import { SheetItemJsModel, SheetJsModel } from 'domain/api/JsModels';
 import { QueryStatus } from 'domain/QueryStatus';
 import { errorData } from 'redux/api/apiConfig';
 import { SheetClient } from 'redux/api/SheetClient';
-import { blankPagedResult } from 'utils/constants';
+import { blankPagedResult, blankSheetItem } from 'utils/constants';
 
 export interface SheetState {
     list: SheetJsModel;
+    current: SheetItemJsModel;
     status: QueryStatus;
+    currentStatus: QueryStatus;
     query: string;
     applied: boolean;
 }
 
 const initialState: SheetState = {
     list: { ...blankPagedResult },
+    current: { ...blankSheetItem },
     status: QueryStatus.initial(),
+    currentStatus: QueryStatus.initial(),
     query: '',
     applied: false,
 };
@@ -97,7 +101,7 @@ export const addSheetToFavorite = createAsyncThunk<
     AddSheetToFavoriteProps,
     AddSheetToFavoriteProps,
     { rejectValue: AxiosError }
->('sheet/addSheetToFavorite', async (sheetId, isFavorite) => {
+>('sheet/addSheetToFavorite', async ({ sheetId, isFavorite }) => {
     try {
         const favorite = new FormData();
         favorite.append('item', `${sheetId}`);
@@ -105,9 +109,7 @@ export const addSheetToFavorite = createAsyncThunk<
         const response = await SheetClient.addSheetToFavorite(favorite);
 
         if (response?.result === 'OK') {
-            setTimeout(() => {
-                return { sheetId, isFavorite };
-            }, 100);
+            return { sheetId, isFavorite };
         }
     } catch (err: any) {
         return err;
@@ -123,7 +125,7 @@ export const likeSheet = createAsyncThunk<
     LikeSheetProps,
     LikeSheetProps,
     { rejectValue: AxiosError }
->('sheet/likeSheet', async (sheetId, hasLike) => {
+>('sheet/likeSheet', async ({ sheetId, hasLike }) => {
     try {
         const like = new FormData();
         like.append('item', `${sheetId}`);
@@ -131,9 +133,7 @@ export const likeSheet = createAsyncThunk<
         const response = await SheetClient.addLikeToSheet(like);
 
         if (response?.result === 'OK') {
-            setTimeout(() => {
-                return { sheetId, hasLike };
-            }, 100);
+            return { sheetId, hasLike };
         }
     } catch (err: any) {
         return err;
@@ -205,11 +205,12 @@ export const sheetSlice = createSlice({
                 const { statusText, reason, error } = errorData(action.payload);
                 state.status = QueryStatus.error(statusText, reason, error);
             })
-            .addCase(addSheetToFavorite.pending, (state) => {
-                state.status = QueryStatus.request();
+            .addCase(addSheetToFavorite.pending, (state, action) => {
+                state.currentStatus = QueryStatus.request();
+                state.current.id = action.meta.arg.sheetId;
             })
             .addCase(addSheetToFavorite.fulfilled, (state, action) => {
-                state.status = QueryStatus.success();
+                state.currentStatus = QueryStatus.success();
                 const { sheetId, isFavorite } = action.payload;
 
                 state.list.results.forEach(({ id }, index) => {
@@ -220,13 +221,14 @@ export const sheetSlice = createSlice({
             })
             .addCase(addSheetToFavorite.rejected, (state, action) => {
                 const { statusText, reason, error } = errorData(action.payload);
-                state.status = QueryStatus.error(statusText, reason, error);
+                state.currentStatus = QueryStatus.error(statusText, reason, error);
             })
-            .addCase(likeSheet.pending, (state) => {
-                state.status = QueryStatus.request();
+            .addCase(likeSheet.pending, (state, action) => {
+                state.currentStatus = QueryStatus.request();
+                state.current.id = action.meta.arg.sheetId;
             })
             .addCase(likeSheet.fulfilled, (state, action) => {
-                state.status = QueryStatus.success();
+                state.currentStatus = QueryStatus.success();
                 const { sheetId, hasLike } = action.payload;
 
                 state.list.results.forEach(({ id }, index) => {
@@ -239,7 +241,7 @@ export const sheetSlice = createSlice({
             })
             .addCase(likeSheet.rejected, (state, action) => {
                 const { statusText, reason, error } = errorData(action.payload);
-                state.status = QueryStatus.error(statusText, reason, error);
+                state.currentStatus = QueryStatus.error(statusText, reason, error);
             });
     },
 });

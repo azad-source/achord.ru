@@ -1,7 +1,6 @@
 import * as React from 'react';
 import cn from 'classnames';
 import styles from './Page.module.scss';
-import { Spinner } from 'components/shared/Spinner/Spinner';
 import { SheetsNav } from '../SheetsNav/SheetsNav';
 import { SearchResults } from 'components/search/SearchResults';
 import { useToast } from 'components/shared/Toast/Toast';
@@ -14,6 +13,8 @@ import { ErrorBoundary } from 'components/shared/ErrorBoundary/ErrorBoundary';
 import { isDarkTheme } from 'redux/slices/app';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { addAuthor } from 'redux/slices/author';
+import { SpinnerMusic } from 'components/shared/SpinnerMusic/SpinnerMusic';
+import { Spinner } from 'components/shared/Spinner/Spinner';
 
 interface Props {
     className?: string;
@@ -98,7 +99,7 @@ export const Page: React.FC<Props> = ({
                             title="Добавить автора"
                         />
                     )}
-                    {loading ? <Spinner /> : output}
+                    {loading ? <SpinnerMusic /> : output}
                     {(appStatus.isRequest() || userStatus.isRequest()) && (
                         <Spinner withBackground />
                     )}

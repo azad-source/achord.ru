@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
-import { Spinner } from 'components/shared/Spinner/Spinner';
+import { SpinnerGrid } from 'components/shared/SpinnerGrid/SpinnerGrid';
 import { Header } from 'components/shared/layout/Header/Header';
 import { Footer } from 'components/shared/layout/Footer/Footer';
 import styles from './AppRouter.module.scss';
@@ -34,7 +34,7 @@ const AppRouter = () => {
 
     return (
         <div className={cn(styles.root, isDark && styles.root__dark)}>
-            <React.Suspense fallback={<Spinner />}>
+            <React.Suspense fallback={<SpinnerGrid />}>
                 <BrowserRouter>
                     <Header />
                     <Routes>

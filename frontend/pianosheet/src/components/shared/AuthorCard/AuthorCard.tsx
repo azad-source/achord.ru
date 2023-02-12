@@ -11,10 +11,13 @@ import { FavoriteIcon } from '../icons/FavoriteIcon';
 import { Button } from '../Button/Button';
 import { isDarkTheme } from 'redux/slices/app';
 import { useAppSelector } from 'redux/hooks';
+import { Loader } from '../layout/Loader/Loader';
+import { QueryStatus } from 'domain/QueryStatus';
 
 interface Props {
     className?: string;
     author: AuthorItemJsModel;
+    status: QueryStatus;
     editAuthor?: (
         authorId: number,
         author: FormData,
@@ -26,6 +29,7 @@ interface Props {
 export const AuthorCard: React.FC<Props> = ({
     className,
     author,
+    status,
     editAuthor,
     removeAuthor,
     addAuthorToFavorite,
@@ -112,7 +116,7 @@ export const AuthorCard: React.FC<Props> = ({
     const menuEnable = !!editAuthor || !!removeAuthor;
 
     return (
-        <>
+        <Loader loadStatus={status}>
             <NavLink
                 className={cn(styles.root, isDark && styles.root__dark, className)}
                 to={authorPath}
@@ -166,7 +170,7 @@ export const AuthorCard: React.FC<Props> = ({
                             use="link"
                             onClick={addToFavorite}
                             title={favorite ? 'Убрать из избранных' : 'Добавить в избранное'}
-                            disabled={false}
+                            disabled={status.isRequest()}
                         >
                             <FavoriteIcon active={favorite} />
                         </Button>
@@ -204,6 +208,6 @@ export const AuthorCard: React.FC<Props> = ({
                     text={`Вы уверены, что хотите удалить ${author.name}?`}
                 />
             )}
-        </>
+        </Loader>
     );
 };

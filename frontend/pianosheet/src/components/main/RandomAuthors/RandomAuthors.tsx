@@ -1,4 +1,4 @@
-import { SheetItemJsModel } from 'domain/api/JsModels';
+import { AuthorItemJsModel, SheetItemJsModel } from 'domain/api/JsModels';
 import * as React from 'react';
 import styles from './RandomAuthors.module.scss';
 import { Paths } from 'utils/routes/Paths';
@@ -16,13 +16,24 @@ import {
 } from 'redux/slices/author';
 import { addSheetToFavorite, getRandomSheets } from 'redux/slices/sheet';
 import { AuthorClient } from 'redux/api/AuthorClient';
+import { QueryStatus } from 'domain/QueryStatus';
 
 export const RandomAuthors = () => {
     const dispatch = useAppDispatch();
 
     const { author, sheet, user } = useAppSelector((state) => state);
-    const { status: authorStatus, list: authors } = author;
-    const { status: sheetStatus, list: sheets } = sheet;
+    const {
+        status: authorStatus,
+        list: authors,
+        currentStatus: currentAuthorStatus,
+        current: currentAuthor,
+    } = author;
+    const {
+        status: sheetStatus,
+        list: sheets,
+        currentStatus: currentSheetStatus,
+        current: currentSheet,
+    } = sheet;
     const isSuperUser = user.currentUser.is_superuser;
 
     React.useEffect(() => {
@@ -59,6 +70,20 @@ export const RandomAuthors = () => {
         return dispatch(addSheetToFavorite({ sheetId, isFavorite })).unwrap();
     };
 
+    const getCardStatus = (author: AuthorItemJsModel): QueryStatus => {
+        if (author.id === currentAuthor?.id) {
+            return currentAuthorStatus;
+        }
+        return QueryStatus.initial();
+    };
+
+    const getSheetStatus = (sheet: SheetItemJsModel): QueryStatus => {
+        if (sheet.id === currentSheet?.id) {
+            return currentSheetStatus;
+        }
+        return QueryStatus.initial();
+    };
+
     return (
         <Page hideSheetsNav loading={authorStatus.isRequest() || sheetStatus.isRequest()}>
             <TextPlain className={styles.title}>Авторы</TextPlain>
@@ -71,6 +96,7 @@ export const RandomAuthors = () => {
                         editAuthor={isSuperUser ? editAuthorHandler : undefined}
                         removeAuthor={isSuperUser ? removeAuthorHandler : undefined}
                         addAuthorToFavorite={logged ? addAuthorToFavHandler : undefined}
+                        status={getCardStatus(author)}
                     />
                 ))}
             </div>
@@ -83,6 +109,7 @@ export const RandomAuthors = () => {
                         index={index}
                         onOpen={openDownloadPage}
                         addToFavorite={logged ? addSheetToFavHandler : undefined}
+                        status={getSheetStatus(sheet)}
                     />
                 ))}
             </div>

@@ -1,4 +1,4 @@
-import { Spinner } from 'components/shared/Spinner/Spinner';
+import { SpinnerGrid } from 'components/shared/SpinnerGrid/SpinnerGrid';
 import * as React from 'react';
 import styles from './SearchResults.module.scss';
 import cn from 'classnames';
@@ -6,7 +6,7 @@ import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { useLocation } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
-import { SheetItemJsModel } from 'domain/api/JsModels';
+import { AuthorItemJsModel, SheetItemJsModel } from 'domain/api/JsModels';
 import { SiteName } from 'domain/SiteInfo';
 import { useAuth } from 'redux/api/UserClient';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
@@ -18,11 +18,17 @@ import { dropSearch, searchAuthorsByPage, searchSheetsByPage } from 'redux/slice
 import { AuthorClient } from 'redux/api/AuthorClient';
 import { addSheetToFavorite } from 'redux/slices/sheet';
 import { addAuthorToFavorite, editAuthor, removeAuthor } from 'redux/slices/author';
+import { QueryStatus } from 'domain/QueryStatus';
 
 export const SearchResults = () => {
     const dispatch = useAppDispatch();
 
-    const { user, search } = useAppSelector((state) => state);
+    const {
+        user,
+        search,
+        author: { currentStatus: authorStatus, current },
+        sheet: { currentStatus: sheetStatus, current: currentSheet },
+    } = useAppSelector((state) => state);
     const isSuperUser = user.currentUser.is_superuser;
 
     let output: React.ReactNode;
@@ -80,9 +86,23 @@ export const SearchResults = () => {
         return dispatch(addSheetToFavorite({ sheetId, isFavorite })).unwrap();
     };
 
+    const getCardStatus = (author: AuthorItemJsModel): QueryStatus => {
+        if (author.id === current?.id) {
+            return authorStatus;
+        }
+        return QueryStatus.initial();
+    };
+
+    const getSheetStatus = (sheet: SheetItemJsModel): QueryStatus => {
+        if (sheet.id === currentSheet?.id) {
+            return sheetStatus;
+        }
+        return QueryStatus.initial();
+    };
+
     if (search.sheets.results.length > 0 || search.authors.results.length > 0) {
         output = search.status.isRequest() ? (
-            <Spinner />
+            <SpinnerGrid />
         ) : (
             <div className={cn(styles.root, isDark && styles.root__dark)}>
                 <TextPlain className={styles.title}>Результаты поиска</TextPlain>
@@ -103,6 +123,7 @@ export const SearchResults = () => {
                                     index={index}
                                     onOpen={openDownloadPage}
                                     addToFavorite={logged ? addSheetToFavHandler : undefined}
+                                    status={getSheetStatus(sheet)}
                                 />
                             ))}
                         </div>
@@ -131,6 +152,7 @@ export const SearchResults = () => {
                                     editAuthor={isSuperUser ? editAuthorHandler : undefined}
                                     removeAuthor={isSuperUser ? removeAuthorHandler : undefined}
                                     addAuthorToFavorite={logged ? addAuthorToFavHandler : undefined}
+                                    status={getCardStatus(author)}
                                 />
                             ))}
                         </div>

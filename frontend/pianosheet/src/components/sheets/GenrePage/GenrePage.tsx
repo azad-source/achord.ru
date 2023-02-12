@@ -17,12 +17,19 @@ import {
     getAuthorsByGenreAlias,
     removeAuthor,
 } from 'redux/slices/author';
+import { AuthorItemJsModel } from 'domain/api/JsModels';
+import { QueryStatus } from 'domain/QueryStatus';
 
 export const GenrePage = () => {
     const dispatch = useAppDispatch();
     const { genre, author, user } = useAppSelector((state) => state);
     const { current: currentGenre, status: genreStatus } = genre;
-    const { list: authors, status: authorStatus } = author;
+    const {
+        list: authors,
+        status: authorStatus,
+        currentStatus: currentAuthorStatus,
+        current,
+    } = author;
     const isSuperUser = user.currentUser.is_superuser;
 
     const { genreAlias } = useParams<{ genreAlias: string }>();
@@ -80,6 +87,13 @@ export const GenrePage = () => {
         return dispatch(addAuthorToFavorite({ authorId, isFavorite })).unwrap();
     };
 
+    const getCardStatus = (author: AuthorItemJsModel): QueryStatus => {
+        if (author.id === current?.id) {
+            return currentAuthorStatus;
+        }
+        return QueryStatus.initial();
+    };
+
     return (
         <Page
             breadcrumbs={breadcrumbs}
@@ -96,6 +110,7 @@ export const GenrePage = () => {
                         editAuthor={isSuperUser ? editAuthorHandler : undefined}
                         removeAuthor={isSuperUser ? removeAuthorHandler : undefined}
                         addAuthorToFavorite={logged ? addAuthorToFavHandler : undefined}
+                        status={getCardStatus(author)}
                     />
                 ))}
             </div>

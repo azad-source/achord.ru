@@ -59,6 +59,7 @@ export const SheetDownloadPage = () => {
         let link = document.createElement('a');
         link.setAttribute('href', file);
         link.setAttribute('download', file);
+        link.setAttribute('target', '_blank');
         link.click();
     };
 

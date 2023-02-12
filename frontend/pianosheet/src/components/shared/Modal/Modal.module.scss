@@ -58,9 +58,9 @@
 .modal {
   background-color: #fff;
   position: fixed;
-  top: 45%;
+  top: 2%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   width: 600px;
   height: auto;
   z-index: 15;
@@ -80,8 +80,15 @@
 
   .scrollWrapper {
     display: flex;
+    top: 0;
+    position: absolute;
     flex-direction: column;
     height: 100%;
+    overflow-y: scroll;
+  }
+
+  body {
+    overflow: hidden;
   }
 
   &_title {

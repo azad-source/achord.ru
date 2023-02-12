@@ -29,7 +29,7 @@ export const AuthorPage = () => {
     const isDark = useAppSelector(isDarkTheme);
     const { author, user, sheet } = useAppSelector((state) => state);
     const { current: currentAuthor, currentStatus: authorStatus } = author;
-    const { list: sheets, current: currentSheet, status: sheetStatus } = sheet;
+    const { list: sheets, current: currentSheet, currentStatus: sheetStatus } = sheet;
     const isSuperUser = user.currentUser.is_superuser;
 
     const [logged] = useAuth();

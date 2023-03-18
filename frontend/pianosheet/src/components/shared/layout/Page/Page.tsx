@@ -6,14 +6,16 @@ import { SearchResults } from 'components/search/SearchResults';
 import { useToast } from 'components/shared/Toast/Toast';
 import { BreadcrumbProps, Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { AuthorRequestModel } from 'domain/api/JsModels';
 import { Paths } from 'utils/routes/Paths';
 import { AuthorAddModal } from 'components/sheets/AuthorAddModal/AuthorAddModal';
 import { ErrorBoundary } from 'components/shared/ErrorBoundary/ErrorBoundary';
-import { isDarkTheme } from 'redux/slices/app';
+import { appSelector, isDarkTheme } from 'redux/slices/appSlice';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { addAuthor } from 'redux/slices/author';
 import { Spinner } from 'components/shared/Spinner/Spinner';
+import { useAddAuthorMutation } from 'redux/api/authorApi';
+import { AddAuthorRequest } from 'redux/models/authorModels';
+import { dropSearch, searchSelector } from 'redux/slices/searchSlice';
+import { currentUserSelector } from 'redux/slices/userSlice';
 
 interface Props {
     className?: string;
@@ -32,35 +34,24 @@ export const Page: React.FC<Props> = ({
     breadcrumbs,
     showAddAuthorBtn = false,
 }) => {
-    const dispatch = useAppDispatch();
+    const [addAuthor] = useAddAuthorMutation();
     const [showAddAuthorModal, setShowAddAuthorModal] = React.useState<boolean>(false);
 
+    const { applied: searchApplied } = useAppSelector(searchSelector);
+    const { is_superuser: isSuperUser } = useAppSelector(currentUserSelector);
+    const { warning } = useAppSelector(appSelector);
     const isDark = useAppSelector(isDarkTheme);
-    const { search, user, app } = useAppSelector((state) => state);
-    const {
-        status: userStatus,
-        currentUser: { is_superuser: isSuperUser },
-    } = user;
-    const searchApplied = search.applied;
-    const { status: appStatus, warning } = app;
 
     const navigate = useNavigate();
-
+    const { toast, push } = useToast();
     const { pathname } = useLocation();
+
+    const dispatch = useAppDispatch();
 
     React.useEffect(() => {
         window.scrollTo(0, 0);
+        dispatch(dropSearch());
     }, [pathname]);
-
-    let output: React.ReactNode = '';
-
-    if (searchApplied) {
-        output = <SearchResults />;
-    } else {
-        output = children;
-    }
-
-    const { toast, push } = useToast();
 
     React.useEffect(() => {
         if (warning) push(warning);
@@ -69,13 +60,13 @@ export const Page: React.FC<Props> = ({
     const closeAddAuthorModal = () => setShowAddAuthorModal(false);
     const openAddAuthorModal = () => setShowAddAuthorModal(true);
 
-    const addAuthorHandler = (options: AuthorRequestModel) => {
+    const addAuthorHandler = (options: AddAuthorRequest) => {
         let formData = new FormData();
         formData.append('preview', options.preview);
         formData.append('name', options.name);
         formData.append('info', options.info);
         formData.append('genres', JSON.stringify(options.genres.map(({ id }) => id)));
-        dispatch(addAuthor(formData))
+        addAuthor(options)
             .unwrap()
             .then((res) => {
                 if (res) {
@@ -98,10 +89,18 @@ export const Page: React.FC<Props> = ({
                             title="Добавить автора"
                         />
                     )}
-                    {loading ? <Spinner withBackground /> : output}
-                    {(appStatus.isRequest() || userStatus.isRequest()) && (
+                    {loading ? (
                         <Spinner withBackground />
+                    ) : searchApplied ? (
+                        <SearchResults />
+                    ) : (
+                        children
                     )}
+                    {
+                        /** appStatus.isRequest() || */ false /**userStatus.isRequest() */ && (
+                            <Spinner withBackground />
+                        )
+                    }
                 </div>
                 {toast}
                 {showAddAuthorModal && (

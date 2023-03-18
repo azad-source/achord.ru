@@ -21,7 +21,7 @@ import { PrivacyPage } from 'components/privacy/PrivacyPage';
 import { CopyrightHolders } from 'components/rights/CopyrightHolders';
 import cn from 'classnames';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { isDarkTheme, switchTheme } from 'redux/slices/app';
+import { isDarkTheme, switchTheme } from 'redux/slices/appSlice';
 import { Spinner } from 'components/shared/Spinner/Spinner';
 
 const AppRouter = () => {

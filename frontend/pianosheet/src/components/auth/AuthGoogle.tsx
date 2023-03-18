@@ -1,17 +1,15 @@
 import * as React from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
-import { login, UserClient } from 'redux/api/UserClient';
 import { GoogleLogo } from 'components/shared/icons/GoogleLogo';
 import styles from './AuthGoogle.module.scss';
+import { useLoginViaGoogleMutation } from 'redux/api/userApi';
 
 export const AuthGoogle = () => {
+    const [loginViaGoogle] = useLoginViaGoogleMutation();
+
     const signIn = useGoogleLogin({
         onSuccess: (response) => {
-            const formData = new FormData();
-            formData.append('access_token', response.access_token);
-            UserClient.loginViaGoogle(formData).then((res) => {
-                login(res);
-            });
+            loginViaGoogle({ accessToken: response.access_token });
         },
     });
 

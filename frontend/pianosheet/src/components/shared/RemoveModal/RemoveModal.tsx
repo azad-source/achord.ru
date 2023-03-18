@@ -2,7 +2,6 @@ import * as React from 'react';
 import styles from './RemoveModal.module.scss';
 import { Button } from 'components/shared/Button/Button';
 import { Modal } from 'components/shared/Modal/Modal';
-import { useToast } from 'components/shared/Toast/Toast';
 
 interface Props {
     title: string;
@@ -12,8 +11,6 @@ interface Props {
 }
 
 export const RemoveModal: React.FC<Props> = ({ title, text, closeModal, onRemove }) => {
-    const { push } = useToast();
-
     const handleRemove = () => {
         onRemove();
         closeModal();

@@ -1,12 +1,12 @@
-import { useAuth } from 'redux/api/UserClient';
 import { Page } from 'components/shared/layout/Page/Page';
 import { Tabs } from 'components/shared/Tabs/Tabs';
 import { SiteName } from 'domain/SiteInfo';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
-import { FavouriteAuthors } from './FavouriteAuthors/FavouriteAuthors';
-import { RandomAuthors } from './RandomAuthors/RandomAuthors';
-import { TopAuthors } from './TopAuthors/TopAuthors';
+import { FavouriteAuthors } from './FavouriteAuthors';
+import { RandomAuthors } from './RandomAuthors';
+import { TopAuthors } from './TopAuthors';
+import { useAuth } from 'redux/api/userApi';
 
 export const MainPage = () => {
     const [tab, setTab] = React.useState<number>(0);

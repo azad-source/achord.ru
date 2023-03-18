@@ -1,5 +1,4 @@
 import { AuthorItemJsModel, GenreItemJsModel, SheetItemJsModel } from 'domain/api/JsModels';
-import { QueryStatus } from 'domain/QueryStatus';
 
 export const DEFAULT_AUTHORS_SIZE = 20;
 export const DEFAULT_SHEETS_SIZE = 20;
@@ -12,6 +11,9 @@ export const RANDOM_SHEETS_SIZE = TOP_SHEETS_SIZE;
 
 export const FAVORITE_AUTHORS_SIZE = TOP_AUTHORS_SIZE;
 export const FAVORITE_SHEETS_SIZE = TOP_SHEETS_SIZE;
+
+export const AUTHORS_SEARCH_SIZE = DEFAULT_AUTHORS_SIZE;
+export const SHEETS_SEARCH_SIZE = DEFAULT_SHEETS_SIZE;
 
 export const abcEn = [
     // '0-9',
@@ -85,7 +87,6 @@ export const blankPagedResult = {
 
 export const blankSearch = {
     applied: false,
-    status: QueryStatus.initial(),
     sheets: { ...blankPagedResult },
     authors: { ...blankPagedResult },
     query: '',

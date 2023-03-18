@@ -3,26 +3,19 @@ import styles from './SheetDownloadPage.module.scss';
 import { useParams } from 'react-router-dom';
 import { Page } from 'components/shared/layout/Page/Page';
 import { Button } from 'components/shared/Button/Button';
-import { AuthorItemJsModel, SheetItemJsModel } from 'domain/api/JsModels';
 import { SiteName } from 'domain/SiteInfo';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { Paths } from 'utils/routes/Paths';
 import cn from 'classnames';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 import { useAppSelector } from 'redux/hooks';
-import { SheetClient } from 'redux/api/SheetClient';
-import { AuthorClient } from 'redux/api/AuthorClient';
-import { isDarkTheme } from 'redux/slices/app';
-import { blankAuthorItem, blankSheetItem } from 'utils/constants';
-// import { Document, Page as PDFPage, pdfjs } from 'react-pdf';
-// import { PDFDocumentProxy } from 'pdfjs-dist';
-// import { Pagination } from 'components/shared/layout/Pagination/Pagination';
-// pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
-// import test from './test.pdf';
+import { isDarkTheme } from 'redux/slices/appSlice';
+import { useLazyGetAuthorByIdQuery } from 'redux/api/authorApi';
+import { useLazyGetSheetByIdQuery } from 'redux/api/sheetApi';
 
 export const SheetDownloadPage = () => {
-    const isSuperUser = useAppSelector((state) => state.user.currentUser.is_superuser);
-
+    const [getAuthorById, { data: author }] = useLazyGetAuthorByIdQuery();
+    const [getSheetById, { data: sheet }] = useLazyGetSheetByIdQuery();
     const {
         letter = '',
         authorAlias = '',
@@ -33,10 +26,6 @@ export const SheetDownloadPage = () => {
         sheetId: string;
     }>();
 
-    const [sheet, setSheet] = React.useState<SheetItemJsModel>(blankSheetItem);
-
-    const [author, setAuthor] = React.useState<AuthorItemJsModel>(blankAuthorItem);
-
     const [downloadState, setDownloadState] = React.useState<{ counter: number; started: boolean }>(
         {
             counter: 15,
@@ -46,21 +35,27 @@ export const SheetDownloadPage = () => {
 
     const isDark = useAppSelector(isDarkTheme);
 
+    async function getAuthor() {
+        try {
+            const sheet = await getSheetById({ noteId: sheetId }).unwrap();
+            document.title = `${SiteName} - ${sheet.name}`;
+            await getAuthorById({ id: sheet.author });
+        } catch {}
+    }
+
     React.useEffect(() => {
-        SheetClient.getSheetById(sheetId).then((res) => {
-            setSheet(res);
-            document.title = `${SiteName} - ${res.name}`;
-            AuthorClient.getAuthorById(res.author).then((author) => setAuthor(author));
-        });
+        getAuthor();
     }, []);
 
     const download = () => {
-        const file = sheet.filename;
-        let link = document.createElement('a');
-        link.setAttribute('href', file);
-        link.setAttribute('download', file);
-        link.setAttribute('target', '_blank');
-        link.click();
+        const file = sheet?.filename;
+        if (file) {
+            let link = document.createElement('a');
+            link.setAttribute('href', file);
+            link.setAttribute('download', file);
+            link.setAttribute('target', '_blank');
+            link.click();
+        }
     };
 
     const breadcrumbs: BreadcrumbProps[] = [
@@ -73,7 +68,7 @@ export const SheetDownloadPage = () => {
             link: Paths.getLetterPath(letter),
         },
         {
-            caption: author.name,
+            caption: author?.name || '',
             link: Paths.getAuthorPath(letter, authorAlias),
         },
     ];
@@ -86,18 +81,13 @@ export const SheetDownloadPage = () => {
         }, 1000);
     };
 
-    // const [pagesCount, setPagesCount] = React.useState(0);
-    // const [pageNumber, setPageNumber] = React.useState(1);
-
-    // const onDocumentLoadSuccess = (pdf: PDFDocumentProxy) => {
-    //     setPagesCount(pdf.numPages);
-    // };
-
     return (
         <Page breadcrumbs={breadcrumbs}>
             <div className={cn(styles.root, isDark && styles.root__dark)}>
-                <TextPlain className={styles.fileName}>{sheet.name}</TextPlain>
-                {sheet.filename ? (
+                <TextPlain className={styles.fileName}>
+                    {sheet?.name || 'Название отсутствует'}
+                </TextPlain>
+                {sheet?.filename ? (
                     <div className={styles.download}>
                         {downloadState.counter < 1 ? (
                             <Button onClick={download} className={styles.downloadButton} use="link">
@@ -120,9 +110,3 @@ export const SheetDownloadPage = () => {
         </Page>
     );
 };
-
-// const mapStateToProps = (state: RootState) => ({
-//     isSuperUser: state.users.currentUser.is_superuser,
-// });
-
-// export const SheetDownloadPage = connect(mapStateToProps)(SheetDownloadPageFC);

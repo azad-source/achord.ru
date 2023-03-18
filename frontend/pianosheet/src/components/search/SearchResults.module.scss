@@ -34,30 +34,6 @@
   padding: 8px 10px 10px;
 }
 
-.searchItems {
-  margin-left: 20px;
-  margin-bottom: 20px;
-}
-
-.searchItem {
-  padding: 8px 0;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.searchItem:hover {
-  color: #000;
-}
-
-.searchItem::before {
-  display: inline-block;
-  content: '';
-  width: 10px;
-  height: 10px;
-  background-color: #333;
-  margin-right: 14px;
-}
-
 .dropSearch {
   display: block !important;
   position: absolute !important;
@@ -94,18 +70,12 @@
   transform: translate(-50%, -50%) rotate(-45deg);
 }
 
-.searchAuthors {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.searchAuthor {
+.authorCard {
   margin-right: 20px;
   margin-bottom: 20px;
 }
 
-.searchAuthor:last-child {
+.authorCard:last-child {
   margin-right: 0;
 }
 
@@ -114,9 +84,6 @@
 }
 
 @media screen and (max-width: $siteWidthMobile) {
-  .searchItems {
-    margin-left: 0;
-  }
   .dropSearch {
     position: relative;
     top: unset;
@@ -134,21 +101,14 @@
     display: none;
   }
 
-  .searchAuthors {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
-  }
-
-  .searchAuthor {
+  .authorCard {
     width: 150px !important;
     height: 150px !important;
   }
 }
 
 @media screen and (max-width: 320px) {
-  .searchAuthor {
+  .authorCard {
     width: 130px !important;
     height: 130px !important;
   }

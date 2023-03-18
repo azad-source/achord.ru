@@ -3,30 +3,35 @@ import styles from './SearchField.module.scss';
 import cn from 'classnames';
 import { Loupe } from 'components/shared/icons/Loupe';
 import { useLocation } from 'react-router';
-import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { RootState } from 'redux/store';
-import { dropSearch, searchSheets } from 'redux/slices/search';
 
 interface Props {
     className?: string;
     isDark?: boolean;
+    query: string;
+    isSuccess: boolean;
+    searchSheets: (query: string) => void;
+    dropSearch: () => void;
 }
 
-export const SearchField: React.FC<Props> = ({ className, isDark = false }) => {
+export const SearchField: React.FC<Props> = ({
+    className,
+    isDark = false,
+    query,
+    isSuccess,
+    searchSheets,
+    dropSearch,
+}) => {
     const [input, setInput] = React.useState<string>('');
     let location = useLocation();
 
-    const dispatch = useAppDispatch();
-    const { status, query: searchQuery } = useAppSelector(({ search }: RootState) => search);
-
     function skipSearch() {
-        dispatch(dropSearch());
+        dropSearch();
         setInput('');
     }
 
     function searchHandler() {
         if (input && input.length > 2) {
-            dispatch(searchSheets(input));
+            searchSheets(input);
         }
     }
 
@@ -37,16 +42,16 @@ export const SearchField: React.FC<Props> = ({ className, isDark = false }) => {
     }
 
     React.useEffect(() => {
-        if (status.isSuccess()) {
+        if (isSuccess) {
             skipSearch();
         }
     }, [location]);
 
     React.useEffect(() => {
-        if (status.isSuccess()) {
+        if (isSuccess) {
             setInput('');
         }
-    }, [searchQuery]);
+    }, [query]);
 
     return (
         <div className={cn(styles.root, isDark && styles.root__dark, className)}>
@@ -56,7 +61,7 @@ export const SearchField: React.FC<Props> = ({ className, isDark = false }) => {
                     className={styles.input}
                     placeholder="Поиск нот"
                     onChange={(e) => setInput(e.target.value)}
-                    onKeyPress={keyPressHandler}
+                    onKeyUp={keyPressHandler}
                     onClick={searchHandler}
                     value={input}
                 />

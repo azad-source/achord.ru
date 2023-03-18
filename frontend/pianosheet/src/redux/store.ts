@@ -1,21 +1,32 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import authorReducer from './slices/author';
-import sheetReducer from './slices/sheet';
-import genreReducer from './slices/genre';
-import searchReducer from './slices/search';
-import appReducer from './slices/app';
-import userReducer from './slices/user';
+import appReducer from './slices/appSlice';
+import userReducer from './slices/userSlice';
+import searchReducer from './slices/searchSlice';
+import { authorApi } from './api/authorApi';
+import { genreApi } from './api/genreApi';
+import { sheetApi } from './api/sheetApi';
+import { searchApi } from './api/searchApi';
+import { userApi } from './api/userApi';
+import { setupListeners } from '@reduxjs/toolkit/dist/query';
 
 export const store = configureStore({
     reducer: {
-        author: authorReducer,
-        sheet: sheetReducer,
-        genre: genreReducer,
-        search: searchReducer,
         app: appReducer,
         user: userReducer,
+        search: searchReducer,
+        [authorApi.reducerPath]: authorApi.reducer,
+        [genreApi.reducerPath]: genreApi.reducer,
+        [sheetApi.reducerPath]: sheetApi.reducer,
+        [searchApi.reducerPath]: searchApi.reducer,
+        [userApi.reducerPath]: userApi.reducer,
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
+    middleware: (gDM) =>
+        gDM()
+            .concat(authorApi.middleware)
+            .concat(genreApi.middleware)
+            .concat(sheetApi.middleware)
+            .concat(searchApi.middleware)
+            .concat(userApi.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;
@@ -26,3 +37,7 @@ export type AppThunk<ReturnType = void> = ThunkAction<
     unknown,
     Action<string>
 >;
+
+// optional, but required for refetchOnFocus/refetchOnReconnect behaviors
+// see setupListeners docs - takes an optional callback as the 2nd arg for customization
+setupListeners(store.dispatch);

@@ -3,11 +3,11 @@ import styles from './AuthorPage.module.scss';
 import cn from 'classnames';
 import { Page } from 'components/shared/layout/Page/Page';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { AuthorRequestModel, SheetItemJsModel } from 'domain/api/JsModels';
+import { SheetItemJsModel } from 'domain/api/JsModels';
 import { AddIcon } from 'components/shared/icons/AddIcon';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { Paths } from 'utils/routes/Paths';
-import { SheetAddModal, sheetAddModel } from '../SheetAddModal/SheetAddModal';
+import { SheetAddModal } from '../SheetAddModal/SheetAddModal';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { AuthorEditModal } from '../AuthorEditModal/AuthorEditModal';
 import { Button } from 'components/shared/Button/Button';
@@ -17,20 +17,33 @@ import { FavoriteIcon } from 'components/shared/icons/FavoriteIcon';
 import { LikeIcon } from 'components/shared/icons/LikeIcon';
 import { SheetRow } from 'components/shared/SheetRow/SheetRow';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
-import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { isDarkTheme } from 'redux/slices/app';
-import { useAuth } from 'redux/api/UserClient';
-import { addAuthorToFavorite, editAuthor, getAuthor, likeAuthor } from 'redux/slices/author';
-import { addSheet, addSheetToFavorite, getSheets } from 'redux/slices/sheet';
-import { QueryStatus } from 'domain/QueryStatus';
+import { useAppSelector } from 'redux/hooks';
+import { isDarkTheme } from 'redux/slices/appSlice';
+import {
+    useAddAuthorToFavoriteMutation,
+    useAddLikeToAuthorMutation,
+    useEditAuthorByIdMutation,
+    useLazyGetAuthorByAliasQuery,
+} from 'redux/api/authorApi';
+import { EditAuthorByIdRequest } from 'redux/models/authorModels';
+import { useAddSheetMutation, useLazyGetSheetsQuery } from 'redux/api/sheetApi';
+import { AddSheetRequest } from 'redux/models/sheetModels';
+import { useAuth } from 'redux/api/userApi';
 
 export const AuthorPage = () => {
-    const dispatch = useAppDispatch();
+    const [editAuthor] = useEditAuthorByIdMutation();
+    const [getAuthor, { data: author, isFetching: isAuthorLoading }] =
+        useLazyGetAuthorByAliasQuery();
+    const [addAuthorToFavorite] = useAddAuthorToFavoriteMutation();
+    const [likeAuthor] = useAddLikeToAuthorMutation();
+    const [getSheets, { data: sheets }] = useLazyGetSheetsQuery();
+    const [addSheet] = useAddSheetMutation();
+
+    const sheetsList = sheets?.results || [];
+
     const isDark = useAppSelector(isDarkTheme);
-    const { author, user, sheet } = useAppSelector((state) => state);
-    const { current: currentAuthor, currentStatus: authorStatus } = author;
-    const { list: sheets, current: currentSheet, currentStatus: sheetStatus } = sheet;
-    const isSuperUser = user.currentUser.is_superuser;
+    // const { user } = useAppSelector((state) => state);
+    const isSuperUser = true; /**user.currentUser.is_superuser */
 
     const [logged] = useAuth();
     const { letter = '', authorAlias } = useParams<{ letter: string; authorAlias: string }>();
@@ -43,52 +56,46 @@ export const AuthorPage = () => {
 
     React.useEffect(() => {
         if (authorAlias) {
-            dispatch(getAuthor(authorAlias));
+            getAuthor({ alias: authorAlias });
+            getSheets({ authorAlias });
             setPageNumber(1);
         }
     }, [location]);
 
     React.useEffect(() => {
-        document.title = `${SiteName} - ${currentAuthor?.name}`;
-    }, [location, currentAuthor]);
+        document.title = `${SiteName} - ${author?.name}`;
+    }, [location, author]);
 
     const openSheetAddModal = () => setShowSheetAddModal(true);
     const closeSheetAddModal = () => setShowSheetAddModal(false);
     const closeEditModal = () => setShowEditModal(false);
     const openEditModal = () => setShowEditModal(true);
 
-    const addSheetHandler = (options: sheetAddModel) => {
-        if (currentAuthor?.id) {
+    const addSheetHandler = (options: AddSheetRequest) => {
+        if (author?.id) {
             let formData = new FormData();
             formData.append('filename', options.filename);
             formData.append('name', options.sheetname);
-            formData.append('author', currentAuthor.id.toString());
-            dispatch(addSheet(formData));
+            formData.append('author', author.id.toString());
+            addSheet(options);
             closeSheetAddModal();
         }
     };
 
     const getSheetsByPage = (page: number) => {
         if (authorAlias) {
-            dispatch(getSheets({ author_alias: authorAlias, page }));
+            getSheets({ authorAlias, page });
             setPageNumber(page);
         }
     };
 
-    const editAuthorHandler = (options: AuthorRequestModel) => {
-        if (currentAuthor?.id) {
-            let formData = new FormData();
-            if (options.preview !== currentAuthor.preview)
-                formData.append('preview', options.preview);
-            if (options.name !== currentAuthor.name) formData.append('name', options.name);
-            if (options.info !== currentAuthor.info) formData.append('info', options.info);
-            if (options.genres !== currentAuthor.genres)
-                formData.append('genres', JSON.stringify(options.genres.map(({ id }) => id)));
-            dispatch(editAuthor({ authorId: currentAuthor.id, author: formData }))
+    const editAuthorHandler = (options: EditAuthorByIdRequest) => {
+        if (author?.id) {
+            editAuthor({ ...options })
                 .unwrap()
-                .then(({ author }) => {
-                    if (author.id) {
-                        navigate(Paths.getAuthorPath(author.name.charAt(0), author.alias));
+                .then(({ id, name, alias }) => {
+                    if (id) {
+                        navigate(Paths.getAuthorPath(name.charAt(0), alias));
                     }
                 });
             closeEditModal();
@@ -105,7 +112,7 @@ export const AuthorPage = () => {
             link: Paths.getLetterPath(letter),
         },
         {
-            caption: currentAuthor?.name || '',
+            caption: author?.name || '',
         },
     ];
 
@@ -114,19 +121,17 @@ export const AuthorPage = () => {
     };
 
     const swithFavoriteAuthor = () => {
-        if (currentAuthor?.id) {
-            dispatch(
-                addAuthorToFavorite({
-                    authorId: currentAuthor.id,
-                    isFavorite: !currentAuthor.favorite,
-                }),
-            );
+        if (author?.id) {
+            addAuthorToFavorite({
+                authorId: author.id,
+                isFavorite: !author.favorite,
+            });
         }
     };
 
     const swithLikeAuthor = () => {
-        if (currentAuthor?.id) {
-            dispatch(likeAuthor({ authorId: currentAuthor.id, hasLike: !currentAuthor.like }));
+        if (author?.id) {
+            likeAuthor({ authorId: author.id, hasLike: !author.like });
         }
     };
 
@@ -137,61 +142,45 @@ export const AuthorPage = () => {
         }
     };
 
-    const addSheetToFavHandler = (sheetId: number, isFavorite: boolean) => {
-        return dispatch(addSheetToFavorite({ sheetId, isFavorite })).unwrap();
-    };
-
-    const getSheetStatus = (sheet: SheetItemJsModel): QueryStatus => {
-        if (sheet.id === currentSheet?.id) {
-            return sheetStatus;
-        }
-        return QueryStatus.initial();
-    };
-
     return (
-        <Page breadcrumbs={breadcrumbs} loading={authorStatus.isRequest()}>
+        <Page breadcrumbs={breadcrumbs} loading={isAuthorLoading}>
             <div className={styles.title}>
-                <TextPlain className={styles.authorName}>{currentAuthor?.name}</TextPlain>
+                <TextPlain className={styles.authorName}>{author?.name}</TextPlain>
                 {logged && (
                     <div className={cn(styles.actions, isDark && styles.actions__dark)}>
                         {isSuperUser && (
                             <Button
                                 className={styles.editBtn}
                                 onClick={openEditModal}
-                                disabled={authorStatus.isRequest()}
+                                disabled={isAuthorLoading}
                                 icon={<EditIcon />}
                                 use="link"
                             />
                         )}
                         <Button
-                            className={cn(
-                                styles.likeBtn,
-                                currentAuthor?.like && styles.likeBtn_active,
-                            )}
+                            className={cn(styles.likeBtn, author?.like && styles.likeBtn_active)}
                             onClick={swithLikeAuthor}
-                            title={currentAuthor?.like ? 'Убрать лайк' : 'Поставить лайк'}
-                            disabled={authorStatus.isRequest()}
+                            title={author?.like ? 'Убрать лайк' : 'Поставить лайк'}
+                            disabled={isAuthorLoading}
                             use="link"
                         >
-                            {currentAuthor?.like_count}{' '}
-                            <LikeIcon className={styles.likeIcon} active={currentAuthor?.like} />
+                            {author?.like_count}{' '}
+                            <LikeIcon className={styles.likeIcon} active={author?.like} />
                         </Button>
                         <Button
                             className={cn(
                                 styles.favoriteBtn,
-                                currentAuthor?.favorite && styles.favoriteBtn_active,
+                                author?.favorite && styles.favoriteBtn_active,
                                 styles.favoriteBtn_showAlways,
                             )}
                             onClick={swithFavoriteAuthor}
                             title={
-                                currentAuthor?.favorite
-                                    ? 'Убрать из избранных'
-                                    : 'Добавить в избранное'
+                                author?.favorite ? 'Убрать из избранных' : 'Добавить в избранное'
                             }
-                            disabled={authorStatus.isRequest()}
+                            disabled={isAuthorLoading}
                             use="link"
                         >
-                            <FavoriteIcon active={currentAuthor?.favorite} />
+                            <FavoriteIcon active={author?.favorite} />
                         </Button>
                     </div>
                 )}
@@ -202,13 +191,13 @@ export const AuthorPage = () => {
                     <div>
                         <div className={styles.photo}>
                             <img
-                                src={currentAuthor?.preview}
-                                alt={currentAuthor?.name}
+                                src={author?.preview}
+                                alt={author?.name}
                                 className={styles.image}
                             />
                         </div>
                         <div className={styles.genres}>
-                            {currentAuthor?.genres.map(({ name, id, alias }) => (
+                            {author?.genres.map(({ name, id, alias }) => (
                                 <div
                                     key={id}
                                     className={styles.genres_item}
@@ -219,10 +208,10 @@ export const AuthorPage = () => {
                             ))}
                         </div>
                     </div>
-                    <TextPlain className={styles.authorInfo}>{currentAuthor?.info}</TextPlain>
+                    <TextPlain className={styles.authorInfo}>{author?.info}</TextPlain>
                 </div>
                 <TextPlain className={styles.sheetTitle}>НОТЫ</TextPlain>
-                {sheets.page_count > 1 && (
+                {sheets && sheets.page_count > 1 && (
                     <Pagination
                         pageNumber={pageNumber}
                         pageCount={sheets.page_count}
@@ -231,17 +220,15 @@ export const AuthorPage = () => {
                     />
                 )}
                 <div className={styles.sheets}>
-                    {sheets.results && sheets.results.length > 0 ? (
-                        sheets.results.map((sheet, index) => (
+                    {sheetsList.length > 0 ? (
+                        sheetsList.map((sheet, index) => (
                             <SheetRow
                                 key={sheet.id}
                                 sheet={sheet}
                                 index={index}
                                 onOpen={openDownloadPage}
-                                addToFavorite={logged ? addSheetToFavHandler : undefined}
                                 type="second"
                                 hidePosition
-                                status={getSheetStatus(sheet)}
                             />
                         ))
                     ) : (
@@ -249,7 +236,7 @@ export const AuthorPage = () => {
                             Тут скоро появятся ноты
                         </TextPlain>
                     )}
-                    {sheets.page_count > 1 && (
+                    {sheets && sheets.page_count > 1 && (
                         <Pagination
                             pageNumber={pageNumber}
                             pageCount={sheets.page_count}
@@ -269,14 +256,18 @@ export const AuthorPage = () => {
                     )}
                 </div>
             </div>
-            {showSheetAddModal && (
-                <SheetAddModal closeModal={closeSheetAddModal} addSheet={addSheetHandler} />
+            {showSheetAddModal && author?.id && (
+                <SheetAddModal
+                    author={author}
+                    closeModal={closeSheetAddModal}
+                    addSheet={addSheetHandler}
+                />
             )}
-            {showEditModal && currentAuthor?.id && (
+            {showEditModal && author?.id && (
                 <AuthorEditModal
                     closeModal={closeEditModal}
                     editAuthor={editAuthorHandler}
-                    author={currentAuthor}
+                    author={author}
                 />
             )}
         </Page>

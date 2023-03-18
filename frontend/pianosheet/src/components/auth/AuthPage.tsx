@@ -8,13 +8,22 @@ import { SocialAuthParams } from 'domain/api/JsModels';
 import { useNavigate } from 'react-router-dom';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 import { Button } from 'components/shared/Button/Button';
-import { logout, useAuth, UserClient } from 'redux/api/UserClient';
-import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { authorization, dropError, registration, resetPassword } from 'redux/slices/user';
+import {
+    logout,
+    useAuth,
+    useAuthorizationMutation,
+    useLazyGetSocialLinksAuthQuery,
+    useRegisterMutation,
+    useResetPasswordMutation,
+} from 'redux/api/userApi';
 
 export const AuthPage = () => {
-    const dispatch = useAppDispatch();
-    const status = useAppSelector(({ user }) => user.status);
+    const [getSocialLinksAuth] = useLazyGetSocialLinksAuthQuery();
+    const [authorization, { error: authorizationError, isLoading: isAuthorizationLoading }] =
+        useAuthorizationMutation();
+    const [registration, { error: registrtionError }] = useRegisterMutation();
+    const [resetPassword] = useResetPasswordMutation();
+
     const navigate = useNavigate();
 
     const [logged] = useAuth();
@@ -26,32 +35,34 @@ export const AuthPage = () => {
 
     React.useEffect(() => {
         document.title = `${SiteName} - ${isRegForm ? 'Регистрация' : 'Авторизация'}`;
-        dispatch(dropError());
+        // dispatch(dropError());
     }, [isRegForm]);
 
     const [googleAuth, setGoogleAuth] = React.useState<SocialAuthParams>();
 
     React.useEffect(() => {
-        UserClient.getSocialLinksAuth().then((res) => setGoogleAuth(res.google));
+        getSocialLinksAuth()
+            .unwrap()
+            .then((res) => setGoogleAuth(res.google));
     }, []);
 
     const loginHandler = (email: string, password: string, event: React.FormEvent) => {
         event.preventDefault();
-        dispatch(authorization({ email, password }));
+        authorization({ email, password });
     };
 
     const registerHandler = (
         email: string,
         password: string,
-        re_password: string,
+        rePassword: string,
         event: React.FormEvent,
     ) => {
         event.preventDefault();
-        return dispatch(registration({ email, password, re_password })).unwrap();
+        return registration({ email, password, rePassword }).unwrap();
     };
 
     const resetPasswordHandler = (email: string) => {
-        return dispatch(resetPassword(email)).unwrap();
+        return resetPassword({ email }).unwrap();
     };
 
     const handleRegConfirm = (isSuccessRegistration: boolean, email: string) => {
@@ -98,16 +109,16 @@ export const AuthPage = () => {
                     <Registration
                         onSwitchForm={setIsRegForm}
                         registerHandler={registerHandler}
-                        errorMessage={status?.errorMessage}
+                        errorMessage={'' /**registrtionError */}
                         regConfirm={handleRegConfirm}
                     />
                 ) : (
                     <Authorization
                         onSwitchForm={setIsRegForm}
                         loginHandler={loginHandler}
-                        errorMessage={status?.errorMessage}
+                        errorMessage={'' /**authorizationError */}
                         resetPassword={resetPasswordHandler}
-                        status={status}
+                        isLoading={isAuthorizationLoading}
                         googleAuth={googleAuth}
                     />
                 )}

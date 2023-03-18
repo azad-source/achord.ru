@@ -4,11 +4,16 @@ import { Link, useParams } from 'react-router-dom';
 import styles from './ChangePasswordPage.module.scss';
 import { Input } from 'components/shared/Input/Input';
 import { Button } from 'components/shared/Button/Button';
-import { useAppDispatch } from 'redux/hooks';
-import { changePassword, ChangePasswordType } from 'redux/slices/user';
+import { useChangePasswordMutation } from 'redux/api/userApi';
+// import { changePassword, ChangePasswordType } from 'redux/slices/!del_user';
+
+type ChangePasswordType = {
+    isChangedPassword: boolean;
+    message?: string[];
+};
 
 export const ChangePasswordPage = () => {
-    const dispatch = useAppDispatch();
+    const [changePassword] = useChangePasswordMutation();
 
     const { uid, token } = useParams<{ uid: string; token: string }>();
     const [form, setForm] = React.useState<{
@@ -23,11 +28,11 @@ export const ChangePasswordPage = () => {
     const handleChangePassword = (e: React.FormEvent) => {
         e.preventDefault();
         const { new_password, re_new_password } = form;
-        dispatch(
-            changePassword({ uid: uid || '', token: token || '', new_password, re_new_password }),
-        )
-            .unwrap()
-            .then((res) => setChangePass(res));
+        if (uid && token) {
+            changePassword({ uid, token, new_password, re_new_password })
+                .unwrap()
+                .then((res) => setChangePass(res));
+        }
     };
 
     const validation = () => {

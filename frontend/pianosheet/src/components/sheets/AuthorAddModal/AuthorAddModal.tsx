@@ -5,34 +5,28 @@ import { Modal } from 'components/shared/Modal/Modal';
 import { Input } from 'components/shared/Input/Input';
 import { Textarea } from 'components/shared/Textarea/Textarea';
 import { maxAuthorDescriptionLength, maxUploadImageSize } from 'domain/SiteInfo';
-import {
-    AuthorRequestModel,
-    defaultAuthorRequestModel,
-    GenreItemJsModel,
-} from 'domain/api/JsModels';
+import { defaultAuthorRequestModel, GenreItemJsModel } from 'domain/api/JsModels';
 import cn from 'classnames';
 import { useToast } from 'components/shared/Toast/Toast';
 import { useAppSelector } from 'redux/hooks';
-import { isDarkTheme } from 'redux/slices/app';
-import { GenreClient } from 'redux/api/GenreClient';
+import { isDarkTheme } from 'redux/slices/appSlice';
+import { AddAuthorRequest } from 'redux/models/authorModels';
+import { useGetGenresQuery } from 'redux/api/genreApi';
 
 interface Props {
     closeModal: () => void;
-    addAuthor: (options: AuthorRequestModel) => void;
+    addAuthor: (options: AddAuthorRequest) => void;
 }
 
 export const AuthorAddModal: React.FC<Props> = ({ closeModal, addAuthor }) => {
-    const [form, setForm] = React.useState<AuthorRequestModel>(defaultAuthorRequestModel);
-    const [tempImage, setTempImage] = React.useState<string | ArrayBuffer | null>('');
-    const [allGenres, setAllGenres] = React.useState<GenreItemJsModel[]>([]);
+    const { data: genres } = useGetGenresQuery({ page: 1 });
+    const genresList = genres?.results || [];
 
+    const [form, setForm] = React.useState<AddAuthorRequest>(defaultAuthorRequestModel);
+    const [tempImage, setTempImage] = React.useState<string | ArrayBuffer | null>('');
     const isDark = useAppSelector(isDarkTheme);
 
     const { push } = useToast();
-
-    React.useEffect(() => {
-        if (allGenres.length < 1) GenreClient.getGenres().then((r) => setAllGenres(r.results));
-    }, []);
 
     const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, name: e.target.value });
@@ -103,19 +97,18 @@ export const AuthorAddModal: React.FC<Props> = ({ closeModal, addAuthor }) => {
                 />
             </div>
             <div className={cn(styles.formItem, styles.genres, isDark && styles.genres__dark)}>
-                {allGenres.length > 0 &&
-                    allGenres.map((genre) => (
-                        <div
-                            key={genre.id}
-                            className={cn(
-                                styles.genres_item,
-                                isGenreSelected(genre) && styles.genres_item__selected,
-                            )}
-                            onClick={() => handleSelectGenre(genre)}
-                        >
-                            {genre.name}
-                        </div>
-                    ))}
+                {genresList.map((genre) => (
+                    <div
+                        key={genre.id}
+                        className={cn(
+                            styles.genres_item,
+                            isGenreSelected(genre) && styles.genres_item__selected,
+                        )}
+                        onClick={() => handleSelectGenre(genre)}
+                    >
+                        {genre.name}
+                    </div>
+                ))}
             </div>
             <div className={styles.formItem}>
                 <img src={tempImage || form.preview} className={styles.image} />

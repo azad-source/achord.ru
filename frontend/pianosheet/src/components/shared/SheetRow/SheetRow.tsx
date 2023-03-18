@@ -4,32 +4,33 @@ import { Button } from '../Button/Button';
 import styles from './SheetRow.module.scss';
 import cn from 'classnames';
 import { FavoriteIcon } from '../icons/FavoriteIcon';
-import { QueryStatus } from 'domain/QueryStatus';
 import { useAppSelector } from 'redux/hooks';
-import { isDarkTheme } from 'redux/slices/app';
+import { isDarkTheme } from 'redux/slices/appSlice';
 import { Loader } from '../layout/Loader/Loader';
+import { useAddSheetToFavoriteMutation } from 'redux/api/sheetApi';
+import { useAuth } from 'redux/api/userApi';
 
 type SheetRowType = 'main' | 'second';
 
 interface Props {
     sheet: SheetItemJsModel;
     index: number;
-    status: QueryStatus;
     type?: SheetRowType;
     hidePosition?: boolean;
     onOpen: (sheet: SheetItemJsModel) => void;
-    addToFavorite?: (sheetId: number, isFavorite: boolean) => void;
 }
 
 export const SheetRow: React.FC<Props> = ({
     sheet,
     index,
-    status,
     type = 'main',
     hidePosition = false,
     onOpen,
-    addToFavorite,
 }) => {
+    const [addToFavorite, { isLoading }] = useAddSheetToFavoriteMutation();
+
+    const [logged] = useAuth();
+
     const isDark = useAppSelector(isDarkTheme);
 
     const style = {
@@ -41,8 +42,8 @@ export const SheetRow: React.FC<Props> = ({
     const handleAddToFavorite = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        if (addToFavorite) {
-            addToFavorite(id, !favorite);
+        if (logged) {
+            addToFavorite({ sheetId: id, isFavorite: !favorite });
         }
     };
 
@@ -51,7 +52,8 @@ export const SheetRow: React.FC<Props> = ({
             className={cn(styles.root, styles[`root_${type}`], isDark && styles.root__dark)}
             onClick={() => onOpen(sheet)}
             style={type === 'main' ? style : undefined}
-            loadStatus={status}
+            // TODO: поправить
+            isLoading={isLoading}
             spinnerType="ellipsis"
         >
             <div className={styles.caption}>
@@ -63,7 +65,7 @@ export const SheetRow: React.FC<Props> = ({
                     use="link"
                     onClick={handleAddToFavorite}
                     title={favorite ? 'Убрать из избранных' : 'Добавить в избранное'}
-                    disabled={status.isRequest()}
+                    disabled={isLoading}
                 >
                     <FavoriteIcon active={favorite} />
                 </Button>

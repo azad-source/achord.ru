@@ -1,15 +1,14 @@
-import { QueryStatus } from 'domain/QueryStatus';
 import * as React from 'react';
 import { Loader } from '../layout/Loader/Loader';
 import styles from './Modal.module.scss';
 import cn from 'classnames';
-import { isDarkTheme } from 'redux/slices/app';
+import { isDarkTheme } from 'redux/slices/appSlice';
 import { useAppSelector } from 'redux/hooks';
 
 interface Props {
     title: string;
     children: React.ReactNode;
-    loadStatus?: QueryStatus;
+    isLoading?: boolean;
     bottomPanel?: React.ReactNode;
     setScroll?: boolean;
     className?: string;
@@ -19,7 +18,7 @@ interface Props {
 export const Modal: React.FC<Props> = ({
     title,
     children,
-    loadStatus = QueryStatus.success(),
+    isLoading = false,
     bottomPanel,
     setScroll = false,
     className,
@@ -36,7 +35,7 @@ export const Modal: React.FC<Props> = ({
                         {title}
                         <div className={styles.modal_close} onClick={onClose} />
                     </div>
-                    <Loader loadStatus={loadStatus}>{children}</Loader>
+                    <Loader isLoading={isLoading}>{children}</Loader>
                     {!!bottomPanel && <div className={styles.modal_bottomPanel}>{bottomPanel}</div>}
                 </div>
             </div>

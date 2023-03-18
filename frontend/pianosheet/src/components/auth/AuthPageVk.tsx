@@ -2,7 +2,8 @@ import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 import styles from './AuthPageVk.module.scss';
 import { TokenJsModel } from 'domain/api/JsModels';
-import { login } from 'redux/api/UserClient';
+import { login } from 'redux/api/userApi';
+// import { login } from 'redux/api/!del_UserClient';
 
 export const AuthPageVk = () => {
     const location = useLocation();

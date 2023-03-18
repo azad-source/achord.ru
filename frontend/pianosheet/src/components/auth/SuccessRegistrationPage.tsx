@@ -3,11 +3,16 @@ import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styles from './SuccessRegistrationPage.module.scss';
 import cn from 'classnames';
-import { useAppDispatch } from 'redux/hooks';
-import { ConfirmationType, confirmEmail } from 'redux/slices/user';
+import { useAccountActivationMutation } from 'redux/api/userApi';
+// import { ConfirmationType, confirmEmail } from 'redux/slices/!del_user';
+
+type ConfirmationType = {
+    isConfirmed: boolean;
+    message?: string;
+};
 
 export const SuccessRegistrationPage = () => {
-    const dispatch = useAppDispatch();
+    const [confirmEmail] = useAccountActivationMutation();
 
     const { uid, token } = useParams<{ uid: string; token: string }>();
     const [confirm, setConfirm] = React.useState<ConfirmationType>({
@@ -15,9 +20,11 @@ export const SuccessRegistrationPage = () => {
     });
 
     React.useEffect(() => {
-        dispatch(confirmEmail({ userId: uid || '', token: token || '' }))
-            .unwrap()
-            .then((confirm) => setConfirm(confirm));
+        if (token && uid) {
+            confirmEmail({ userId: uid, token })
+                .unwrap()
+                .then((confirm) => setConfirm(confirm));
+        }
     }, []);
 
     return (

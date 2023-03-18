@@ -3,7 +3,7 @@ import cn from 'classnames';
 import styles from './Button.module.scss';
 import { MouseEvent } from 'react';
 import { useAppSelector } from 'redux/hooks';
-import { isDarkTheme } from 'redux/slices/app';
+import { isDarkTheme } from 'redux/slices/appSlice';
 
 type ButtonUse = 'link' | 'default' | 'transparent';
 

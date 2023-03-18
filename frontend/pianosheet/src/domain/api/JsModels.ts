@@ -75,13 +75,6 @@ export type SheetJsModel = PagedJsModel<SheetItemJsModel>;
 
 export type GenreJsModel = PagedJsModel<GenreItemJsModel>;
 
-export type AuthorRequestModel = {
-    name: string;
-    info: string;
-    preview: any;
-    genres: GenreItemJsModel[];
-};
-
 export const defaultAuthorRequestModel = {
     name: '',
     info: '',

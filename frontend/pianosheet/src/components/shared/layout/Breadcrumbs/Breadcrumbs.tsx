@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import styles from './Breadcrumbs.module.scss';
 import cn from 'classnames';
 import { useAppSelector } from 'redux/hooks';
-import { isDarkTheme } from 'redux/slices/app';
+import { isDarkTheme } from 'redux/slices/appSlice';
 
 export interface BreadcrumbProps {
     caption: string;

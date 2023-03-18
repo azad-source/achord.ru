@@ -7,34 +7,34 @@ import { Textarea } from 'components/shared/Textarea/Textarea';
 import { maxAuthorDescriptionLength, maxUploadImageSize } from 'domain/SiteInfo';
 import {
     AuthorItemJsModel,
-    AuthorRequestModel,
     defaultAuthorRequestModel,
     GenreItemJsModel,
 } from 'domain/api/JsModels';
 import cn from 'classnames';
 import { useToast } from 'components/shared/Toast/Toast';
 import { useAppSelector } from 'redux/hooks';
-import { isDarkTheme } from 'redux/slices/app';
-import { GenreClient } from 'redux/api/GenreClient';
+import { isDarkTheme } from 'redux/slices/appSlice';
+import { EditAuthorByIdRequest } from 'redux/models/authorModels';
+import { useGetGenresQuery } from 'redux/api/genreApi';
 
 interface Props {
     author: AuthorItemJsModel;
     closeModal: () => void;
-    editAuthor: (options: AuthorRequestModel) => void;
+    editAuthor: (options: EditAuthorByIdRequest) => void;
 }
 
+type AuthorState = Omit<EditAuthorByIdRequest, 'id'>;
+
 export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAuthor }) => {
-    const [form, setForm] = React.useState<AuthorRequestModel>(defaultAuthorRequestModel);
+    const { data: genres } = useGetGenresQuery({ page: 1 });
+    const genresList = genres?.results || [];
+
+    const [form, setForm] = React.useState<AuthorState>(defaultAuthorRequestModel);
     const [selectedImage, setSelectedImage] = React.useState<string | ArrayBuffer | null>('');
-    const [allGenres, setAllGenres] = React.useState<GenreItemJsModel[]>([]);
 
     const { push } = useToast();
 
     const isDark = useAppSelector(isDarkTheme);
-
-    React.useEffect(() => {
-        if (allGenres.length < 1) GenreClient.getGenres().then((r) => setAllGenres(r.results));
-    }, []);
 
     React.useEffect(() => {
         if (author)
@@ -74,7 +74,7 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
             push('Выберите хотябы один жанр');
             return;
         }
-        editAuthor(form);
+        editAuthor({ ...form, id: author.id });
     };
 
     const isGenreSelected = (genre: GenreItemJsModel) =>
@@ -116,19 +116,18 @@ export const AuthorEditModal: React.FC<Props> = ({ author, closeModal, editAutho
                 />
             </div>
             <div className={cn(styles.formItem, styles.genres)}>
-                {allGenres.length > 0 &&
-                    allGenres.map((genre) => (
-                        <div
-                            key={genre.id}
-                            className={cn(
-                                styles.genres_item,
-                                isGenreSelected(genre) && styles.genres_item__selected,
-                            )}
-                            onClick={() => handleSelectGenre(genre)}
-                        >
-                            {genre.name}
-                        </div>
-                    ))}
+                {genresList.map((genre) => (
+                    <div
+                        key={genre.id}
+                        className={cn(
+                            styles.genres_item,
+                            isGenreSelected(genre) && styles.genres_item__selected,
+                        )}
+                        onClick={() => handleSelectGenre(genre)}
+                    >
+                        {genre.name}
+                    </div>
+                ))}
             </div>
             <div className={styles.formItem}>
                 <img className={styles.image} src={selectedImage || form.preview} />

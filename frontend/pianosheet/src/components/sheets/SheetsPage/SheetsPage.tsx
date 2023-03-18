@@ -8,14 +8,13 @@ import { Paths } from 'utils/routes/Paths';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 import cn from 'classnames';
-import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { isDarkTheme } from 'redux/slices/app';
-import { getGenres } from 'redux/slices/genre';
+import { useAppSelector } from 'redux/hooks';
+import { isDarkTheme } from 'redux/slices/appSlice';
+import { useLazyGetGenresQuery } from 'redux/api/genreApi';
 
 export const SheetsPage = () => {
-    const dispatch = useAppDispatch();
-    const { genre } = useAppSelector((state) => state);
-    const { status, list } = genre;
+    const [getGenres, { data: genres, isFetching: isGenresLoading }] = useLazyGetGenresQuery();
+    const genresList = genres?.results || [];
 
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const location = useLocation();
@@ -25,7 +24,7 @@ export const SheetsPage = () => {
 
     React.useEffect(() => {
         document.title = title;
-        dispatch(getGenres());
+        getGenres({ page: 1 });
     }, [location]);
 
     const breadcrumbs: BreadcrumbProps[] = [
@@ -35,15 +34,15 @@ export const SheetsPage = () => {
     ];
 
     const getGenresByPage = (page: number) => {
-        dispatch(getGenres(page));
+        getGenres({ page });
         setPageNumber(page);
         window.scroll({ top: 0, behavior: 'smooth' });
     };
 
     return (
-        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn loading={status.isRequest()}>
+        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn loading={isGenresLoading}>
             <div className={cn(styles.root, isDark && styles.root__dark)}>
-                {list.results.map(({ id, name, alias, preview }) => (
+                {genresList.map(({ id, name, alias, preview }) => (
                     <Link key={id} className={styles.item} to={Paths.getGenrePage(alias)}>
                         <div
                             className={styles.preview}
@@ -60,9 +59,9 @@ export const SheetsPage = () => {
                     </Link>
                 ))}
             </div>
-            {list.page_count > 1 && (
+            {genres && genres.page_count > 1 && (
                 <Pagination
-                    pageCount={list.page_count}
+                    pageCount={genres.page_count}
                     pageNumber={pageNumber}
                     switchPage={getGenresByPage}
                 />

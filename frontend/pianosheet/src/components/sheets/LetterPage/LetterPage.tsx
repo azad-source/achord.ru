@@ -8,89 +8,46 @@ import { Paths } from 'utils/routes/Paths';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
-import { useAuth } from 'redux/api/UserClient';
-import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { addAuthorToFavorite, editAuthor, getAuthors, removeAuthor } from 'redux/slices/author';
-import { AuthorItemJsModel } from 'domain/api/JsModels';
-import { QueryStatus } from 'domain/QueryStatus';
+import { useGetAuthorsQuery } from 'redux/api/authorApi';
+import authorsStyles from 'styles/authors.module.scss';
 
 export const LetterPage = () => {
-    const dispatch = useAppDispatch();
-    const { author, user } = useAppSelector((state) => state);
-    const { list: authors, status, currentStatus: currentAuthorStatus, current } = author;
-    const isSuperUser = user.currentUser.is_superuser;
-
     const { letter = '' } = useParams<{ letter: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const location = useLocation();
     const title = `${SiteName} - ${letter.toUpperCase()}`;
-    const [logged] = useAuth();
+    const { data: authors, isFetching } = useGetAuthorsQuery({ letter, page: pageNumber });
 
     React.useEffect(() => {
         document.title = title;
-        dispatch(getAuthors({ letter }));
         setPageNumber(1);
     }, [letter, location]);
 
-    const getAuthorsByPage = (page: number) => {
-        dispatch(getAuthors({ letter, page }));
-        setPageNumber(page);
+    React.useEffect(() => {
         window.scroll({ top: 0, behavior: 'smooth' });
-    };
+    }, [pageNumber]);
 
     const breadcrumbs: BreadcrumbProps[] = [
-        {
-            caption: 'Ноты',
-            link: Paths.sheetsPage,
-        },
-        {
-            caption: letter.toUpperCase(),
-        },
+        { caption: 'Ноты', link: Paths.sheetsPage },
+        { caption: letter.toUpperCase() },
     ];
 
-    const editAuthorHandler = (authorId: number, author: FormData) => {
-        return dispatch(editAuthor({ authorId, author })).unwrap();
-    };
-
-    const removeAuthorHandler = (authorId: number) => {
-        return dispatch(removeAuthor(authorId)).unwrap();
-    };
-
-    const addAuthorToFavHandler = (authorId: number, isFavorite: boolean) => {
-        return dispatch(addAuthorToFavorite({ authorId, isFavorite })).unwrap();
-    };
-
-    const getCardStatus = (author: AuthorItemJsModel): QueryStatus => {
-        if (author.id === current?.id) {
-            return currentAuthorStatus;
-        }
-        return QueryStatus.initial();
-    };
-
     return (
-        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn loading={status.isRequest()}>
+        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn loading={isFetching}>
             <TextPlain className={styles.title}>{letter.toUpperCase()}</TextPlain>
-            <div className={styles.authors}>
-                {authors.results.map((author, index) => (
-                    <AuthorCard
-                        key={index}
-                        author={author}
-                        className={styles.authors_item}
-                        editAuthor={isSuperUser ? editAuthorHandler : undefined}
-                        removeAuthor={isSuperUser ? removeAuthorHandler : undefined}
-                        addAuthorToFavorite={logged ? addAuthorToFavHandler : undefined}
-                        status={getCardStatus(author)}
-                    />
+            <div className={authorsStyles.authors}>
+                {authors?.results.map((author, index) => (
+                    <AuthorCard key={index} author={author} className={authorsStyles.authors__item} />
                 ))}
             </div>
-            {authors.page_count > 1 && (
+            {authors && authors.page_count > 1 && (
                 <Pagination
                     pageCount={authors.page_count}
                     pageNumber={pageNumber}
-                    switchPage={getAuthorsByPage}
+                    switchPage={setPageNumber}
                 />
             )}
-            {authors.count === 0 && !status.isRequest() && (
+            {authors && authors.count === 0 && !isFetching && (
                 <TextPlain className={styles.empty}>Раздел пока пустой</TextPlain>
             )}
         </Page>

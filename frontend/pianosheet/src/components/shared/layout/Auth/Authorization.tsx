@@ -4,16 +4,16 @@ import { Input } from 'components/shared/Input/Input';
 import { SiteName } from 'domain/SiteInfo';
 import styles from './Authorization.module.scss';
 import { Modal } from 'components/shared/Modal/Modal';
-import { QueryStatus } from 'domain/QueryStatus';
 import cn from 'classnames';
 import { AuthGoogle } from 'components/auth/AuthGoogle';
 import { SocialAuthParams } from 'domain/api/JsModels';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 import { AxiosResponse } from 'axios';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { Loader } from '../Loader/Loader';
 
 interface Props {
-    status: QueryStatus;
+    isLoading: boolean;
     errorMessage: string;
     googleAuth?: SocialAuthParams;
     onSwitchForm: (bool: boolean) => void;
@@ -22,7 +22,7 @@ interface Props {
 }
 
 export const Authorization: React.FC<Props> = ({
-    status,
+    isLoading,
     errorMessage,
     googleAuth,
     onSwitchForm,
@@ -44,7 +44,7 @@ export const Authorization: React.FC<Props> = ({
     };
 
     return (
-        <div className={styles.root}>
+        <Loader className={styles.root} isLoading={isLoading}>
             <TextPlain className={styles.title}>Авторизация на сайте {SiteName}</TextPlain>
             <form onSubmit={(e) => loginHandler(email.auth, password, e)}>
                 <Input
@@ -66,13 +66,14 @@ export const Authorization: React.FC<Props> = ({
                     }
                 />
                 <div className={styles.btnsWrapper}>
-                    <Button type="submit" className={styles.btnLogin} disabled={false}>
+                    <Button type="submit" className={styles.btnLogin} disabled={isLoading}>
                         Войти
                     </Button>
                     <Button
                         use="transparent"
                         className={styles.btnRegistr}
                         onClick={() => onSwitchForm(true)}
+                        disabled={isLoading}
                     >
                         Регистрация
                     </Button>
@@ -100,7 +101,7 @@ export const Authorization: React.FC<Props> = ({
                 <Modal
                     title="Восстановление пароля"
                     onClose={() => setOpenModalResetPassword(false)}
-                    loadStatus={status}
+                    isLoading={isLoading}
                     bottomPanel={<Button onClick={handleResetPassword}>Восстановить</Button>}
                 >
                     <Input
@@ -119,6 +120,6 @@ export const Authorization: React.FC<Props> = ({
                     />
                 </Modal>
             )}
-        </div>
+        </Loader>
     );
 };

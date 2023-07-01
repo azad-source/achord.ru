@@ -2,7 +2,7 @@ before_script:
   - apt update -y
   - apt upgrade -y
   - apt -y install curl dirmngr apt-transport-https lsb-release ca-certificates
-  - curl -sL https://deb.nodesource.com/setup_12.x | bash -
+  - curl -sL https://deb.nodesource.com/setup_16.x | bash -
   - apt-get install -y nodejs
   - apt -y install rsync
   - 'which ssh-agent || ( apt-get install openssh-client -y )'

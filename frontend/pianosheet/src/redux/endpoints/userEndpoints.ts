@@ -67,7 +67,7 @@ export const userEndpoints = (builder: BuildType) => ({
         transformErrorResponse,
     }),
     /** Авторизация в VK */
-    // TODO: any заменить на конкретный тип
+    // TODO: any заменить на конкретный тип (пока данный эндпоинт не используется)
     accountActivation: builder.mutation<any, AccountActivationRequest>({
         query: ({ userId, token }) => {
             let formData = new FormData();

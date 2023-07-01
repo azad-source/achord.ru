@@ -138,10 +138,8 @@ export const authorEndpoints = (builder: BuildType) => ({
         invalidatesTags: [TagsEnum.Author],
     }),
     /** Удаление автора */
-    // TODO: по идее ничего не должен возвращать
     removeAuthorById: builder.mutation<AuthorItemJsModel, RemoveAuthorByIdRequest>({
         query: ({ id }) => ({ url: `${baseUrl}/${id}/`, method: 'DELETE' }),
-        transformResponse: AuthorResponseCallback,
         transformErrorResponse,
         invalidatesTags: [TagsEnum.Authors],
     }),

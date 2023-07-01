@@ -27,7 +27,10 @@ class ImageConvert():
         Метод изменяет размер изображения
         '''
         if image:
-            image = Image.open(image)
+            try:
+                image = Image.open(image)
+            except FileNotFoundError:
+                return None
 
             if image.size[0] > MAX_WIDTH_S:
                 width = MAX_WIDTH_S
@@ -56,7 +59,10 @@ class ImageConvert():
         Метод изменяет размер изображения
         '''
         if image:
-            image = Image.open(image)
+            try:
+                image = Image.open(image)
+            except FileNotFoundError:
+                return None
 
             if image.size[0] > MAX_WIDTH_XS:
                 width = MAX_WIDTH_XS
@@ -81,7 +87,10 @@ class ImageConvert():
         Метод обрезает картинку до квадратной
         '''
         if image:
-            image = Image.open(image)
+            try:
+                image = Image.open(image)
+            except FileNotFoundError:
+                return None
 
             if image.size[1] > image.size[0]:
                 x1 = 0

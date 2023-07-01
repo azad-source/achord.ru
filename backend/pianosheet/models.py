@@ -128,14 +128,28 @@ class Author(models.Model):
     )
     stats = models.ManyToManyField(User, through='AuthorStat', related_name='author_stats')
     objects = managers.AuthorManager()
+
     class Meta:
         verbose_name = "aвтор"
         verbose_name_plural = "aвторы"
 
     def save(self, *args, **kwargs):
         self.alias = Translate.create_alias(self.name)
-        self.preview_xs = ImageConvert().resize_xs(self.preview, self.preview.name)
-        self.preview_s = ImageConvert().resize_s(self.preview, self.preview.name)
+        resize = False
+
+        if self.pk:
+            instance: Author  = type(self).objects.get(pk=self.pk)
+            preview_before = instance.preview
+            preview_after = self.preview
+            if preview_before != preview_after:
+                resize = True
+        else:
+            resize = True
+
+        if resize:
+            self.preview_xs = ImageConvert().resize_xs(self.preview, self.preview.name)
+            self.preview_s = ImageConvert().resize_s(self.preview, self.preview.name)
+
         super(Author, self).save(*args, **kwargs)
 
     def __str__(self):

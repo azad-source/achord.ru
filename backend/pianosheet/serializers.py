@@ -74,7 +74,7 @@ class AuthorSerializer(LikeFavoriteSerializer):
         try:
             genres_all = Genre.objects.filter(id__in=id__in)
         except ValueError as e:
-            raise ValidationError({'detail':f'{str(e)} Field genres must be like [1,2,3]'})
+            raise ValidationError({'detail': f'{str(e)} Field genres must be like [1,2,3]'})
         instance.genres.set(genres_all)
 
 

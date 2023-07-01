@@ -10,8 +10,7 @@ import cn from 'classnames';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 import { useAppSelector } from 'redux/hooks';
 import { isDarkTheme } from 'redux/slices/appSlice';
-import { useLazyGetAuthorByIdQuery } from 'redux/api/authorApi';
-import { useLazyGetSheetByIdQuery } from 'redux/api/sheetApi';
+import { useLazyGetAuthorByIdQuery, useLazyGetSheetByIdQuery } from 'redux/api';
 
 export const SheetDownloadPage = () => {
     const [getAuthorById, { data: author }] = useLazyGetAuthorByIdQuery();

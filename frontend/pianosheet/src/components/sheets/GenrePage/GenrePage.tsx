@@ -8,8 +8,7 @@ import { Paths } from 'utils/routes/Paths';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
-import { useLazyGetAuthorsByGenreAliasQuery } from 'redux/api/authorApi';
-import { useLazyGetGenreByAliasQuery } from 'redux/api/genreApi';
+import { useLazyGetAuthorsByGenreAliasQuery, useLazyGetGenreByAliasQuery } from 'redux/api';
 import authorsStyles from 'styles/authors.module.scss';
 
 export const GenrePage = () => {
@@ -64,7 +63,11 @@ export const GenrePage = () => {
             <TextPlain className={styles.title}>{genre?.name.toUpperCase()}</TextPlain>
             <div className={authorsStyles.authors}>
                 {authors?.results.map((author, index) => (
-                    <AuthorCard key={index} author={author} className={authorsStyles.authors__item} />
+                    <AuthorCard
+                        key={index}
+                        author={author}
+                        className={authorsStyles.authors__item}
+                    />
                 ))}
             </div>
             {authors && authors.page_count > 1 && (

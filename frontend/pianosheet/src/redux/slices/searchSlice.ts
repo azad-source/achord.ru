@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AuthorJsModel, SheetJsModel } from 'domain/api/JsModels';
-import { searchApi } from 'redux/api/searchApi';
+import { TagsEnum, api } from 'redux/api';
 import { RootState } from 'redux/store';
 import { blankPagedResult, blankSearch } from 'utils/constants';
 
@@ -24,7 +24,7 @@ export const searchSlice = createSlice({
             state.sheets = payload.sheets;
         },
         dropSearch: (state) => {
-            searchApi.util.resetApiState();
+            api.util.invalidateTags([TagsEnum.SearchAuthors, TagsEnum.SearchSheets]);
             state.applied = false;
             state.authors = { ...blankPagedResult };
             state.sheets = { ...blankPagedResult };

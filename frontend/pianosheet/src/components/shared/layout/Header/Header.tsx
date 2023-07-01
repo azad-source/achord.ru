@@ -11,10 +11,14 @@ import cn from 'classnames';
 import { MenuMobile } from 'components/shared/layout/Menu/MenuMobile';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { isDarkTheme, switchTheme } from 'redux/slices/appSlice';
-import { useLazySearchAuthorsQuery, useLazySearchSheetsQuery } from 'redux/api/searchApi';
-import { logout, useAuth, useLazyGetUserDataQuery } from 'redux/api/userApi';
+import {
+    useLazySearchAuthorsQuery,
+    useLazySearchSheetsQuery,
+    useLazyGetUserDataQuery,
+} from 'redux/api';
 import { addSearch } from 'redux/slices/searchSlice';
 import { clearCurrentUser, setCurrentUser, currentUserSelector } from 'redux/slices/userSlice';
+import { logout, useAuth } from 'redux/apiConfig';
 
 export type MenuItemType = { caption: React.ReactNode; link?: string; handler?: () => void };
 

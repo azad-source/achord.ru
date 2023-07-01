@@ -24,11 +24,12 @@ import {
     useAddLikeToAuthorMutation,
     useEditAuthorByIdMutation,
     useLazyGetAuthorByAliasQuery,
-} from 'redux/api/authorApi';
+    useAddSheetMutation,
+    useLazyGetSheetsQuery,
+} from 'redux/api';
 import { EditAuthorByIdRequest } from 'redux/models/authorModels';
-import { useAddSheetMutation, useLazyGetSheetsQuery } from 'redux/api/sheetApi';
 import { AddSheetRequest } from 'redux/models/sheetModels';
-import { useAuth } from 'redux/api/userApi';
+import { useAuth } from 'redux/apiConfig';
 
 export const AuthorPage = () => {
     const [editAuthor] = useEditAuthorByIdMutation();

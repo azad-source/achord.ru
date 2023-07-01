@@ -1,7 +1,32 @@
 import { BaseQueryApi } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 import { ResponseError } from 'redux/models/sharedModels';
 import { getAuthToken } from 'utils/tokenHelper';
-import { logout } from './userApi';
+import {
+    BaseQueryFn,
+    FetchArgs,
+    FetchBaseQueryError,
+    FetchBaseQueryMeta,
+} from '@reduxjs/toolkit/dist/query';
+import { EndpointBuilder, TagDescription } from '@reduxjs/toolkit/dist/query/endpointDefinitions';
+import { createAuthProvider } from 'react-token-auth';
+
+export const { useAuth, authFetch, login, logout } = createAuthProvider<{
+    accessToken: string;
+    refreshToken: string;
+}>({
+    getAccessToken: (session) => session.accessToken,
+    onUpdateToken: (token) =>
+        fetch('/update-token', {
+            method: 'POST',
+            body: token.refreshToken,
+        }).then((r) => r.json()),
+});
+
+export type BuildType = EndpointBuilder<
+    BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError, {}, FetchBaseQueryMeta>,
+    TagDescription<any>,
+    'api'
+>;
 
 export const API_URL = 'https://achord.ru/api/pianosheet';
 

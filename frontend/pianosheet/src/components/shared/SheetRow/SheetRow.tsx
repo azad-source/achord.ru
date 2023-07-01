@@ -7,8 +7,8 @@ import { FavoriteIcon } from '../icons/FavoriteIcon';
 import { useAppSelector } from 'redux/hooks';
 import { isDarkTheme } from 'redux/slices/appSlice';
 import { Loader } from '../layout/Loader/Loader';
-import { useAddSheetToFavoriteMutation } from 'redux/api/sheetApi';
-import { useAuth } from 'redux/api/userApi';
+import { useAddSheetToFavoriteMutation } from 'redux/api';
+import { useAuth } from 'redux/apiConfig';
 
 type SheetRowType = 'main' | 'second';
 

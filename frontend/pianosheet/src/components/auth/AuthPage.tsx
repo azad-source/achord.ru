@@ -9,13 +9,12 @@ import { useNavigate } from 'react-router-dom';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 import { Button } from 'components/shared/Button/Button';
 import {
-    logout,
-    useAuth,
     useAuthorizationMutation,
     useLazyGetSocialLinksAuthQuery,
     useRegisterMutation,
     useResetPasswordMutation,
-} from 'redux/api/userApi';
+} from 'redux/api';
+import { logout, useAuth } from 'redux/apiConfig';
 
 export const AuthPage = () => {
     const [getSocialLinksAuth] = useLazyGetSocialLinksAuthQuery();

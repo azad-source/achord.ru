@@ -10,7 +10,7 @@ import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 import cn from 'classnames';
 import { useAppSelector } from 'redux/hooks';
 import { isDarkTheme } from 'redux/slices/appSlice';
-import { useLazyGetGenresQuery } from 'redux/api/genreApi';
+import { useLazyGetGenresQuery } from 'redux/api';
 
 export const SheetsPage = () => {
     const [getGenres, { data: genres, isFetching: isGenresLoading }] = useLazyGetGenresQuery();

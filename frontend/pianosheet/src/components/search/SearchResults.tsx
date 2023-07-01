@@ -12,7 +12,7 @@ import { SheetRow } from 'components/shared/SheetRow/SheetRow';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { isDarkTheme } from 'redux/slices/appSlice';
 import { openDownloadPage } from 'hooks/openDownloadPage';
-import { useSearchAuthorsQuery, useSearchSheetsQuery } from 'redux/api/searchApi';
+import { useSearchAuthorsQuery, useSearchSheetsQuery } from 'redux/api';
 import { dropSearch, searchSelector } from 'redux/slices/searchSlice';
 import { SHEETS_SEARCH_SIZE } from 'utils/constants';
 import authorsStyles from 'styles/authors.module.scss';

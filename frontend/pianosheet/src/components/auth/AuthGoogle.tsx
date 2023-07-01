@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
 import { GoogleLogo } from 'components/shared/icons/GoogleLogo';
 import styles from './AuthGoogle.module.scss';
-import { useLoginViaGoogleMutation } from 'redux/api/userApi';
+import { useLoginViaGoogleMutation } from 'redux/api';
 
 export const AuthGoogle = () => {
     const [loginViaGoogle] = useLoginViaGoogleMutation();

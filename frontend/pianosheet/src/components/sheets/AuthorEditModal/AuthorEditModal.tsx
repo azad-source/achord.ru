@@ -15,7 +15,7 @@ import { useToast } from 'components/shared/Toast/Toast';
 import { useAppSelector } from 'redux/hooks';
 import { isDarkTheme } from 'redux/slices/appSlice';
 import { EditAuthorByIdRequest } from 'redux/models/authorModels';
-import { useGetGenresQuery } from 'redux/api/genreApi';
+import { useGetGenresQuery } from 'redux/api';
 
 interface Props {
     author: AuthorItemJsModel;

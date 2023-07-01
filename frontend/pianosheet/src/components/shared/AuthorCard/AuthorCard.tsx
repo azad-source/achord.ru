@@ -16,10 +16,10 @@ import {
     useAddAuthorToFavoriteMutation,
     useEditAuthorByIdMutation,
     useRemoveAuthorByIdMutation,
-} from 'redux/api/authorApi';
+} from 'redux/api';
 import { EditAuthorByIdRequest } from 'redux/models/authorModels';
-import { useAuth } from 'redux/api/userApi';
 import { isSuperUserSelector } from 'redux/slices/userSlice';
+import { useAuth } from 'redux/apiConfig';
 
 interface Props {
     author: AuthorItemJsModel;

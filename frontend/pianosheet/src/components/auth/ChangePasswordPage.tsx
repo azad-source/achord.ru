@@ -4,8 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import styles from './ChangePasswordPage.module.scss';
 import { Input } from 'components/shared/Input/Input';
 import { Button } from 'components/shared/Button/Button';
-import { useChangePasswordMutation } from 'redux/api/userApi';
-// import { changePassword, ChangePasswordType } from 'redux/slices/!del_user';
+import { useChangePasswordMutation } from 'redux/api';
 
 type ChangePasswordType = {
     isChangedPassword: boolean;

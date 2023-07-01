@@ -12,7 +12,7 @@ import { ErrorBoundary } from 'components/shared/ErrorBoundary/ErrorBoundary';
 import { appSelector, isDarkTheme } from 'redux/slices/appSlice';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { Spinner } from 'components/shared/Spinner/Spinner';
-import { useAddAuthorMutation } from 'redux/api/authorApi';
+import { useAddAuthorMutation } from 'redux/api';
 import { AddAuthorRequest } from 'redux/models/authorModels';
 import { dropSearch, searchSelector } from 'redux/slices/searchSlice';
 import { currentUserSelector } from 'redux/slices/userSlice';

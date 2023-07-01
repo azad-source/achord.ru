@@ -2,31 +2,17 @@ import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import appReducer from './slices/appSlice';
 import userReducer from './slices/userSlice';
 import searchReducer from './slices/searchSlice';
-import { authorApi } from './api/authorApi';
-import { genreApi } from './api/genreApi';
-import { sheetApi } from './api/sheetApi';
-import { searchApi } from './api/searchApi';
-import { userApi } from './api/userApi';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
+import { api } from './api';
 
 export const store = configureStore({
     reducer: {
         app: appReducer,
         user: userReducer,
         search: searchReducer,
-        [authorApi.reducerPath]: authorApi.reducer,
-        [genreApi.reducerPath]: genreApi.reducer,
-        [sheetApi.reducerPath]: sheetApi.reducer,
-        [searchApi.reducerPath]: searchApi.reducer,
-        [userApi.reducerPath]: userApi.reducer,
+        [api.reducerPath]: api.reducer,
     },
-    middleware: (gDM) =>
-        gDM()
-            .concat(authorApi.middleware)
-            .concat(genreApi.middleware)
-            .concat(sheetApi.middleware)
-            .concat(searchApi.middleware)
-            .concat(userApi.middleware),
+    middleware: (gDM) => gDM().concat(api.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;

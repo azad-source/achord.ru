@@ -1,5 +1,5 @@
 import { SheetItemJsModel } from 'domain/api/JsModels';
-import { useLazyGetAuthorByIdQuery } from 'redux/api/authorApi';
+import { useLazyGetAuthorByIdQuery } from 'redux/api';
 import { Paths } from 'utils/routes/Paths';
 
 export const openDownloadPage = (sheet: SheetItemJsModel) => {

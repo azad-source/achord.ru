@@ -8,7 +8,7 @@ import { Paths } from 'utils/routes/Paths';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
-import { useGetAuthorsQuery } from 'redux/api/authorApi';
+import { useGetAuthorsQuery } from 'redux/api';
 import authorsStyles from 'styles/authors.module.scss';
 
 export const LetterPage = () => {

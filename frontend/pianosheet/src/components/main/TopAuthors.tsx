@@ -3,9 +3,8 @@ import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { Page } from 'components/shared/layout/Page/Page';
 import { SheetRow } from 'components/shared/SheetRow/SheetRow';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
-import { useGetTopAuthorsQuery } from 'redux/api/authorApi';
+import { useGetTopAuthorsQuery, useGetTopSheetsQuery } from 'redux/api';
 import { openDownloadPage } from 'hooks/openDownloadPage';
-import { useGetTopSheetsQuery } from 'redux/api/sheetApi';
 import authorsStyles from 'styles/authors.module.scss';
 import mainStyles from './main.module.scss';
 

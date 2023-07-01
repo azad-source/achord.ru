@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 import { FavouriteAuthors } from './FavouriteAuthors';
 import { RandomAuthors } from './RandomAuthors';
 import { TopAuthors } from './TopAuthors';
-import { useAuth } from 'redux/api/userApi';
+import { useAuth } from 'redux/apiConfig';
 
 export const MainPage = () => {
     const [tab, setTab] = React.useState<number>(0);

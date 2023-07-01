@@ -3,8 +3,7 @@ import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styles from './SuccessRegistrationPage.module.scss';
 import cn from 'classnames';
-import { useAccountActivationMutation } from 'redux/api/userApi';
-// import { ConfirmationType, confirmEmail } from 'redux/slices/!del_user';
+import { useAccountActivationMutation } from 'redux/api';
 
 type ConfirmationType = {
     isConfirmed: boolean;

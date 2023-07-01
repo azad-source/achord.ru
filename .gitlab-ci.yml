@@ -2,7 +2,6 @@ before_script:
   - apt-get update -y
   - apt-get upgrade -y
   - apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates
-  # - curl -sL https://deb.nodesource.com/setup_16.x | bash -
   - apt-get install -y nodejs npm
   - apt-get -y install rsync
   - node --version

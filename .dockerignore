@@ -1,0 +1,16 @@
+.vscode
+frontend/
+pg_data
+.dockerignore
+.env
+.gitignore
+.gitlab-ci.yaml
+
+venv/
+backend/media/
+backend/backstatic/
+package-lock.json
+README.md
+Dockerfile
+docker-compose-win.yml
+docker-compose.yml

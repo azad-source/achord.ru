@@ -4,19 +4,18 @@ services:
     db:
         image: postgres:12
         volumes: 
-            - ./docker/postgres/backups/init.sql:/docker-entrypoint-initdb.d/init.sql
+            - ./docker/postgres/backups/init.sql/init.sql:/docker-entrypoint-initdb.d/init.sql
             - ./pg_data:/db/data
         env_file: .env
         restart: always
     web:
         build: .
-        command: bash -c "python /usr/src/pianosheet/backend/manage.py collectstatic --noinput && 
-                python /usr/src/pianosheet/backend/manage.py migrate --noinput &&
-                cd ../../backend &&
+        command: sh -c "cd backend && python manage.py collectstatic --noinput && 
+                python manage.py migrate --noinput &&
                 gunicorn backend.wsgi:application --reload --bind 0.0.0.0:9001 --workers=3 --log-level debug"
 
         volumes: 
-            - .:/usr/src/pianosheet
+            - ./backend/:/usr/src/pianosheet/backend
         ports: 
             - 127.0.0.1:9001:9001
         depends_on: 

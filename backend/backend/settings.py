@@ -153,9 +153,6 @@ EMAIL_PORT = 587
 ROOT_URLCONF = 'backend.urls'
 
 
-FRONTEND_DIR_REV = os.path.abspath(os.path.join(
-    BASE_DIR, "..", "frontend", "pianosheet", "build"))
-FRONTEND_DIR = FRONTEND_DIR_REV.replace('\\', '/')
 
 
 TEMPLATES = [
@@ -164,7 +161,6 @@ TEMPLATES = [
         'DIRS': [
             'templates',
             'backend/auth_app/templates',
-            FRONTEND_DIR,
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -233,12 +229,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
-STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "backstatic/")
+STATIC_URL = '/backstatic/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
-STATIC_REACR_DIR = os.path.join(FRONTEND_DIR, 'static')
-STATICFILES_DIRS = (STATIC_REACR_DIR,)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

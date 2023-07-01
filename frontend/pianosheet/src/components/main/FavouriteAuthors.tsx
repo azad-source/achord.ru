@@ -9,8 +9,8 @@ import authorsStyles from 'styles/authors.module.scss';
 import mainStyles from './main.module.scss';
 
 export const FavouriteAuthors = () => {
-    const { data: authors, isFetching: isAuthorsLoading } = useGetFavoriteAuthorsQuery();
-    const { data: sheets, isFetching: isSheetsLoading } = useGetFavoriteSheetsQuery();
+    const { data: authors, isLoading: isAuthorsLoading } = useGetFavoriteAuthorsQuery();
+    const { data: sheets, isLoading: isSheetsLoading } = useGetFavoriteSheetsQuery();
 
     const authorsList = authors?.results || [];
     const sheetsList = sheets?.results || [];

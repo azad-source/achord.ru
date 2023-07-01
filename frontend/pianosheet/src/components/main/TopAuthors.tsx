@@ -9,8 +9,8 @@ import authorsStyles from 'styles/authors.module.scss';
 import mainStyles from './main.module.scss';
 
 export const TopAuthors = () => {
-    const { data: authors, isFetching: isAuthorsLoading } = useGetTopAuthorsQuery();
-    const { data: sheets, isFetching: isSheetsLoading } = useGetTopSheetsQuery();
+    const { data: authors, isLoading: isAuthorsLoading } = useGetTopAuthorsQuery();
+    const { data: sheets, isLoading: isSheetsLoading } = useGetTopSheetsQuery();
 
     const authorsList = authors?.results || [];
     const sheetsList = sheets?.results || [];

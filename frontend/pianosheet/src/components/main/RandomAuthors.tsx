@@ -9,8 +9,8 @@ import authorsStyles from 'styles/authors.module.scss';
 import mainStyles from './main.module.scss';
 
 export const RandomAuthors = () => {
-    const { data: authors, isFetching: isAuthorsLoading } = useGetRandomAuthorsQuery();
-    const { data: sheets, isFetching: isSheetsLoading } = useGetRandomSheetsQuery();
+    const { data: authors, isLoading: isAuthorsLoading } = useGetRandomAuthorsQuery();
+    const { data: sheets, isLoading: isSheetsLoading } = useGetRandomSheetsQuery();
 
     const authorsList = authors?.results || [];
     const sheetsList = sheets?.results || [];

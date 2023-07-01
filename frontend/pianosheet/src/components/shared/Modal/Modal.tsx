@@ -1,14 +1,14 @@
-import { QueryStatus } from 'domain/QueryStatus';
 import * as React from 'react';
 import { Loader } from '../layout/Loader/Loader';
-import styles from './Modal.scss';
+import styles from './Modal.module.scss';
 import cn from 'classnames';
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/rootReducer';
+import { isDarkTheme } from 'redux/slices/appSlice';
+import { useAppSelector } from 'redux/hooks';
 
 interface Props {
     title: string;
-    loadStatus?: QueryStatus;
+    children: React.ReactNode;
+    isLoading?: boolean;
     bottomPanel?: React.ReactNode;
     setScroll?: boolean;
     className?: string;
@@ -18,13 +18,13 @@ interface Props {
 export const Modal: React.FC<Props> = ({
     title,
     children,
-    loadStatus = QueryStatus.success(),
+    isLoading = false,
     bottomPanel,
     setScroll = false,
     className,
     onClose,
 }) => {
-    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+    const isDark = useAppSelector(isDarkTheme);
 
     return (
         <div className={cn(styles.root, isDark && styles.root__dark)}>
@@ -35,7 +35,7 @@ export const Modal: React.FC<Props> = ({
                         {title}
                         <div className={styles.modal_close} onClick={onClose} />
                     </div>
-                    <Loader loadStatus={loadStatus}>{children}</Loader>
+                    <Loader isLoading={isLoading}>{children}</Loader>
                     {!!bottomPanel && <div className={styles.modal_bottomPanel}>{bottomPanel}</div>}
                 </div>
             </div>

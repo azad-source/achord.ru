@@ -1,22 +1,24 @@
 import { Button } from 'components/shared/Button/Button';
 import { Input } from 'components/shared/Input/Input';
 import { Modal } from 'components/shared/Modal/Modal';
+import { AuthorItemJsModel } from 'domain/api/JsModels';
 import { maxUploadPdfSize } from 'domain/SiteInfo';
 import * as React from 'react';
+import { AddSheetRequest } from 'redux/models/sheetModels';
 import styles from './SheetAddModal.module.scss';
 
-export type sheetAddModel = {
-    sheetname: string;
-    filename: any;
-};
-
 interface Props {
+    author: AuthorItemJsModel;
     closeModal: () => void;
-    addSheet: (options: sheetAddModel) => void;
+    addSheet: (options: AddSheetRequest) => void;
 }
 
-export const SheetAddModal: React.FC<Props> = ({ closeModal, addSheet }) => {
-    const [form, setForm] = React.useState<sheetAddModel>({ sheetname: '', filename: '' });
+export const SheetAddModal: React.FC<Props> = ({ author, closeModal, addSheet }) => {
+    const [form, setForm] = React.useState<AddSheetRequest>({
+        sheetname: '',
+        filename: '',
+        authorId: author.id,
+    });
 
     const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, sheetname: e.target.value });

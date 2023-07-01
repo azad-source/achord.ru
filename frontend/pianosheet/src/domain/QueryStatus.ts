@@ -1,4 +1,4 @@
-import { ErrorPrinter } from './ErrorPrinter';
+import { ErrorPrinter } from 'domain/ErrorPrinter';
 import { immerable } from 'immer';
 
 type Status = 'INITIAL' | 'REQUEST' | 'SUCCESS' | 'ERROR';
@@ -45,11 +45,7 @@ export class QueryStatus {
     public static success(): QueryStatus {
         return new QueryStatus('SUCCESS');
     }
-    public static error(
-        reason: string,
-        message: string,
-        exception?: Error,
-    ): QueryStatus {
+    public static error(reason: string, message: string, exception?: Error): QueryStatus {
         return new QueryStatus('ERROR', reason, message, exception);
     }
 
@@ -73,10 +69,7 @@ export class QueryStatus {
 
         return (
             this.errorMessage ||
-            new ErrorPrinter(
-                this.exception,
-                this.errorName,
-            ).getErrorMessage() ||
+            new ErrorPrinter(this.exception, this.errorName).getErrorMessage() ||
             this.errorName ||
             'Ошибка'
         );

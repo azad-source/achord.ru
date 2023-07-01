@@ -3,25 +3,27 @@ import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styles from './SuccessRegistrationPage.module.scss';
 import cn from 'classnames';
-import { bindActionCreators, Dispatch } from 'redux';
-import { ConfirmationType, usersAction } from 'store/usersActions';
-import { connect } from 'react-redux';
-import { RootState } from 'store/rootReducer';
-import { QueryStatus } from 'domain/QueryStatus';
+import { useAccountActivationMutation } from 'redux/api';
 
-interface Props {
-    status: QueryStatus;
-    confirmEmail: (uid: string, token: string) => Promise<ConfirmationType>;
-}
+type ConfirmationType = {
+    isConfirmed: boolean;
+    message?: string;
+};
 
-const SuccessRegistrationPageFC: React.FC<Props> = ({ status, confirmEmail }) => {
+export const SuccessRegistrationPage = () => {
+    const [confirmEmail] = useAccountActivationMutation();
+
     const { uid, token } = useParams<{ uid: string; token: string }>();
     const [confirm, setConfirm] = React.useState<ConfirmationType>({
         isConfirmed: false,
     });
 
     React.useEffect(() => {
-        confirmEmail(uid, token).then((confirm) => setConfirm(confirm));
+        if (token && uid) {
+            confirmEmail({ userId: uid, token })
+                .unwrap()
+                .then((confirm) => setConfirm(confirm));
+        }
     }, []);
 
     return (
@@ -42,23 +44,3 @@ const SuccessRegistrationPageFC: React.FC<Props> = ({ status, confirmEmail }) =>
         </Page>
     );
 };
-
-const mapStateToProps = (state: RootState) => {
-    return {
-        status: state.users.status,
-    };
-};
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return bindActionCreators(
-        {
-            confirmEmail: usersAction.confirmEmail,
-        },
-        dispatch,
-    );
-};
-
-export const SuccessRegistrationPage = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(SuccessRegistrationPageFC);

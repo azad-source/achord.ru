@@ -1,113 +1,55 @@
 import * as React from 'react';
 import { Page } from 'components/shared/layout/Page/Page';
 import { useLocation, useParams } from 'react-router-dom';
-import styles from './LetterPage.scss';
-import { connect } from 'react-redux';
-import { RootState } from 'store/rootReducer';
-import { bindActionCreators, Dispatch } from 'redux';
-import { sheetsAction } from 'store/sheetsActions';
-import { AuthorItemJsModel, AuthorJsModel } from 'domain/api/JsModels';
-import { QueryStatus } from 'domain/QueryStatus';
+import styles from './LetterPage.module.scss';
 import { SiteName } from 'domain/SiteInfo';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { Paths } from 'utils/routes/Paths';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
-import { useAuth } from 'api/UsersClient';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
+import { useGetAuthorsQuery } from 'redux/api';
+import authorsStyles from 'styles/authors.module.scss';
 
-interface Props {
-    authors: AuthorJsModel;
-    status: QueryStatus;
-    isSuperUser?: boolean;
-    getAuthors: (letter?: string, page?: number) => void;
-    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
-    removeAuthor: (authorId: number) => void;
-    addAuthorToFavorite: (authorId: number, isFavorite: boolean) => void;
-}
-
-const LetterPageFC: React.FC<Props> = ({
-    authors,
-    status,
-    isSuperUser = false,
-    getAuthors,
-    editAuthor,
-    removeAuthor,
-    addAuthorToFavorite,
-}) => {
-    const { letter } = useParams<{ letter: string }>();
+export const LetterPage = () => {
+    const { letter = '' } = useParams<{ letter: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const location = useLocation();
     const title = `${SiteName} - ${letter.toUpperCase()}`;
-    const [logged] = useAuth();
+    const { data: authors, isFetching } = useGetAuthorsQuery({ letter, page: pageNumber });
 
     React.useEffect(() => {
         document.title = title;
-        getAuthors(letter);
         setPageNumber(1);
     }, [letter, location]);
 
-    const getAuthorsByPage = (page: number) => {
-        getAuthors(letter, page);
-        setPageNumber(page);
+    React.useEffect(() => {
         window.scroll({ top: 0, behavior: 'smooth' });
-    };
+    }, [pageNumber]);
 
     const breadcrumbs: BreadcrumbProps[] = [
-        {
-            caption: 'Ноты',
-            link: Paths.sheetsPage,
-        },
-        {
-            caption: letter.toUpperCase(),
-        },
+        { caption: 'Ноты', link: Paths.sheetsPage },
+        { caption: letter.toUpperCase() },
     ];
 
     return (
-        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn status={status}>
+        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn loading={isFetching}>
             <TextPlain className={styles.title}>{letter.toUpperCase()}</TextPlain>
-            <div className={styles.authors}>
-                {authors.results.map((author, index) => (
-                    <AuthorCard
-                        key={index}
-                        author={author}
-                        className={styles.authors_item}
-                        editAuthor={isSuperUser ? editAuthor : undefined}
-                        removeAuthor={isSuperUser ? removeAuthor : undefined}
-                        addAuthorToFavorite={logged ? addAuthorToFavorite : undefined}
-                    />
+            <div className={authorsStyles.authors}>
+                {authors?.results.map((author, index) => (
+                    <AuthorCard key={index} author={author} className={authorsStyles.authors__item} />
                 ))}
             </div>
-            {authors.page_count > 1 && (
+            {authors && authors.page_count > 1 && (
                 <Pagination
                     pageCount={authors.page_count}
                     pageNumber={pageNumber}
-                    switchPage={getAuthorsByPage}
+                    switchPage={setPageNumber}
                 />
             )}
-            {authors.count === 0 && !status.isRequest() && (
+            {authors && authors.count === 0 && !isFetching && (
                 <TextPlain className={styles.empty}>Раздел пока пустой</TextPlain>
             )}
         </Page>
     );
 };
-
-const mapStateToProps = (state: RootState) => ({
-    authors: state.sheets.authors,
-    status: state.sheets.status,
-    isSuperUser: state.users.currentUser.is_superuser,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return bindActionCreators(
-        {
-            getAuthors: sheetsAction.getAuthors,
-            editAuthor: sheetsAction.editAuthor,
-            removeAuthor: sheetsAction.removeAuthor,
-            addAuthorToFavorite: sheetsAction.addAuthorToFavorite,
-        },
-        dispatch,
-    );
-};
-
-export const LetterPage = connect(mapStateToProps, mapDispatchToProps)(LetterPageFC);

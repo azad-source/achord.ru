@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
-import { Spinner } from 'components/shared/Spinner/Spinner';
 import { Header } from 'components/shared/layout/Header/Header';
 import { Footer } from 'components/shared/layout/Footer/Footer';
-import styles from './AppRouter.scss';
+import styles from './AppRouter.module.scss';
 import { SheetsPage } from 'components/sheets/SheetsPage/SheetsPage';
 import { MainPage } from 'components/main/MainPage';
 import { AuthPage } from 'components/auth/AuthPage';
@@ -20,53 +19,44 @@ import { GenrePage } from 'components/sheets/GenrePage/GenrePage';
 import { ContactsPage } from 'components/contacts/ContactsPage';
 import { PrivacyPage } from 'components/privacy/PrivacyPage';
 import { CopyrightHolders } from 'components/rights/CopyrightHolders';
-import { useDispatch, useSelector } from 'react-redux';
-import { appAction } from 'store/appActions';
-import { RootState } from 'store/rootReducer';
 import cn from 'classnames';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+import { isDarkTheme, switchTheme } from 'redux/slices/appSlice';
+import { Spinner } from 'components/shared/Spinner/Spinner';
 
 const AppRouter = () => {
-    const dispatch = useDispatch();
-    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
-
     React.useEffect(() => {
-        dispatch(appAction.switchTheme());
+        dispatch(switchTheme());
     }, []);
+    
+    const dispatch = useAppDispatch();
+    const isDark = useAppSelector(isDarkTheme);
 
     return (
         <div className={cn(styles.root, isDark && styles.root__dark)}>
             <React.Suspense fallback={<Spinner />}>
                 <BrowserRouter>
                     <Header />
-                    <Switch>
-                        <Route path={Paths.sheetsPage} component={SheetsPage} exact />
-                        <Route path={Paths.genrePage} component={GenrePage} exact />
-                        <Route path={Paths.letterPage} component={LetterPage} exact />
-                        <Route path={Paths.authorPage} component={AuthorPage} exact />
-                        <Route path={Paths.sheetDownloadPage} component={SheetDownloadPage} exact />
-                        <Route path={Paths.authPage} component={AuthPage} exact />
-                        <Route path={Paths.authVKPage} component={AuthPageVk} exact />
+                    <Routes>
+                        <Route path={Paths.sheetsPage} element={<SheetsPage />} />
+                        <Route path={Paths.genrePage} element={<GenrePage />} />
+                        <Route path={Paths.letterPage} element={<LetterPage />} />
+                        <Route path={Paths.authorPage} element={<AuthorPage />} />
+                        <Route path={Paths.sheetDownloadPage} element={<SheetDownloadPage />} />
+                        <Route path={Paths.authPage} element={<AuthPage />} />
+                        <Route path={Paths.authVKPage} element={<AuthPageVk />} />
                         <Route
                             path={Paths.successConfirmEmailPage}
-                            component={SuccessRegistrationPage}
-                            exact
+                            element={<SuccessRegistrationPage />}
                         />
-                        <Route
-                            path={Paths.changePasswordPage}
-                            component={ChangePasswordPage}
-                            exact
-                        />
-                        <Route path={Paths.virtPianoPage} component={PlayOnlinePage} exact />
-                        <Route path={Paths.contactsPage} component={ContactsPage} exact />
-                        <Route path={Paths.privacyPage} component={PrivacyPage} exact />
-                        <Route
-                            path={Paths.copyrightHoldersPage}
-                            component={CopyrightHolders}
-                            exact
-                        />
-                        <Route path={Paths.mainPage} component={MainPage} exact />
-                        <Route component={NotFoundPage} />
-                    </Switch>
+                        <Route path={Paths.changePasswordPage} element={<ChangePasswordPage />} />
+                        <Route path={Paths.virtPianoPage} element={<PlayOnlinePage />} />
+                        <Route path={Paths.contactsPage} element={<ContactsPage />} />
+                        <Route path={Paths.privacyPage} element={<PrivacyPage />} />
+                        <Route path={Paths.copyrightHoldersPage} element={<CopyrightHolders />} />
+                        <Route path={Paths.mainPage} element={<MainPage />} />
+                        <Route element={<NotFoundPage />} />
+                    </Routes>
                     <Footer isDark={isDark} />
                 </BrowserRouter>
             </React.Suspense>

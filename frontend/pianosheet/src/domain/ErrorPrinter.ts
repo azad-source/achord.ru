@@ -1,11 +1,8 @@
-import { isAxiosError } from '../utils/axios';
+import { isAxiosError } from 'utils/axios';
 
 // Место для набивания маппинга ошибок в человеческую форму.
 export class ErrorPrinter {
-    constructor(
-        private readonly error?: Error,
-        private readonly errorName?: string,
-    ) {}
+    constructor(private readonly error?: Error, private readonly errorName?: string) {}
 
     public getErrorMessage(): string | null {
         if (!this.error) {
@@ -25,10 +22,7 @@ export class ErrorPrinter {
             return null;
         }
 
-        if (
-            this.error.code === 'ECONNABORTED' &&
-            this.error.message.startsWith('timeout')
-        ) {
+        if (this.error.code === 'ECONNABORTED' && this.error.message.startsWith('timeout')) {
             return 'Время ожидания запроса истекло';
         }
         if (this.error.message === 'Network Error') {

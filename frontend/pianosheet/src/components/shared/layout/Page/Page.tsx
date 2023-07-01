@@ -1,72 +1,57 @@
 import * as React from 'react';
 import cn from 'classnames';
-import styles from './Page.scss';
-import { QueryStatus } from 'domain/QueryStatus';
-import { Spinner } from 'components/shared/Spinner/Spinner';
-import { RootState } from 'store/rootReducer';
-import { connect, useSelector } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import { sheetsAction } from 'store/sheetsActions';
+import styles from './Page.module.scss';
 import { SheetsNav } from '../SheetsNav/SheetsNav';
 import { SearchResults } from 'components/search/SearchResults';
 import { useToast } from 'components/shared/Toast/Toast';
 import { BreadcrumbProps, Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
-import { useHistory, useLocation } from 'react-router-dom';
-import { AuthorItemJsModel, AuthorRequestModel } from 'domain/api/JsModels';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
 import { AuthorAddModal } from 'components/sheets/AuthorAddModal/AuthorAddModal';
 import { ErrorBoundary } from 'components/shared/ErrorBoundary/ErrorBoundary';
+import { appSelector, isDarkTheme } from 'redux/slices/appSlice';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+import { Spinner } from 'components/shared/Spinner/Spinner';
+import { useAddAuthorMutation } from 'redux/api';
+import { AddAuthorRequest } from 'redux/models/authorModels';
+import { dropSearch, searchSelector } from 'redux/slices/searchSlice';
+import { currentUserSelector } from 'redux/slices/userSlice';
 
 interface Props {
     className?: string;
-    status?: QueryStatus;
-    sheetStatus?: QueryStatus;
-    userStatus?: QueryStatus;
+    loading?: boolean;
     children: React.ReactNode;
-    searchApplied: boolean;
     hideSheetsNav?: boolean;
-    warning?: string;
     breadcrumbs?: BreadcrumbProps[];
-    isSuperUser?: boolean;
     showAddAuthorBtn?: boolean;
-    addAuthor: (author: FormData) => Promise<AuthorItemJsModel | false>;
 }
 
-const PageFC: React.FC<Props> = ({
+export const Page: React.FC<Props> = ({
     className,
     children,
-    status = QueryStatus.initial(),
-    sheetStatus = QueryStatus.initial(),
-    userStatus = QueryStatus.initial(),
-    searchApplied,
+    loading = false,
     hideSheetsNav = false,
-    warning,
     breadcrumbs,
-    isSuperUser = false,
     showAddAuthorBtn = false,
-    addAuthor,
 }) => {
+    const [addAuthor] = useAddAuthorMutation();
     const [showAddAuthorModal, setShowAddAuthorModal] = React.useState<boolean>(false);
 
-    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+    const { applied: searchApplied } = useAppSelector(searchSelector);
+    const { is_superuser: isSuperUser } = useAppSelector(currentUserSelector);
+    const { warning } = useAppSelector(appSelector);
+    const isDark = useAppSelector(isDarkTheme);
 
-    const history = useHistory();
-
+    const navigate = useNavigate();
+    const { toast, push } = useToast();
     const { pathname } = useLocation();
+
+    const dispatch = useAppDispatch();
 
     React.useEffect(() => {
         window.scrollTo(0, 0);
+        dispatch(dropSearch());
     }, [pathname]);
-
-    let output: React.ReactNode = '';
-
-    if (searchApplied) {
-        output = <SearchResults />;
-    } else {
-        output = children;
-    }
-
-    const { toast, push } = useToast();
 
     React.useEffect(() => {
         if (warning) push(warning);
@@ -75,17 +60,19 @@ const PageFC: React.FC<Props> = ({
     const closeAddAuthorModal = () => setShowAddAuthorModal(false);
     const openAddAuthorModal = () => setShowAddAuthorModal(true);
 
-    const addAuthorHandler = (options: AuthorRequestModel) => {
+    const addAuthorHandler = (options: AddAuthorRequest) => {
         let formData = new FormData();
         formData.append('preview', options.preview);
         formData.append('name', options.name);
         formData.append('info', options.info);
         formData.append('genres', JSON.stringify(options.genres.map(({ id }) => id)));
-        addAuthor(formData).then((res) => {
-            if (res) {
-                history.push(Paths.getAuthorPath(res.name.charAt(0), res.alias));
-            }
-        });
+        addAuthor(options)
+            .unwrap()
+            .then((res) => {
+                if (res) {
+                    navigate(Paths.getAuthorPath(res.name.charAt(0), res.alias));
+                }
+            });
         closeAddAuthorModal();
     };
 
@@ -102,10 +89,18 @@ const PageFC: React.FC<Props> = ({
                             title="Добавить автора"
                         />
                     )}
-                    {status.isRequest() ? <Spinner /> : output}
-                    {(sheetStatus.isRequest() || userStatus.isRequest()) && (
+                    {loading ? (
                         <Spinner withBackground />
+                    ) : searchApplied ? (
+                        <SearchResults />
+                    ) : (
+                        children
                     )}
+                    {
+                        /** appStatus.isRequest() || */ false /**userStatus.isRequest() */ && (
+                            <Spinner withBackground />
+                        )
+                    }
                 </div>
                 {toast}
                 {showAddAuthorModal && (
@@ -115,35 +110,3 @@ const PageFC: React.FC<Props> = ({
         </div>
     );
 };
-
-type OwnProps = Pick<Props, 'className' | 'children' | 'status'>;
-
-const mapStateToProps = (
-    {
-        sheets: { search, localStatus, warning },
-        users: { currentUser, status: userStatus },
-        app: { theme },
-    }: RootState,
-    { className, children, status }: OwnProps,
-) => ({
-    className,
-    sheetStatus: localStatus,
-    userStatus,
-    status,
-    children,
-    searchApplied: search.applied,
-    warning: warning,
-    isSuperUser: currentUser.is_superuser,
-    isDark: theme === 'dark',
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return bindActionCreators(
-        {
-            addAuthor: sheetsAction.addAuthor,
-        },
-        dispatch,
-    );
-};
-
-export const Page = connect(mapStateToProps, mapDispatchToProps)(PageFC);

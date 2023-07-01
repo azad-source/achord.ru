@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styles from './Link.module.scss';
 import cn from 'classnames';
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/rootReducer';
+import { useAppSelector } from 'redux/hooks';
+import { isDarkTheme } from 'redux/slices/appSlice';
 
 interface Props
     extends React.DetailedHTMLProps<
@@ -14,7 +14,7 @@ interface Props
 }
 
 export const Link: React.FC<Props> = ({ size = 'medium', className, ...props }) => {
-    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+    const isDark = useAppSelector(isDarkTheme);
 
     return (
         <div className={cn(styles.root, isDark && styles.root__dark, className)}>

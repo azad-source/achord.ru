@@ -7,6 +7,7 @@ import { Link } from 'components/shared/Link/Link';
 import { Modal } from 'components/shared/Modal/Modal';
 import { Privacy } from 'components/shared/Privacy/Privacy';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
+import { TokenJsModel } from 'domain/api/JsModels';
 
 interface Props {
     errorMessage: string;
@@ -16,7 +17,7 @@ interface Props {
         password: string,
         re_password: string,
         event: React.FormEvent,
-    ) => Promise<void>;
+    ) => Promise<TokenJsModel>;
     regConfirm: (isSuccessRegistration: boolean, email: string) => void;
 }
 

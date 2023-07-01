@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styles from './FavoriteIcon.scss';
+import styles from './FavoriteIcon.module.scss';
 
 interface Props {
     className?: string;

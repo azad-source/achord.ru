@@ -1,6 +1,6 @@
 @import './default.scss';
 @import './fonts.scss';
-@import './colors';
+@import './colors.scss';
 
 body,
 html {
@@ -9,6 +9,7 @@ html {
   min-height: 100%;
   margin: 0;
   padding: 0;
+  background-color: rgb(60, 64, 67);
 }
 
 * {

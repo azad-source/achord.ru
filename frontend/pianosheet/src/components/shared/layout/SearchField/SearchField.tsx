@@ -1,28 +1,23 @@
 import * as React from 'react';
-import styles from './SearchField.scss';
+import styles from './SearchField.module.scss';
 import cn from 'classnames';
 import { Loupe } from 'components/shared/icons/Loupe';
-import { bindActionCreators, Dispatch } from 'redux';
-import { connect } from 'react-redux';
-import { sheetsAction } from 'store/sheetsActions';
-import { RootState } from 'store/rootReducer';
-import { QueryStatus } from 'domain/QueryStatus';
 import { useLocation } from 'react-router';
 
 interface Props {
     className?: string;
-    status: QueryStatus;
-    searchQuery: string;
     isDark?: boolean;
+    query: string;
+    isSuccess: boolean;
     searchSheets: (query: string) => void;
     dropSearch: () => void;
 }
 
-const SearchFieldFC: React.FC<Props> = ({
+export const SearchField: React.FC<Props> = ({
     className,
-    status,
-    searchQuery,
     isDark = false,
+    query,
+    isSuccess,
     searchSheets,
     dropSearch,
 }) => {
@@ -47,16 +42,16 @@ const SearchFieldFC: React.FC<Props> = ({
     }
 
     React.useEffect(() => {
-        if (status.isSuccess()) {
+        if (isSuccess) {
             skipSearch();
         }
     }, [location]);
 
     React.useEffect(() => {
-        if (status.isSuccess()) {
+        if (isSuccess) {
             setInput('');
         }
-    }, [searchQuery]);
+    }, [query]);
 
     return (
         <div className={cn(styles.root, isDark && styles.root__dark, className)}>
@@ -66,7 +61,7 @@ const SearchFieldFC: React.FC<Props> = ({
                     className={styles.input}
                     placeholder="Поиск нот"
                     onChange={(e) => setInput(e.target.value)}
-                    onKeyPress={keyPressHandler}
+                    onKeyUp={keyPressHandler}
                     onClick={searchHandler}
                     value={input}
                 />
@@ -75,20 +70,3 @@ const SearchFieldFC: React.FC<Props> = ({
         </div>
     );
 };
-
-const mapStateToProps = (state: RootState) => ({
-    status: state.sheets.search.status,
-    searchQuery: state.sheets.search.query,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return bindActionCreators(
-        {
-            searchSheets: sheetsAction.searchSheets,
-            dropSearch: sheetsAction.dropSearch,
-        },
-        dispatch,
-    );
-};
-
-export const SearchField = connect(mapStateToProps, mapDispatchToProps)(SearchFieldFC);

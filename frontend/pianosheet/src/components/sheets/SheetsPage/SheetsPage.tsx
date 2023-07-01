@@ -1,36 +1,30 @@
 import * as React from 'react';
-import styles from './SheetsPage.scss';
+import styles from './SheetsPage.module.scss';
 import { Page } from 'components/shared/layout/Page/Page';
 import { SiteName } from 'domain/SiteInfo';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
-import { connect, useSelector } from 'react-redux';
-import { RootState } from 'store/rootReducer';
-import { bindActionCreators, Dispatch } from 'redux';
-import { sheetsAction } from 'store/sheetsActions';
-import { GenreJsModel } from 'domain/api/JsModels';
 import { Link, useLocation } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
-import { QueryStatus } from 'domain/QueryStatus';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 import cn from 'classnames';
+import { useAppSelector } from 'redux/hooks';
+import { isDarkTheme } from 'redux/slices/appSlice';
+import { useLazyGetGenresQuery } from 'redux/api';
 
-interface Props {
-    genres: GenreJsModel;
-    status: QueryStatus;
-    getGenres: (page?: number) => void;
-}
+export const SheetsPage = () => {
+    const [getGenres, { data: genres, isFetching: isGenresLoading }] = useLazyGetGenresQuery();
+    const genresList = genres?.results || [];
 
-const SheetsPageFC: React.FC<Props> = ({ genres, status, getGenres }) => {
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const location = useLocation();
     const title = `${SiteName} - Ноты`;
 
-    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+    const isDark = useAppSelector(isDarkTheme);
 
     React.useEffect(() => {
         document.title = title;
-        getGenres();
+        getGenres({ page: 1 });
     }, [location]);
 
     const breadcrumbs: BreadcrumbProps[] = [
@@ -40,15 +34,15 @@ const SheetsPageFC: React.FC<Props> = ({ genres, status, getGenres }) => {
     ];
 
     const getGenresByPage = (page: number) => {
-        getGenres(page);
+        getGenres({ page });
         setPageNumber(page);
         window.scroll({ top: 0, behavior: 'smooth' });
     };
 
     return (
-        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn status={status}>
+        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn loading={isGenresLoading}>
             <div className={cn(styles.root, isDark && styles.root__dark)}>
-                {genres.results.map(({ id, name, alias, preview }) => (
+                {genresList.map(({ id, name, alias, preview }) => (
                     <Link key={id} className={styles.item} to={Paths.getGenrePage(alias)}>
                         <div
                             className={styles.preview}
@@ -65,7 +59,7 @@ const SheetsPageFC: React.FC<Props> = ({ genres, status, getGenres }) => {
                     </Link>
                 ))}
             </div>
-            {genres.page_count > 1 && (
+            {genres && genres.page_count > 1 && (
                 <Pagination
                     pageCount={genres.page_count}
                     pageNumber={pageNumber}
@@ -75,21 +69,3 @@ const SheetsPageFC: React.FC<Props> = ({ genres, status, getGenres }) => {
         </Page>
     );
 };
-
-const mapStateToProps = (state: RootState) => {
-    return {
-        status: state.sheets.status,
-        genres: state.sheets.genres,
-    };
-};
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return bindActionCreators(
-        {
-            getGenres: sheetsAction.getGenres,
-        },
-        dispatch,
-    );
-};
-
-export const SheetsPage = connect(mapStateToProps, mapDispatchToProps)(SheetsPageFC);

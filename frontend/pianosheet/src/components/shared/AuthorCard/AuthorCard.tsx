@@ -1,42 +1,55 @@
 import * as React from 'react';
-import styles from './AuthorCard.scss';
+import styles from './AuthorCard.module.scss';
 import cn from 'classnames';
-import { NavLink, useHistory } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Paths } from 'utils/routes/Paths';
 import defaultImg from 'images/default.png';
 import { AuthorEditModal } from 'components/sheets/AuthorEditModal/AuthorEditModal';
-import { AuthorItemJsModel, AuthorRequestModel } from 'domain/api/JsModels';
+import { AuthorItemJsModel } from 'domain/api/JsModels';
 import { RemoveModal } from '../RemoveModal/RemoveModal';
 import { FavoriteIcon } from '../icons/FavoriteIcon';
 import { Button } from '../Button/Button';
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/rootReducer';
+import { isDarkTheme } from 'redux/slices/appSlice';
+import { useAppSelector } from 'redux/hooks';
+import { Loader } from '../layout/Loader/Loader';
+import {
+    useAddAuthorToFavoriteMutation,
+    useEditAuthorByIdMutation,
+    useRemoveAuthorByIdMutation,
+} from 'redux/api';
+import { EditAuthorByIdRequest } from 'redux/models/authorModels';
+import { isSuperUserSelector } from 'redux/slices/userSlice';
+import { useAuth } from 'redux/apiConfig';
 
 interface Props {
-    className?: string;
     author: AuthorItemJsModel;
-    editAuthor?: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
-    removeAuthor?: (authorId: number) => void;
-    addAuthorToFavorite?: (authorId: number, isFavorite: boolean) => void;
+    className?: string;
 }
 
-export const AuthorCard: React.FC<Props> = ({
-    className,
-    author,
-    editAuthor,
-    removeAuthor,
-    addAuthorToFavorite,
-}) => {
-    const history = useHistory();
+export const AuthorCard: React.FC<Props> = ({ author, className }) => {
+    const [
+        editAuthorById,
+        { isLoading: isEditLoading, isSuccess: isEditSuccess, data: editedAuthor },
+    ] = useEditAuthorByIdMutation();
+    const [addToFavorite, { isLoading: isAddToFavoriteLoading }] = useAddAuthorToFavoriteMutation();
+    const [removeAuthorById, { isLoading: isRemoveLoading }] = useRemoveAuthorByIdMutation();
+
+    const isSuperUser = useAppSelector(isSuperUserSelector);
+
+    const [logged] = useAuth();
+
+    const isLoading = isEditLoading || isAddToFavoriteLoading || isRemoveLoading;
+
+    const navigate = useNavigate();
     const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
     const [showRemoveModal, setShowRemoveModal] = React.useState<boolean>(false);
     const [showEditMenu, setShowEditMenu] = React.useState<boolean>(false);
 
-    const isDark = useSelector((state: RootState) => state.app.theme === 'dark');
+    const isDark = useAppSelector(isDarkTheme);
 
     const { id, preview_s, alias, name, favorite } = author;
     const authorImage = preview_s || defaultImg;
-    const authorPath = alias ? Paths.getAuthorPath(author.name.charAt(0), alias) : '';
+    const authorPath = alias ? Paths.getAuthorPath(name.charAt(0), alias) : '';
 
     const hasPreview = preview_s && !preview_s.includes('default.png');
 
@@ -68,36 +81,24 @@ export const AuthorCard: React.FC<Props> = ({
         setShowEditMenu(false);
     };
 
-    const editAuthorHandler = (options: AuthorRequestModel) => {
-        let formData = new FormData();
-        if (options.preview !== author.preview) formData.append('preview', options.preview);
-        if (options.name !== author.name) formData.append('name', options.name);
-        if (options.info !== author.info) formData.append('info', options.info);
-        if (options.genres !== author.genres)
-            formData.append('genres', JSON.stringify(options.genres.map(({ id }) => id)));
-
-        if (editAuthor) {
-            editAuthor(id, formData).then((res) => {
-                if (res) {
-                    history.push(Paths.getAuthorPath(res.name.charAt(0), res.alias));
-                }
-            });
+    const editAuthorHandler = async (options: EditAuthorByIdRequest) => {
+        try {
+            const { name, alias } = await editAuthorById(options).unwrap();
+            await navigate(Paths.getAuthorPath(name.charAt(0), alias));
+        } finally {
+            closeEditModal();
         }
-
-        closeEditModal();
     };
 
     const handleRemove = () => {
-        if (removeAuthor) {
-            removeAuthor(author.id);
-        }
+        removeAuthorById({ id });
     };
 
-    const addToFavorite = (e: React.MouseEvent) => {
+    const handleAddToFavorite = (e: React.MouseEvent) => {
         e.stopPropagation();
         e.preventDefault();
-        if (addAuthorToFavorite) {
-            addAuthorToFavorite(id, !favorite);
+        if (addToFavorite) {
+            addToFavorite({ authorId: id, isFavorite: !favorite });
         }
         setShowEditMenu(false);
     };
@@ -106,64 +107,54 @@ export const AuthorCard: React.FC<Props> = ({
         if (showEditMenu) setShowEditMenu(false);
     });
 
-    const menuEnable = !!editAuthor || !!removeAuthor;
-
     return (
-        <>
+        <Loader isLoading={isLoading} className={styles.wrapper}>
             <NavLink
                 className={cn(styles.root, isDark && styles.root__dark, className)}
                 to={authorPath}
             >
-                {!!addAuthorToFavorite && (
+                {isSuperUser && (
                     <>
-                        {menuEnable && (
-                            <span className={styles.edit} onClick={openEditMenu}>
-                                <div className={styles.edit_icon}>
-                                    <span className={styles.edit_icon_dot} />
-                                    <span className={styles.edit_icon_dot} />
-                                    <span className={styles.edit_icon_dot} />
-                                </div>
-                            </span>
-                        )}
+                        <span className={styles.edit} onClick={openEditMenu}>
+                            <div className={styles.edit_icon}>
+                                <span className={styles.edit_icon_dot} />
+                                <span className={styles.edit_icon_dot} />
+                                <span className={styles.edit_icon_dot} />
+                            </div>
+                        </span>
                         {showEditMenu && (
                             <div className={styles.editMenu}>
-                                {!!editAuthor && (
-                                    <div className={styles.editMenu_item} onClick={openEditModal}>
-                                        Изменить
-                                    </div>
-                                )}
-                                {!!removeAuthor && (
-                                    <div
-                                        className={cn(
-                                            styles.editMenu_item,
-                                            styles.editMenu_item__remove,
-                                        )}
-                                        onClick={openRemoveModal}
-                                    >
-                                        Удалить
-                                    </div>
-                                )}
-                                {menuEnable && (
-                                    <div className={styles.editMenu_item} onClick={closeEditMenu}>
-                                        Отмена
-                                    </div>
-                                )}
+                                <div className={styles.editMenu_item} onClick={openEditModal}>
+                                    Изменить
+                                </div>
+                                <div
+                                    className={cn(
+                                        styles.editMenu_item,
+                                        styles.editMenu_item__remove,
+                                    )}
+                                    onClick={openRemoveModal}
+                                >
+                                    Удалить
+                                </div>
+                                <div className={styles.editMenu_item} onClick={closeEditMenu}>
+                                    Отмена
+                                </div>
                             </div>
                         )}
                     </>
                 )}
 
                 <div className={styles.img}>
-                    {!!addAuthorToFavorite && (
+                    {logged && (
                         <Button
                             className={cn(
                                 styles.favoriteBtn,
                                 favorite && styles.favoriteBtn_active,
                             )}
                             use="link"
-                            onClick={addToFavorite}
+                            onClick={handleAddToFavorite}
                             title={favorite ? 'Убрать из избранных' : 'Добавить в избранное'}
-                            disabled={false}
+                            disabled={isLoading}
                         >
                             <FavoriteIcon active={favorite} />
                         </Button>
@@ -175,8 +166,8 @@ export const AuthorCard: React.FC<Props> = ({
                     {hasPreview && (
                         <img
                             src={authorImage}
-                            alt={author.name}
-                            title={author.name}
+                            alt={name}
+                            title={name}
                             className={styles.img_main}
                         />
                     )}
@@ -198,9 +189,9 @@ export const AuthorCard: React.FC<Props> = ({
                     closeModal={closeRemoveModal}
                     onRemove={handleRemove}
                     title="Удаление автора"
-                    text={`Вы уверены, что хотите удалить ${author.name}?`}
+                    text={`Вы уверены, что хотите удалить ${name}?`}
                 />
             )}
-        </>
+        </Loader>
     );
 };

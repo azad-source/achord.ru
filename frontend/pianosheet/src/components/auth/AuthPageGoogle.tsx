@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
-import styles from './AuthPageGoogle.scss';
-import { login } from 'api/UsersClient';
+import styles from './AuthPageGoogle.module.scss';
 import { TokenJsModel } from 'domain/api/JsModels';
+import { login } from 'redux/apiConfig';
 
 export const AuthPageGoogle = () => {
     const location = useLocation();

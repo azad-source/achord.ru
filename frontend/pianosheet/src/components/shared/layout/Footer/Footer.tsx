@@ -4,7 +4,7 @@ import * as React from 'react';
 import styles from './Footer.module.scss';
 import cn from 'classnames';
 import { Button } from 'components/shared/Button/Button';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
     isDark?: boolean;
@@ -13,18 +13,18 @@ interface Props {
 export const Footer: React.FC<Props> = ({ isDark = false }) => {
     const year = new Date().getFullYear();
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     return (
         <footer className={cn(styles.backplate, isDark && styles.backplate__dark)}>
             <div className={styles.root}>
                 <div className={styles.item}>
-                    <Button onClick={() => history.push('/')} use="link">
+                    <Button onClick={() => navigate('/')} use="link">
                         Главная
                     </Button>
                 </div>
                 <div className={styles.item}>
-                    <Button onClick={() => history.push('/privacy')} use="link">
+                    <Button onClick={() => navigate('/privacy')} use="link">
                         Политика конфиденциальности
                     </Button>
                 </div>
@@ -34,12 +34,12 @@ export const Footer: React.FC<Props> = ({ isDark = false }) => {
                     </TextPlain>
                 </div>
                 <div className={styles.item}>
-                    <Button onClick={() => history.push('/contacts')} use="link">
+                    <Button onClick={() => navigate('/contacts')} use="link">
                         Контактная информация
                     </Button>
                 </div>
                 <div className={styles.item}>
-                    <Button onClick={() => history.push('/copyright-holders')} use="link">
+                    <Button onClick={() => navigate('/copyright-holders')} use="link">
                         Правовая информация
                     </Button>
                 </div>

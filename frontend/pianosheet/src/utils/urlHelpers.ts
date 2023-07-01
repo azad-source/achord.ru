@@ -1,23 +1,4 @@
 /**
- * Изменившиеся поля объекта сворачивает в строку поиска.
- */
-export function changedFieldsToQuery<T>(
-    obj: T,
-    defaultObj: Partial<T>,
-): string {
-    const changedValues: Record<string, any> = {};
-
-    Object.keys(obj).forEach((key) => {
-        const k = key as keyof T;
-        if (obj[k] !== defaultObj[k]) {
-            changedValues[k as string] = String(obj[k]);
-        }
-    });
-
-    return new URLSearchParams(changedValues).toString();
-}
-
-/**
  * Преобразует строку поиска в объект по переданному списку ключей.
  */
 export function queryToObject<T>(
@@ -53,11 +34,7 @@ export function buildSearchString(params: Record<string, any>): string {
         }
 
         if (Array.isArray(value)) {
-            pairs.push(
-                value
-                    .map((v) => `${key}=${encodeURIComponent(String(v))}`)
-                    .join('&'),
-            );
+            pairs.push(value.map((v) => `${key}=${encodeURIComponent(String(v))}`).join('&'));
         } else {
             pairs.push(`${key}=${encodeURIComponent(String(value))}`);
         }

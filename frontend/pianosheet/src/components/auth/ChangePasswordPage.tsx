@@ -2,25 +2,18 @@ import { Page } from 'components/shared/layout/Page/Page';
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styles from './ChangePasswordPage.module.scss';
-import { bindActionCreators, Dispatch } from 'redux';
-import { ChangePasswordType, usersAction } from 'store/usersActions';
-import { connect } from 'react-redux';
-import { RootState } from 'store/rootReducer';
-import { QueryStatus } from 'domain/QueryStatus';
 import { Input } from 'components/shared/Input/Input';
 import { Button } from 'components/shared/Button/Button';
+import { useChangePasswordMutation } from 'redux/api';
 
-interface Props {
-    status: QueryStatus;
-    changePassword: (
-        uid: string,
-        token: string,
-        password: string,
-        re_new_password: string,
-    ) => Promise<ChangePasswordType>;
-}
+type ChangePasswordType = {
+    isChangedPassword: boolean;
+    message?: string[];
+};
 
-const ChangePasswordPageFC: React.FC<Props> = ({ status, changePassword }) => {
+export const ChangePasswordPage = () => {
+    const [changePassword] = useChangePasswordMutation();
+
     const { uid, token } = useParams<{ uid: string; token: string }>();
     const [form, setForm] = React.useState<{
         new_password: string;
@@ -33,9 +26,12 @@ const ChangePasswordPageFC: React.FC<Props> = ({ status, changePassword }) => {
 
     const handleChangePassword = (e: React.FormEvent) => {
         e.preventDefault();
-        changePassword(uid, token, form.new_password, form.re_new_password).then((res) =>
-            setChangePass(res),
-        );
+        const { new_password, re_new_password } = form;
+        if (uid && token) {
+            changePassword({ uid, token, new_password, re_new_password })
+                .unwrap()
+                .then((res) => setChangePass(res));
+        }
     };
 
     const validation = () => {
@@ -122,23 +118,3 @@ const ChangePasswordPageFC: React.FC<Props> = ({ status, changePassword }) => {
         </Page>
     );
 };
-
-const mapStateToProps = (state: RootState) => {
-    return {
-        status: state.users.status,
-    };
-};
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return bindActionCreators(
-        {
-            changePassword: usersAction.changePassword,
-        },
-        dispatch,
-    );
-};
-
-export const ChangePasswordPage = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(ChangePasswordPageFC);

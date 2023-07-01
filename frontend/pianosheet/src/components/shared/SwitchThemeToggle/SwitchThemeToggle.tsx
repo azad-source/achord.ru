@@ -9,15 +9,12 @@ interface Props {
     themeToggler: () => void;
 }
 
-export const SwitchThemeToggle: React.FC<Props> = ({ isDark = false, className, themeToggler }) => {
-
-    return (
-        <Toggle
-            onChange={themeToggler}
-            position={isDark ? 'left' : 'right'}
-            items={['light', 'dark']}
-            className={cn(styles.toggle, className)}
-            isDark={isDark}
-        />
-    );
-};
+export const SwitchThemeToggle: React.FC<Props> = ({ isDark = false, className, themeToggler }) => (
+    <Toggle
+        onChange={themeToggler}
+        position={isDark ? 'left' : 'right'}
+        items={['light', 'dark']}
+        className={cn(styles.toggle, className)}
+        isDark={isDark}
+    />
+);

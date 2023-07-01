@@ -5,7 +5,7 @@ export type TokenJsModel = {
 
 export type UserJsModel = {
     id: Nullable<string>;
-    is_superuser?: boolean;
+    is_superuser: boolean;
     first_name?: string;
     last_name?: string;
     avatar?: string;
@@ -74,13 +74,6 @@ export type AuthorJsModel = PagedJsModel<AuthorItemJsModel>;
 export type SheetJsModel = PagedJsModel<SheetItemJsModel>;
 
 export type GenreJsModel = PagedJsModel<GenreItemJsModel>;
-
-export type AuthorRequestModel = {
-    name: string;
-    info: string;
-    preview: any;
-    genres: GenreItemJsModel[];
-};
 
 export const defaultAuthorRequestModel = {
     name: '',

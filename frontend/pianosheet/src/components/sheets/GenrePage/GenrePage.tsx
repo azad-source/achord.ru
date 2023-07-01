@@ -1,51 +1,30 @@
 import * as React from 'react';
 import { Page } from 'components/shared/layout/Page/Page';
 import { useLocation, useParams } from 'react-router-dom';
-import styles from './GenrePage.scss';
-import { connect } from 'react-redux';
-import { RootState } from 'store/rootReducer';
-import { bindActionCreators, Dispatch } from 'redux';
-import { sheetsAction } from 'store/sheetsActions';
-import { AuthorItemJsModel, AuthorJsModel, GenreItemJsModel } from 'domain/api/JsModels';
-import { QueryStatus } from 'domain/QueryStatus';
+import styles from './GenrePage.module.scss';
 import { SiteName } from 'domain/SiteInfo';
 import { BreadcrumbProps } from 'components/shared/layout/Breadcrumbs/Breadcrumbs';
 import { Paths } from 'utils/routes/Paths';
 import { AuthorCard } from 'components/shared/AuthorCard/AuthorCard';
 import { Pagination } from 'components/shared/layout/Pagination/Pagination';
-import { useAuth } from 'api/UsersClient';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
+import { useLazyGetAuthorsByGenreAliasQuery, useLazyGetGenreByAliasQuery } from 'redux/api';
+import authorsStyles from 'styles/authors.module.scss';
 
-interface Props {
-    genre: GenreItemJsModel;
-    authors: AuthorJsModel;
-    status: QueryStatus;
-    isSuperUser?: boolean;
-    getGenreByAlias: (genreAlias: string) => void;
-    getAuthorsByGenreAlias: (genreAlias: string, page?: number) => void;
-    editAuthor: (authorId: number, author: FormData) => Promise<AuthorItemJsModel | false>;
-    removeAuthor: (authorId: number) => void;
-    addAuthorToFavorite: (authorId: number, isFavorite: boolean) => void;
-}
+export const GenrePage = () => {
+    const [getAuthors, { data: authors, isFetching: isAuthorsLoading }] =
+        useLazyGetAuthorsByGenreAliasQuery({});
+    const [getGenreByAlias, { data: genre, isFetching: isGenreLoading }] =
+        useLazyGetGenreByAliasQuery();
 
-const GenrePageFC: React.FC<Props> = ({
-    genre,
-    authors,
-    status,
-    isSuperUser = false,
-    getGenreByAlias,
-    getAuthorsByGenreAlias,
-    editAuthor,
-    removeAuthor,
-    addAuthorToFavorite,
-}) => {
     const { genreAlias } = useParams<{ genreAlias: string }>();
     const [pageNumber, setPageNumber] = React.useState<number>(1);
     const location = useLocation();
-    const [logged] = useAuth();
 
     React.useEffect(() => {
-        getGenreByAlias(genreAlias);
+        if (genreAlias) {
+            getGenreByAlias({ alias: genreAlias });
+        }
     }, []);
 
     React.useEffect(() => {
@@ -56,73 +35,51 @@ const GenrePageFC: React.FC<Props> = ({
     }, [genre]);
 
     React.useEffect(() => {
-        getAuthorsByGenreAlias(genreAlias);
-        setPageNumber(1);
+        if (genreAlias) {
+            getAuthors({ genreAlias });
+            setPageNumber(1);
+        }
     }, [genre, location]);
 
     const getAuthorsByPage = (page: number) => {
-        getAuthorsByGenreAlias(genreAlias, page);
-        setPageNumber(page);
-        window.scroll({ top: 0, behavior: 'smooth' });
+        if (genreAlias) {
+            getAuthors({ genreAlias, page });
+            setPageNumber(page);
+            window.scroll({ top: 0, behavior: 'smooth' });
+        }
     };
 
     const breadcrumbs: BreadcrumbProps[] = [
-        {
-            caption: 'Ноты',
-            link: Paths.sheetsPage,
-        },
-        {
-            caption: genre.name.toUpperCase(),
-        },
+        { caption: 'Ноты', link: Paths.sheetsPage },
+        { caption: genre?.name.toUpperCase() || '' },
     ];
 
     return (
-        <Page breadcrumbs={breadcrumbs} showAddAuthorBtn status={status}>
-            <TextPlain className={styles.title}>{genre.name.toUpperCase()}</TextPlain>
-            <div className={styles.authors}>
-                {authors.results.map((author, index) => (
+        <Page
+            breadcrumbs={breadcrumbs}
+            showAddAuthorBtn
+            loading={isGenreLoading || isAuthorsLoading}
+        >
+            <TextPlain className={styles.title}>{genre?.name.toUpperCase()}</TextPlain>
+            <div className={authorsStyles.authors}>
+                {authors?.results.map((author, index) => (
                     <AuthorCard
                         key={index}
                         author={author}
-                        className={styles.authors_item}
-                        editAuthor={isSuperUser ? editAuthor : undefined}
-                        removeAuthor={isSuperUser ? removeAuthor : undefined}
-                        addAuthorToFavorite={logged ? addAuthorToFavorite : undefined}
+                        className={authorsStyles.authors__item}
                     />
                 ))}
             </div>
-            {authors.page_count > 1 && (
+            {authors && authors.page_count > 1 && (
                 <Pagination
                     pageCount={authors.page_count}
                     pageNumber={pageNumber}
                     switchPage={getAuthorsByPage}
                 />
             )}
-            {authors.count === 0 && !status.isRequest() && (
+            {authors && authors.count === 0 && !isAuthorsLoading && !isGenreLoading && (
                 <TextPlain className={styles.empty}>Раздел пока пустой</TextPlain>
             )}
         </Page>
     );
 };
-
-const mapStateToProps = (state: RootState) => ({
-    genre: state.sheets.genre,
-    authors: state.sheets.authors,
-    status: state.sheets.status,
-    isSuperUser: state.users.currentUser.is_superuser,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return bindActionCreators(
-        {
-            getGenreByAlias: sheetsAction.getGenreByAlias,
-            getAuthorsByGenreAlias: sheetsAction.getAuthorsByGenreAlias,
-            editAuthor: sheetsAction.editAuthor,
-            removeAuthor: sheetsAction.removeAuthor,
-            addAuthorToFavorite: sheetsAction.addAuthorToFavorite,
-        },
-        dispatch,
-    );
-};
-
-export const GenrePage = connect(mapStateToProps, mapDispatchToProps)(GenrePageFC);

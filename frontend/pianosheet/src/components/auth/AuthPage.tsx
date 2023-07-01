@@ -1,36 +1,29 @@
 import * as React from 'react';
 import { Authorization } from 'components/shared/layout/Auth/Authorization';
 import { Page } from 'components/shared/layout/Page/Page';
-import styles from './AuthPage.scss';
+import styles from './AuthPage.module.scss';
 import { Registration } from 'components/shared/layout/Auth/Registration';
-import { logout, useAuth, UsersClient } from 'api/UsersClient';
 import { SiteName } from 'domain/SiteInfo';
-import { connect } from 'react-redux';
-import { RootState } from 'store/rootReducer';
-import { bindActionCreators, Dispatch } from 'redux';
-import { usersAction } from 'store/usersActions';
-import { QueryStatus } from 'domain/QueryStatus';
 import { SocialAuthParams } from 'domain/api/JsModels';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 import { Button } from 'components/shared/Button/Button';
+import {
+    useAuthorizationMutation,
+    useLazyGetSocialLinksAuthQuery,
+    useRegisterMutation,
+    useResetPasswordMutation,
+} from 'redux/api';
+import { logout, useAuth } from 'redux/apiConfig';
 
-interface Props {
-    status: QueryStatus;
-    registration: (email: string, password: string, re_password: string) => Promise<void>;
-    authorization: (email: string, password: string) => Promise<void>;
-    dropError: () => void;
-    resetPassword: (email: string) => Promise<void>;
-}
+export const AuthPage = () => {
+    const [getSocialLinksAuth] = useLazyGetSocialLinksAuthQuery();
+    const [authorization, { error: authorizationError, isLoading: isAuthorizationLoading }] =
+        useAuthorizationMutation();
+    const [registration, { error: registrtionError }] = useRegisterMutation();
+    const [resetPassword] = useResetPasswordMutation();
 
-const AuthPageFC: React.FC<Props> = ({
-    status,
-    registration,
-    authorization,
-    dropError,
-    resetPassword,
-}) => {
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const [logged] = useAuth();
     const [isRegForm, setIsRegForm] = React.useState<boolean>(false);
@@ -41,28 +34,34 @@ const AuthPageFC: React.FC<Props> = ({
 
     React.useEffect(() => {
         document.title = `${SiteName} - ${isRegForm ? 'Регистрация' : 'Авторизация'}`;
-        dropError();
+        // dispatch(dropError());
     }, [isRegForm]);
 
     const [googleAuth, setGoogleAuth] = React.useState<SocialAuthParams>();
 
     React.useEffect(() => {
-        UsersClient.getSocialLinksAuth().then((res) => setGoogleAuth(res.google));
+        getSocialLinksAuth()
+            .unwrap()
+            .then((res) => setGoogleAuth(res.google));
     }, []);
 
     const loginHandler = (email: string, password: string, event: React.FormEvent) => {
         event.preventDefault();
-        authorization(email, password);
+        authorization({ email, password });
     };
 
     const registerHandler = (
         email: string,
         password: string,
-        re_password: string,
+        rePassword: string,
         event: React.FormEvent,
-    ): Promise<void> => {
+    ) => {
         event.preventDefault();
-        return registration(email, password, re_password);
+        return registration({ email, password, rePassword }).unwrap();
+    };
+
+    const resetPasswordHandler = (email: string) => {
+        return resetPassword({ email }).unwrap();
     };
 
     const handleRegConfirm = (isSuccessRegistration: boolean, email: string) => {
@@ -88,7 +87,7 @@ const AuthPageFC: React.FC<Props> = ({
 
                         <div className={styles.linkWrapper}>
                             <Button
-                                onClick={() => history.push('/')}
+                                onClick={() => navigate('/')}
                                 className={styles.button}
                                 use="transparent"
                             >
@@ -97,7 +96,7 @@ const AuthPageFC: React.FC<Props> = ({
                             <Button
                                 onClick={() => {
                                     logout();
-                                    history.push('/sign-in');
+                                    navigate('/sign-in');
                                 }}
                                 use="transparent"
                             >
@@ -109,16 +108,16 @@ const AuthPageFC: React.FC<Props> = ({
                     <Registration
                         onSwitchForm={setIsRegForm}
                         registerHandler={registerHandler}
-                        errorMessage={status?.errorMessage}
+                        errorMessage={'' /**registrtionError */}
                         regConfirm={handleRegConfirm}
                     />
                 ) : (
                     <Authorization
                         onSwitchForm={setIsRegForm}
                         loginHandler={loginHandler}
-                        errorMessage={status?.errorMessage}
-                        resetPassword={resetPassword}
-                        status={status}
+                        errorMessage={'' /**authorizationError */}
+                        resetPassword={resetPasswordHandler}
+                        isLoading={isAuthorizationLoading}
                         googleAuth={googleAuth}
                     />
                 )}
@@ -126,21 +125,3 @@ const AuthPageFC: React.FC<Props> = ({
         </Page>
     );
 };
-
-const mapStateToProps = (state: RootState) => {
-    return { status: state.users.status };
-};
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return bindActionCreators(
-        {
-            registration: usersAction.registration,
-            authorization: usersAction.authorization,
-            dropError: usersAction.dropError,
-            resetPassword: usersAction.resetPassword,
-        },
-        dispatch,
-    );
-};
-
-export const AuthPage = connect(mapStateToProps, mapDispatchToProps)(AuthPageFC);

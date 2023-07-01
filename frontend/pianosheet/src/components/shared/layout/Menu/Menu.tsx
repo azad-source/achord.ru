@@ -21,7 +21,7 @@ export const Menu: React.FC<Props> = ({ items, isDark = false }) => {
                                 className={styles.menuItem}
                                 to={link || ''}
                                 onClick={handler}
-                                exact
+                                // exact
                             >
                                 {caption}
                             </NavLink>

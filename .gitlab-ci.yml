@@ -1,10 +1,10 @@
 before_script:
-  - apt update -y
-  - apt upgrade -y
-  - apt -y install curl dirmngr apt-transport-https lsb-release ca-certificates
+  - apt-get update -y
+  - apt-get upgrade -y
+  - apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates
   - curl -sL https://deb.nodesource.com/setup_16.x | bash -
   - apt-get install -y nodejs
-  - apt -y install rsync
+  - apt-get -y install rsync
   - 'which ssh-agent || ( apt-get install openssh-client -y )'
   - eval $(ssh-agent -s)
   - mkdir -p ~/.ssh

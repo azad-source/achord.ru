@@ -3,6 +3,7 @@ from . import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
+router.register(r'author/alias', views.AuthorViewSetAlias, basename='author/alias')
 router.register(r'author', views.AuthorViewSet, basename='author')
 router.register(r'note', views.NoteViewSet, basename='note')
 router.register(r'genre', views.GenreViewSet, basename='genre')

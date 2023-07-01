@@ -90,17 +90,6 @@ class CustomModelViewSet(StatMixin, ModelViewSet):
             self.perform_like_favorite()
             return Response({'result': 'OK'})
 
-    def get_object(self):
-        queryset = self.filter_queryset(self.get_queryset())
-        pk = self.kwargs['pk']
-        try:
-            filter_kwargs = {'pk': int(pk)}
-        except ValueError:
-            filter_kwargs = {'alias': pk}
-        obj = get_object_or_404(queryset, **filter_kwargs)
-        self.check_object_permissions(self.request, obj)
-        return obj
-
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
@@ -118,7 +107,7 @@ class CustomModelViewSet(StatMixin, ModelViewSet):
 
     def up_rate(self, instance):
         instance.rate = instance.rate + 1
-        instance.save()
+        instance.save(update_fields=['rate'])
         return instance
 
     def up_rate_list(self, queryset):
@@ -181,7 +170,7 @@ class AuthorViewSet(CustomModelViewSet):
         'like': (IsAuthenticated,),
         'favorite': (IsAuthenticated,),
     }
-
+    
     def get_serializer_class(self):
         if self.action == 'favorite' and self.request.method == 'POST':
             return FavoriteAuthorSerializer
@@ -189,11 +178,16 @@ class AuthorViewSet(CustomModelViewSet):
             return LikeAuthorSerializer
         return super().get_serializer_class()
 
+
     def get_queryset(self):
         queryset = super().get_queryset()\
             .annotate(**self.like_count)\
             .prefetch_related(*self.all_prefetch).prefetch_related('genres')
         return self.make_ordering(queryset)
+
+
+class AuthorViewSetAlias(AuthorViewSet):
+    lookup_field = 'alias'
 
 
 class NoteViewSet(CustomModelViewSet):

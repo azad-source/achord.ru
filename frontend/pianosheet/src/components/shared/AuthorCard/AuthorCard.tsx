@@ -15,10 +15,10 @@ import { Loader } from '../layout/Loader/Loader';
 import {
     useAddAuthorToFavoriteMutation,
     useEditAuthorByIdMutation,
+    useGetUserDataQuery,
     useRemoveAuthorByIdMutation,
 } from 'redux/api';
 import { EditAuthorByIdRequest } from 'redux/models/authorModels';
-import { isSuperUserSelector } from 'redux/slices/userSlice';
 import { useAuth } from 'redux/apiConfig';
 
 interface Props {
@@ -35,11 +35,13 @@ export const AuthorCard: React.FC<Props> = ({ author, className }) => {
 
     const [removeAuthorById, { isLoading: isRemoveLoading }] = useRemoveAuthorByIdMutation();
 
-    const isLoading = isEditLoading || isAddToFavoriteLoading || isRemoveLoading;
+    const { data: currentUser, isLoading: isUserLoading } = useGetUserDataQuery();
+
+    const isLoading = isEditLoading || isAddToFavoriteLoading || isRemoveLoading || isUserLoading;
 
     const navigate = useNavigate();
 
-    const isSuperUser = useAppSelector(isSuperUserSelector);
+    const isSuperUser = currentUser?.is_superuser || false;
 
     const isDark = useAppSelector(isDarkTheme);
 

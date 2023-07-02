@@ -66,8 +66,24 @@ export const SearchResults = () => {
 
     const handleDropSearch = () => dispatch(dropSearch());
 
-    if (!hasResult) {
-        return <>По запросу &laquo;{searchQuery}&raquo; ничего не найдено</>;
+    if (!hasResult && !isLoading) {
+        return (
+            <>
+                <br />
+                <div>
+                    По запросу <strong>&laquo;{searchQuery}&raquo;</strong> ничего не найдено
+                </div>
+                <div>
+                    <br />
+                    <div>Рекомендации:</div>
+                    <ul>
+                        <li>Убедитесь, что все слова написаны без ошибок.</li>
+                        <li>Попробуйте использовать другие ключевые слова.</li>
+                        <li>Попробуйте использовать более популярные ключевые слова.</li>
+                    </ul>
+                </div>
+            </>
+        );
     }
 
     if (isLoading) {

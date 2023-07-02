@@ -15,9 +15,10 @@ import {
     useLazySearchAuthorsQuery,
     useLazySearchSheetsQuery,
     useLazyGetUserDataQuery,
+    useGetUserDataQuery,
+    api,
 } from 'redux/api';
 import { addSearch } from 'redux/slices/searchSlice';
-import { clearCurrentUser, setCurrentUser, currentUserSelector } from 'redux/slices/userSlice';
 import { logout, useAuth } from 'redux/apiConfig';
 
 export type MenuItemType = { caption: React.ReactNode; link?: string; handler?: () => void };
@@ -27,7 +28,7 @@ export const Header = () => {
     const [searchSheets, { isSuccess: isSearchSheetsSuccess }] = useLazySearchSheetsQuery();
     const [getCurrentUser] = useLazyGetUserDataQuery();
 
-    const currentUser = useAppSelector(currentUserSelector);
+    const { data: currentUser } = useGetUserDataQuery();
 
     const [searchQuery, setSearchQuery] = React.useState<string>('');
 
@@ -48,22 +49,20 @@ export const Header = () => {
     React.useEffect(() => {
         document.title = SiteName;
         if (logged && !currentUser?.id) {
-            getCurrentUser()
-                .unwrap()
-                .then((user) => dispatch(setCurrentUser(user)));
+            getCurrentUser();
         }
     }, [location]);
 
     const logoutHandler = () => {
         logout();
-        dispatch(clearCurrentUser());
+        dispatch(api.util.invalidateTags(['User']));
         window.location.pathname = '/sign-in';
     };
 
     const handleSearch = (query: string) => {
         Promise.all([searchAuthors({ query }).unwrap(), searchSheets({ query }).unwrap()])
-            .then(([authors, sheets]) => {
-                dispatch(addSearch({ authors, sheets, query, applied: true }));
+            .then(() => {
+                dispatch(addSearch({ query, applied: true }));
             })
             .finally(() => {
                 setSearchQuery(query);
@@ -107,8 +106,8 @@ export const Header = () => {
                 </NavLink>
                 <SearchField
                     query={searchQuery}
-                    searchSheets={handleSearch}
-                    dropSearch={handleDropSearch}
+                    onSearch={handleSearch}
+                    onDropSearch={handleDropSearch}
                     isSuccess={isSuccess}
                     className={styles.search}
                     isDark={isDark}

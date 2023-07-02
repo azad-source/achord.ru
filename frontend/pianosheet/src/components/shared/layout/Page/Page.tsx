@@ -12,10 +12,14 @@ import { ErrorBoundary } from 'components/shared/ErrorBoundary/ErrorBoundary';
 import { appSelector, isDarkTheme } from 'redux/slices/appSlice';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { Spinner } from 'components/shared/Spinner/Spinner';
-import { useAddAuthorMutation } from 'redux/api';
+import {
+    useAddAuthorMutation,
+    useGetUserDataQuery,
+    useSearchAuthorsQuery,
+    useSearchSheetsQuery,
+} from 'redux/api';
 import { AddAuthorRequest } from 'redux/models/authorModels';
 import { dropSearch, searchSelector } from 'redux/slices/searchSlice';
-import { currentUserSelector } from 'redux/slices/userSlice';
 
 interface Props {
     className?: string;
@@ -35,10 +39,17 @@ export const Page: React.FC<Props> = ({
     showAddAuthorBtn = false,
 }) => {
     const [addAuthor] = useAddAuthorMutation();
+    const { data: currentUser } = useGetUserDataQuery();
+
     const [showAddAuthorModal, setShowAddAuthorModal] = React.useState<boolean>(false);
 
-    const { applied: searchApplied } = useAppSelector(searchSelector);
-    const { is_superuser: isSuperUser } = useAppSelector(currentUserSelector);
+    const { applied: searchApplied, query: searchQuery } = useAppSelector(searchSelector);
+
+    const { isFetching: isAuthorSearchLoading } = useSearchAuthorsQuery({ query: searchQuery });
+    const { isFetching: isSheetSearchLoading } = useSearchSheetsQuery({ query: searchQuery });
+
+    const isSearchLoading = isAuthorSearchLoading || isSheetSearchLoading;
+
     const { warning } = useAppSelector(appSelector);
     const isDark = useAppSelector(isDarkTheme);
 
@@ -82,14 +93,14 @@ export const Page: React.FC<Props> = ({
                 {!hideSheetsNav && <SheetsNav isDark={isDark} />}
                 <div className={cn(styles.root, className)}>
                     {!!breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
-                    {isSuperUser && showAddAuthorBtn && !searchApplied && (
+                    {!!currentUser?.is_superuser && showAddAuthorBtn && !searchApplied && (
                         <div
                             onClick={openAddAuthorModal}
                             className={styles.addAuthor}
                             title="Добавить автора"
                         />
                     )}
-                    {loading ? (
+                    {loading || isSearchLoading ? (
                         <Spinner withBackground />
                     ) : searchApplied ? (
                         <SearchResults />

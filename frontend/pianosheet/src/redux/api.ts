@@ -80,4 +80,5 @@ export const {
     useChangePasswordMutation,
     useAccountActivationMutation,
     useLazyGetUserDataQuery,
+    useGetUserDataQuery,
 } = api;

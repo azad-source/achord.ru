@@ -1,6 +1,5 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import appReducer from './slices/appSlice';
-import userReducer from './slices/userSlice';
 import searchReducer from './slices/searchSlice';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
 import { api } from './api';
@@ -8,7 +7,6 @@ import { api } from './api';
 export const store = configureStore({
     reducer: {
         app: appReducer,
-        user: userReducer,
         search: searchReducer,
         [api.reducerPath]: api.reducer,
     },

@@ -9,8 +9,8 @@ interface Props {
     isDark?: boolean;
     query: string;
     isSuccess: boolean;
-    searchSheets: (query: string) => void;
-    dropSearch: () => void;
+    onSearch: (query: string) => void;
+    onDropSearch: () => void;
 }
 
 export const SearchField: React.FC<Props> = ({
@@ -18,20 +18,20 @@ export const SearchField: React.FC<Props> = ({
     isDark = false,
     query,
     isSuccess,
-    searchSheets,
-    dropSearch,
+    onSearch,
+    onDropSearch,
 }) => {
     const [input, setInput] = React.useState<string>('');
     let location = useLocation();
 
     function skipSearch() {
-        dropSearch();
+        onDropSearch();
         setInput('');
     }
 
     function searchHandler() {
         if (input && input.length > 2) {
-            searchSheets(input);
+            onSearch(input);
         }
     }
 

@@ -85,13 +85,6 @@ export const blankPagedResult = {
     results: [],
 };
 
-export const blankSearch = {
-    applied: false,
-    sheets: { ...blankPagedResult },
-    authors: { ...blankPagedResult },
-    query: '',
-};
-
 export const blankAuthorItem: AuthorItemJsModel = {
     id: 0,
     name: '',

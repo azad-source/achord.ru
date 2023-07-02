@@ -27,6 +27,7 @@ backend/media/notes/
 backend/media/previews/
 backend/db.sqlite3
 backend/static/
+backend/backstatic/
 backend/media/previews_s/
 backend/media/previews_xs/
 
@@ -37,3 +38,4 @@ secrets/user
 docker/postgres/backups/*
 .env
 pg_data/
+backend/media/notes — копия/

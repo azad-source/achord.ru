@@ -18,7 +18,6 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
-from django.conf.urls import url
 
 urlpatterns = [
     # path('silk/', include('silk.urls', namespace='silk')),
@@ -30,8 +29,7 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
 ] + static('media/', document_root=settings.MEDIA_ROOT
-) + static('static/', document_root=settings.STATIC_ROOT
+) + static('backstatic/', document_root=settings.STATIC_ROOT
 ) 
 
-# + [url(r'^.*$', TemplateView.as_view(template_name="index.html"))
-# ]
+

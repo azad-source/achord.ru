@@ -27,6 +27,8 @@ deploy-prod:
     - ls -a
     - pwd
     - rsync -avz --del --exclude-from='.rsyncignore' -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" ./ $SSH_CONNECT:$BACKEND_FOLDER
+    - ls -a
+    - pwd
     - ssh $SSH_CONNECT "docker-compose -f /var/www/prod/achord.ru/docker-compose.yml -p achordru restart; exit;"
     # frontend
     - cd frontend/pianosheet/

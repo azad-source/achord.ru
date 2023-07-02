@@ -24,7 +24,6 @@ const baseUrl = '/author';
 
 const AuthorsResponseCallback = (r: AuthorJsModel) => r || { ...blankPagedResult };
 const AuthorResponseCallback = (r: AuthorItemJsModel) => r || { ...blankAuthorItem };
-const AuthorByAliasResponseCallback = (r: AuthorJsModel) => r.results[0] || { ...blankAuthorItem };
 
 // Define a service using a base URL and expected endpoints
 export const authorEndpoints = (builder: BuildType) => ({
@@ -74,9 +73,8 @@ export const authorEndpoints = (builder: BuildType) => ({
     }),
     /** Получение автора по алиасу */
     getAuthorByAlias: builder.query<AuthorItemJsModel, AuthorByAliasRequest>({
-        query: ({ alias }) => ({ url: `${baseUrl}/`, params: { alias } }),
-        // TODO: мы тут должны по идее получать от бэка AuthorItemJsModel, а не AuthorJsModel
-        transformResponse: AuthorByAliasResponseCallback,
+        query: ({ alias }) => ({ url: `${baseUrl}/alias/${alias}` }),
+        transformResponse: AuthorResponseCallback,
         transformErrorResponse,
         providesTags: [TagsEnum.Author],
     }),

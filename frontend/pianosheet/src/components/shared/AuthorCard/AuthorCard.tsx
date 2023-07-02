@@ -27,27 +27,80 @@ interface Props {
 }
 
 export const AuthorCard: React.FC<Props> = ({ author, className }) => {
-    const [
-        editAuthorById,
-        { isLoading: isEditLoading, isSuccess: isEditSuccess, data: editedAuthor },
-    ] = useEditAuthorByIdMutation();
+    const { id, favorite } = author;
+
+    const [editAuthorById, { isLoading: isEditLoading }] = useEditAuthorByIdMutation();
+
     const [addToFavorite, { isLoading: isAddToFavoriteLoading }] = useAddAuthorToFavoriteMutation();
+
     const [removeAuthorById, { isLoading: isRemoveLoading }] = useRemoveAuthorByIdMutation();
-
-    const isSuperUser = useAppSelector(isSuperUserSelector);
-
-    const [logged] = useAuth();
 
     const isLoading = isEditLoading || isAddToFavoriteLoading || isRemoveLoading;
 
     const navigate = useNavigate();
+
+    const isSuperUser = useAppSelector(isSuperUserSelector);
+
+    const isDark = useAppSelector(isDarkTheme);
+
+    const [logged] = useAuth();
+
+    const handleEditAuthor = async (options: EditAuthorByIdRequest): Promise<void> => {
+        const { alias, name } = await editAuthorById(options).unwrap();
+        await navigate(Paths.getAuthorPath(name.charAt(0), alias));
+    };
+
+    const handleAddToFavorite = () => {
+        addToFavorite({ authorId: id, isFavorite: !favorite });
+    };
+
+    const handleRemoveAuthor = () => {
+        removeAuthorById({ id });
+    };
+
+    return (
+        <AuthorCard_
+            author={author}
+            isLoading={isLoading}
+            canEdit={isSuperUser}
+            canAddToFavorite={!!logged}
+            className={className}
+            onEditAuthor={handleEditAuthor}
+            onAddToFavorite={handleAddToFavorite}
+            onRemoveAuthor={handleRemoveAuthor}
+            isDarkTheme={isDark}
+        />
+    );
+};
+
+interface Props_ {
+    author: AuthorItemJsModel;
+    isLoading: boolean;
+    canEdit: boolean;
+    canAddToFavorite: boolean;
+    isDarkTheme: boolean;
+    className?: string;
+    onEditAuthor: (options: EditAuthorByIdRequest) => Promise<void>;
+    onAddToFavorite: () => void;
+    onRemoveAuthor: () => void;
+}
+
+export const AuthorCard_: React.FC<Props_> = ({
+    author,
+    isLoading,
+    canEdit,
+    canAddToFavorite,
+    isDarkTheme,
+    className,
+    onEditAuthor,
+    onAddToFavorite,
+    onRemoveAuthor,
+}) => {
     const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
     const [showRemoveModal, setShowRemoveModal] = React.useState<boolean>(false);
     const [showEditMenu, setShowEditMenu] = React.useState<boolean>(false);
 
-    const isDark = useAppSelector(isDarkTheme);
-
-    const { id, preview_s, alias, name, favorite } = author;
+    const { preview_s, alias, name, favorite } = author;
     const authorImage = preview_s || defaultImg;
     const authorPath = alias ? Paths.getAuthorPath(name.charAt(0), alias) : '';
 
@@ -81,25 +134,14 @@ export const AuthorCard: React.FC<Props> = ({ author, className }) => {
         setShowEditMenu(false);
     };
 
-    const editAuthorHandler = async (options: EditAuthorByIdRequest) => {
-        try {
-            const { name, alias } = await editAuthorById(options).unwrap();
-            await navigate(Paths.getAuthorPath(name.charAt(0), alias));
-        } finally {
-            closeEditModal();
-        }
-    };
-
-    const handleRemove = () => {
-        removeAuthorById({ id });
+    const handleEditAuthor = (options: EditAuthorByIdRequest) => {
+        onEditAuthor(options).finally(closeEditModal);
     };
 
     const handleAddToFavorite = (e: React.MouseEvent) => {
         e.stopPropagation();
         e.preventDefault();
-        if (addToFavorite) {
-            addToFavorite({ authorId: id, isFavorite: !favorite });
-        }
+        onAddToFavorite();
         setShowEditMenu(false);
     };
 
@@ -110,10 +152,10 @@ export const AuthorCard: React.FC<Props> = ({ author, className }) => {
     return (
         <Loader isLoading={isLoading} className={styles.wrapper}>
             <NavLink
-                className={cn(styles.root, isDark && styles.root__dark, className)}
+                className={cn(styles.root, isDarkTheme && styles.root__dark, className)}
                 to={authorPath}
             >
-                {isSuperUser && (
+                {canEdit && (
                     <>
                         <span className={styles.edit} onClick={openEditMenu}>
                             <div className={styles.edit_icon}>
@@ -145,7 +187,7 @@ export const AuthorCard: React.FC<Props> = ({ author, className }) => {
                 )}
 
                 <div className={styles.img}>
-                    {logged && (
+                    {canAddToFavorite && (
                         <Button
                             className={cn(
                                 styles.favoriteBtn,
@@ -180,14 +222,14 @@ export const AuthorCard: React.FC<Props> = ({ author, className }) => {
             {showEditModal && (
                 <AuthorEditModal
                     closeModal={closeEditModal}
-                    editAuthor={editAuthorHandler}
+                    editAuthor={handleEditAuthor}
                     author={author}
                 />
             )}
             {showRemoveModal && (
                 <RemoveModal
                     closeModal={closeRemoveModal}
-                    onRemove={handleRemove}
+                    onRemove={onRemoveAuthor}
                     title="Удаление автора"
                     text={`Вы уверены, что хотите удалить ${name}?`}
                 />

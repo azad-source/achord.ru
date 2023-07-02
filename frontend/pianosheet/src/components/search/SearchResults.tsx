@@ -11,7 +11,7 @@ import { Link } from 'components/shared/Link/Link';
 import { SheetRow } from 'components/shared/SheetRow/SheetRow';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { isDarkTheme } from 'redux/slices/appSlice';
-import { openDownloadPage } from 'hooks/openDownloadPage';
+import { useOpenDownloadPage } from 'hooks/openDownloadHook';
 import { useSearchAuthorsQuery, useSearchSheetsQuery } from 'redux/api';
 import { dropSearch, searchSelector } from 'redux/slices/searchSlice';
 import { SHEETS_SEARCH_SIZE } from 'utils/constants';
@@ -91,7 +91,7 @@ export const SearchResults = () => {
                                 type="second"
                                 sheet={sheet}
                                 index={index + (pages.sheets - 1) * SHEETS_SEARCH_SIZE}
-                                onOpen={openDownloadPage}
+                                onOpen={useOpenDownloadPage}
                             />
                         ))}
                     </div>

@@ -2,7 +2,7 @@ import { SheetItemJsModel } from 'domain/api/JsModels';
 import { useLazyGetAuthorByIdQuery } from 'redux/api';
 import { Paths } from 'utils/routes/Paths';
 
-export const openDownloadPage = (sheet: SheetItemJsModel) => {
+export const useOpenDownloadPage = (sheet: SheetItemJsModel) => {
     const [getAuthorById] = useLazyGetAuthorByIdQuery();
 
     async function open() {

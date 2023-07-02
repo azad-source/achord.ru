@@ -5,3 +5,4 @@ pg_data/
 docker-compose-win.yml
 .env
 .gitignore
+.rsyncignore

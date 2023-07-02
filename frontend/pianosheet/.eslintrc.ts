@@ -3,7 +3,7 @@ module.exports = {
         browser: true,
         es2021: true,
     },
-    extends: ['plugin:react/recommended', 'prettier'],
+    extends: ['plugin:react/recommended', 'prettier', 'plugin:storybook/recommended'],
     parser: '@typescript-eslint/parser',
     parserOptions: {
         ecmaFeatures: {
@@ -21,7 +21,9 @@ module.exports = {
         'import/no-unresolved': 0,
         'react/jsx-filename-extension': [
             1,
-            { extensions: ['.js', '.jsx', '.tsx'] },
+            {
+                extensions: ['.js', '.jsx', '.tsx'],
+            },
         ],
         'react/prop-types': 'off',
         'import/prefer-default-export': 'off',

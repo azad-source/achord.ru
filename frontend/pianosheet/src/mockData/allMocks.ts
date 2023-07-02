@@ -89,7 +89,7 @@ export const SheetsMock: SheetItemJsModel[] = sheetsNames.map((name, index) => (
     author: sheetsNames.length - index,
 }));
 
-const AuthorList: AuthorItemJsModel[] = authorsNames.map((name, index) => ({
+export const AuthorListMocks: AuthorItemJsModel[] = authorsNames.map((name, index) => ({
     name,
     id: index,
     info: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eget risus eros. Nam nec gravida dui, eu volutpat justo. Integer sagittis tortor ac laoreet finibus. Aenean vehicula tortor et mauris gravida luctus. Nullam id massa vel quam pellentesque laoreet. Mauris sit amet quam porttitor, tempor nulla a, convallis justo. Curabitur nec consectetur arcu. Maecenas metus magna, lacinia et tempus eget, tempus vel ligula. In hac habitasse platea dictumst. Vestibulum nec suscipit ante. Sed porttitor ex tellus, ac ultrices augue posuere faucibus. Donec elementum arcu eget ipsum luctus, ut accumsan arcu feugiat. Curabitur non tristique mauris, id vehicula erat.',
@@ -110,7 +110,7 @@ export const AuthorsMock: AuthorJsModel = {
     page_size: 20,
     next: '',
     previous: '',
-    results: AuthorList,
+    results: AuthorListMocks,
 };
 
 export const GenresMock: GenreItemJsModel[] = [

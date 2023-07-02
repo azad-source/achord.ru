@@ -28,7 +28,7 @@ deploy-prod:
     - npm install
     - npm run build
     - rsync -avz --del -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" ./build/ $SSH_CONNECT:$BUILD_FOLDER_PROD
-    - ssh $SSH_CONNECT "cd /var/www/prod/achord.ru; git pull origin master; docker-compose -f docker-compose.yml -p pianosheet restart; exit;"
+    - ssh $SSH_CONNECT "cd /var/www/prod/achord.ru; git pull origin master; docker-compose -f docker-compose.yml -p achordru restart; exit;"
 
 deploy-dev:
   stage: deploy-dev
@@ -38,5 +38,5 @@ deploy-dev:
     - cd frontend/pianosheet/
     - npm install
     - npm run build
-    - rsync -avz --del -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" ./build/ $SSH_CONNECT:$BUILD_FOLDER_DEV
-    - ssh $SSH_CONNECT "cd /var/www/dev/achord.ru; git pull origin dev; docker-compose -f docker-compose.yml -p pianosheet_dev restart; exit;"
+    - rsync -avz --del -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" ./build/ $SSH_CONNECT:$BUILD_FOLDER_PROD
+    - ssh $SSH_CONNECT "cd /var/www/prod/achord.ru; git pull origin master; docker-compose -f docker-compose.yml -p achordru restart; exit;"

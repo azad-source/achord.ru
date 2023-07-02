@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { abcEn, abcRu } from 'utils/constants';
 import { Paths } from 'utils/routes/Paths';
 import cn from 'classnames';
@@ -34,7 +34,7 @@ const Letters: React.FC<{ items: string[]; isMenu: boolean; isDark?: boolean }> 
     return (
         <div className={cn(styles.wrapper, isDark && styles.wrapper__dark)}>
             {items.map((l) => (
-                <Link
+                <NavLink
                     key={l}
                     className={cn(
                         styles.letter,
@@ -45,7 +45,7 @@ const Letters: React.FC<{ items: string[]; isMenu: boolean; isDark?: boolean }> 
                     translate="no"
                 >
                     {l}
-                </Link>
+                </NavLink>
             ))}
         </div>
     );

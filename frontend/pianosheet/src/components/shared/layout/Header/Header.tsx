@@ -15,7 +15,6 @@ import {
     useLazySearchAuthorsQuery,
     useLazySearchSheetsQuery,
     useLazyGetUserDataQuery,
-    useGetUserDataQuery,
     api,
 } from 'redux/api';
 import { addSearch } from 'redux/slices/searchSlice';
@@ -26,9 +25,7 @@ export type MenuItemType = { caption: React.ReactNode; link?: string; handler?: 
 export const Header = () => {
     const [searchAuthors, { isSuccess: isSearchAuthorsSuccess }] = useLazySearchAuthorsQuery();
     const [searchSheets, { isSuccess: isSearchSheetsSuccess }] = useLazySearchSheetsQuery();
-    const [getCurrentUser] = useLazyGetUserDataQuery();
-
-    const { data: currentUser } = useGetUserDataQuery();
+    const [getCurrentUser, { data: currentUser }] = useLazyGetUserDataQuery();
 
     const [searchQuery, setSearchQuery] = React.useState<string>('');
 

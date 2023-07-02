@@ -14,6 +14,10 @@
     .menuWrapper {
       background: $darkBg;
       @include themeSwitchTransition;
+
+      .menuItem {
+        color: #fff;
+      }
     }
 
     .burgerMenu {
@@ -43,7 +47,7 @@
   left: 0;
   z-index: 10;
   padding: 20px;
-  background: $defaultBg;
+  background: #fff;
   box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3);
   transition: 0.4s;
 }
@@ -57,7 +61,7 @@
 }
 
 .menuItem {
-  color: #fff;
+  color: $mainText;
   text-decoration: none;
   font-size: 20px;
   padding: 16px 0;
@@ -85,7 +89,7 @@
   position: absolute;
   width: 80%;
   height: 3px;
-  background: #fff;
+  background: $mainText;
   top: 50%;
   left: 50%;
   transition: 0.25s;
@@ -125,8 +129,12 @@
 }
 
 .sheetNav {
-  border-top: 1px solid #ebebeb;
+  border-top: 1px solid #ccc;
   padding-top: 20px;
+}
+
+.navLanguageToggle {
+  border: 1px solid $defaultBg;
 }
 
 @media screen and (max-width: $siteWidthMobile) {

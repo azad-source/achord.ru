@@ -1,0 +1,7 @@
+frontend/
+pg_data/
+.vscode
+.gitlab-ci.yml
+docker-compose-win.yml
+.env
+.gitignore

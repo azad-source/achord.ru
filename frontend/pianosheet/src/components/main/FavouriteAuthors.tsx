@@ -4,7 +4,7 @@ import { Page } from 'components/shared/layout/Page/Page';
 import { SheetRow } from 'components/shared/SheetRow/SheetRow';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
 import { useGetFavoriteAuthorsQuery, useGetFavoriteSheetsQuery } from 'redux/api';
-import { openDownloadPage } from 'hooks/openDownloadPage';
+import { useOpenDownloadPage } from 'hooks/openDownloadHook';
 import authorsStyles from 'styles/authors.module.scss';
 import mainStyles from './main.module.scss';
 
@@ -43,7 +43,7 @@ export const FavouriteAuthors = () => {
                                 key={sheet.id}
                                 sheet={sheet}
                                 index={index}
-                                onOpen={openDownloadPage}
+                                onOpen={useOpenDownloadPage}
                             />
                         ))}
                     </div>

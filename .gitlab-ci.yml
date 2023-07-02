@@ -24,10 +24,14 @@ deploy-prod:
     - master
   script:
     # backend
+    - ls
+    - pwd
     - rsync -avz --del -e --exclude-from='.rsyncignore' "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" ./ $SSH_CONNECT:$BACKEND_FOLDER
     - ssh $SSH_CONNECT "cd $SSH_CONNECT:$BACKEND_FOLDER; docker-compose -f docker-compose.yml -p achordru restart; exit;"
     # frontend
     - cd frontend/pianosheet/
+    - ls
+    - pwd
     - npm install
     - npm run build
     - rsync -avz --del -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" ./build/ $SSH_CONNECT:$BUILD_FOLDER_PROD

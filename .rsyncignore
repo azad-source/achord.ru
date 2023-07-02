@@ -1,0 +1,11 @@
+frontend
+pg_data
+.vscode
+.gitlab-ci.yml
+docker-compose-win.yml
+.env
+.gitignore
+.rsyncignore
+backend/media
+backend/backstatic
+docker/postgres

@@ -17,26 +17,23 @@ before_script:
 
 stages:
   - deploy-prod
-  - deploy-dev
 
 deploy-prod:
   stage: deploy-prod
   only:
     - master
   script:
+    # backend
+    - ls -a
+    - pwd
+    - rsync -avz --del --exclude-from='.rsyncignore' -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" ./ $SSH_CONNECT:$BACKEND_FOLDER
+    - ls -a
+    - pwd
+    - ssh $SSH_CONNECT "docker-compose -f /var/www/prod/achord.ru/docker-compose.yml -p achordru restart; exit;"
+    # frontend
     - cd frontend/pianosheet/
+    - ls
+    - pwd
     - npm install
     - npm run build
     - rsync -avz --del -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" ./build/ $SSH_CONNECT:$BUILD_FOLDER_PROD
-    - ssh $SSH_CONNECT "cd /var/www/prod/achord.ru; git pull origin master; docker-compose -f docker-compose.yml -p pianosheet restart; exit;"
-
-deploy-dev:
-  stage: deploy-dev
-  only:
-    - dev
-  script:
-    - cd frontend/pianosheet/
-    - npm install
-    - npm run build
-    - rsync -avz --del -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" ./build/ $SSH_CONNECT:$BUILD_FOLDER_DEV
-    - ssh $SSH_CONNECT "cd /var/www/dev/achord.ru; git pull origin dev; docker-compose -f docker-compose.yml -p pianosheet_dev restart; exit;"

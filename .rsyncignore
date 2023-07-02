@@ -6,3 +6,6 @@ docker-compose-win.yml
 .env
 .gitignore
 .rsyncignore
+backend/media/
+backend/backstatic/
+docker/postgres/backups/

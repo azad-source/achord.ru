@@ -1,5 +1,6 @@
+import { MaybeDrafted } from '@reduxjs/toolkit/dist/query/core/buildThunks';
 import { SheetItemJsModel, SheetJsModel } from 'domain/api/JsModels';
-import { TagsEnum } from 'redux/api';
+import { TagsEnum, api } from 'redux/api';
 import { BuildType, transformErrorResponse } from 'redux/apiConfig';
 import { ResultResponse } from 'redux/models/sharedModels';
 import {
@@ -102,6 +103,24 @@ export const sheetEndpoints = (builder: BuildType) => ({
         },
         transformErrorResponse,
         invalidatesTags: [TagsEnum.Sheets],
+        onQueryStarted: (params, { dispatch, queryFulfilled }) => {
+            const patchSheets = dispatch(
+                api.util.updateQueryData('getSheets', {}, setSheetFavorite(params)),
+            );
+            const patchRandomSheets = dispatch(
+                api.util.updateQueryData('getRandomSheets', undefined, setSheetFavorite(params)),
+            );
+            const patchTopSheets = dispatch(
+                api.util.updateQueryData('getTopSheets', undefined, setSheetFavorite(params)),
+            );
+            const patchFavoriteSheets = dispatch(
+                api.util.updateQueryData('getFavoriteSheets', undefined, setSheetFavorite(params)),
+            );
+            queryFulfilled.catch(patchSheets.undo);
+            queryFulfilled.catch(patchRandomSheets.undo);
+            queryFulfilled.catch(patchTopSheets.undo);
+            queryFulfilled.catch(patchFavoriteSheets.undo);
+        },
     }),
     /** Проставление лайка нотам */
     addLikeToSheet: builder.mutation<ResultResponse, AddLikeToSheetRequest>({
@@ -115,3 +134,12 @@ export const sheetEndpoints = (builder: BuildType) => ({
         invalidatesTags: [TagsEnum.Sheets],
     }),
 });
+
+const setSheetFavorite = ({ sheetId, isFavorite }: AddSheetToFavoriteRequest) => {
+    return (draft: MaybeDrafted<SheetJsModel>) => {
+        const currentAuthor = draft.results.find((i) => i.id === sheetId);
+        if (currentAuthor) {
+            currentAuthor.favorite = isFavorite;
+        }
+    };
+};

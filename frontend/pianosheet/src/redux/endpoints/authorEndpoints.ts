@@ -1,5 +1,6 @@
+import { MaybeDrafted } from '@reduxjs/toolkit/dist/query/core/buildThunks';
 import { AuthorItemJsModel, AuthorJsModel } from 'domain/api/JsModels';
-import { TagsEnum } from 'redux/api';
+import { TagsEnum, api } from 'redux/api';
 import { BuildType, transformErrorResponse } from 'redux/apiConfig';
 import {
     AddAuthorRequest,
@@ -108,7 +109,29 @@ export const authorEndpoints = (builder: BuildType) => ({
             return { url: `${baseUrl}/favorite/`, method: 'POST', body: formData };
         },
         transformErrorResponse,
-        invalidatesTags: [TagsEnum.Authors, TagsEnum.Author],
+        invalidatesTags: [TagsEnum.Author],
+        onQueryStarted: (params, { dispatch, queryFulfilled }) => {
+            const patchAuthors = dispatch(
+                api.util.updateQueryData('getAuthors', {}, setAuthorFavorite(params)),
+            );
+            const patchRandomAuthors = dispatch(
+                api.util.updateQueryData('getRandomAuthors', undefined, setAuthorFavorite(params)),
+            );
+            const patchTopAuthors = dispatch(
+                api.util.updateQueryData('getTopAuthors', undefined, setAuthorFavorite(params)),
+            );
+            const patchFavoriteAuthors = dispatch(
+                api.util.updateQueryData(
+                    'getFavoriteAuthors',
+                    undefined,
+                    setAuthorFavorite(params),
+                ),
+            );
+            queryFulfilled.catch(patchAuthors.undo);
+            queryFulfilled.catch(patchRandomAuthors.undo);
+            queryFulfilled.catch(patchTopAuthors.undo);
+            queryFulfilled.catch(patchFavoriteAuthors.undo);
+        },
     }),
     /** Проставление лайка автору */
     addLikeToAuthor: builder.mutation<ResultResponse, AddLikeToAuthorRequest>({
@@ -142,3 +165,12 @@ export const authorEndpoints = (builder: BuildType) => ({
         invalidatesTags: [TagsEnum.Authors],
     }),
 });
+
+const setAuthorFavorite = ({ authorId, isFavorite }: AddAuthorToFavoriteRequest) => {
+    return (draft: MaybeDrafted<AuthorJsModel>) => {
+        const currentAuthor = draft.results.find((i) => i.id === authorId);
+        if (currentAuthor) {
+            currentAuthor.favorite = isFavorite;
+        }
+    };
+};

@@ -17,7 +17,7 @@ import {
     useLazyGetUserDataQuery,
     api,
 } from 'redux/api';
-import { addSearch } from 'redux/slices/searchSlice';
+import { addSearch, dropSearch } from 'redux/slices/searchSlice';
 import { logout, useAuth } from 'redux/apiConfig';
 
 export type MenuItemType = { caption: React.ReactNode; link?: string; handler?: () => void };
@@ -57,7 +57,7 @@ export const Header = () => {
     };
 
     const handleSearch = (query: string) => {
-        Promise.all([searchAuthors({ query }).unwrap(), searchSheets({ query }).unwrap()])
+        Promise.all([searchAuthors({ query }), searchSheets({ query })])
             .then(() => {
                 dispatch(addSearch({ query, applied: true }));
             })
@@ -66,7 +66,7 @@ export const Header = () => {
             });
     };
 
-    const handleDropSearch = () => {};
+    const handleDropSearch = () => dispatch(dropSearch());
 
     const menuItems: MenuItemType[] = [
         {

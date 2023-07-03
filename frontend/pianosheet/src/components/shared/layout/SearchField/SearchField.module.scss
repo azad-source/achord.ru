@@ -84,9 +84,5 @@
 @media screen and (max-width: $siteWidthMobile) {
   .input {
     opacity: 1;
-
-    & + .loupe {
-      color: #222;
-    }
   }
 }

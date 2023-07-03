@@ -15,8 +15,8 @@ import { Spinner } from 'components/shared/Spinner/Spinner';
 import {
     useAddAuthorMutation,
     useGetUserDataQuery,
-    useSearchAuthorsQuery,
-    useSearchSheetsQuery,
+    useLazySearchAuthorsQuery,
+    useLazySearchSheetsQuery,
 } from 'redux/api';
 import { AddAuthorRequest } from 'redux/models/authorModels';
 import { dropSearch, searchSelector } from 'redux/slices/searchSlice';
@@ -43,10 +43,10 @@ export const Page: React.FC<Props> = ({
 
     const [showAddAuthorModal, setShowAddAuthorModal] = React.useState<boolean>(false);
 
-    const { applied: searchApplied, query: searchQuery } = useAppSelector(searchSelector);
+    const { applied: searchApplied } = useAppSelector(searchSelector);
 
-    const { isFetching: isAuthorSearchLoading } = useSearchAuthorsQuery({ query: searchQuery });
-    const { isFetching: isSheetSearchLoading } = useSearchSheetsQuery({ query: searchQuery });
+    const [_, { isFetching: isAuthorSearchLoading }] = useLazySearchAuthorsQuery();
+    const [__, { isFetching: isSheetSearchLoading }] = useLazySearchSheetsQuery();
 
     const isSearchLoading = isAuthorSearchLoading || isSheetSearchLoading;
 

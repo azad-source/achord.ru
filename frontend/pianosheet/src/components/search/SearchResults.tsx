@@ -56,8 +56,6 @@ export const SearchResults = () => {
 
     const isLoading = isAuthorsLoading || isSheetsLoading;
 
-    const { query: searchQuery } = useAppSelector(searchSelector);
-
     const isDark = useAppSelector(isDarkTheme);
 
     const handleChangePage = (target: keyof PagesState) => {
@@ -68,10 +66,10 @@ export const SearchResults = () => {
 
     if (!hasResult && !isLoading) {
         return (
-            <>
+            <TextPlain>
                 <br />
                 <div>
-                    По запросу <strong>&laquo;{searchQuery}&raquo;</strong> ничего не найдено
+                    По запросу <strong>&laquo;{query}&raquo;</strong> ничего не найдено
                 </div>
                 <div>
                     <br />
@@ -82,7 +80,7 @@ export const SearchResults = () => {
                         <li>Попробуйте использовать более популярные ключевые слова.</li>
                     </ul>
                 </div>
-            </>
+            </TextPlain>
         );
     }
 

@@ -109,7 +109,7 @@ export const authorEndpoints = (builder: BuildType) => ({
             return { url: `${baseUrl}/favorite/`, method: 'POST', body: formData };
         },
         transformErrorResponse,
-        invalidatesTags: [TagsEnum.Author],
+        invalidatesTags: [TagsEnum.Authors, TagsEnum.Author],
         onQueryStarted: (params, { dispatch, queryFulfilled }) => {
             const patchAuthors = dispatch(
                 api.util.updateQueryData('getAuthors', {}, setAuthorFavorite(params)),

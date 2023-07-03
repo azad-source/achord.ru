@@ -129,6 +129,11 @@ class GenreViewSet(viewsets.ModelViewSet):
         'destroy': (IsAdminUser, ),
     }
 
+    # def get_authenticators(self):
+    #     if self.action in ['list', 'retrieve']:
+    #         return []
+    #     return super().get_authenticators()
+    
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
         pk = self.kwargs['pk']
@@ -170,6 +175,10 @@ class AuthorViewSet(CustomModelViewSet):
         'like': (IsAuthenticated,),
         'favorite': (IsAuthenticated,),
     }
+    # def get_authenticators(self):
+    #     if self.action in ['list', 'retrieve', 'random']:
+    #         return []
+    #     return super().get_authenticators()
     
     def get_serializer_class(self):
         if self.action == 'favorite' and self.request.method == 'POST':
@@ -211,6 +220,10 @@ class NoteViewSet(CustomModelViewSet):
         'author_alias': 'author__alias',
         'genre_alias': 'author__genres__alias',
     }
+    # def get_authenticators(self):
+    #     if self.action in ['list', 'retrieve', 'random']:
+    #         return []
+    #     return super().get_authenticators()
     def get_serializer_class(self):
         if self.action == 'favorite' and self.request.method == 'POST':
             return FavoriteNoteSerializer

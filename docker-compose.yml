@@ -4,7 +4,7 @@ services:
     db:
         image: postgres:12
         volumes: 
-            - ./docker/postgres/backups/init.sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+            - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
             - ./pg_data:/db/data
         env_file: .env
         restart: always

@@ -13,6 +13,12 @@
       background-color: $darkTextColor;
       @include themeSwitchTransition;
     }
+
+    .dropSearch {
+      @media screen and (max-width: $siteWidthMobile) {
+        background-color: $darkBgContent;
+      }
+    }
   }
 }
 
@@ -53,6 +59,10 @@
     color: #fff;
     padding: 10px 5px;
     text-align: center;
+
+    &:hover {
+      text-decoration: none;
+    }
   }
 }
 

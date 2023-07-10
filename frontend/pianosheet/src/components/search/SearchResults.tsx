@@ -7,7 +7,7 @@ import { Pagination } from 'components/shared/layout/Pagination/Pagination';
 import { useLocation } from 'react-router-dom';
 import { SiteName } from 'domain/SiteInfo';
 import { TextPlain } from 'components/shared/TextPlain/TextPlain';
-import { Link } from 'components/shared/Link/Link';
+import { Button } from 'components/shared/Button/Button';
 import { SheetRow } from 'components/shared/SheetRow/SheetRow';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { isDarkTheme } from 'redux/slices/appSlice';
@@ -91,10 +91,10 @@ export const SearchResults = () => {
     return (
         <div className={cn(styles.root, isDark && styles.root__dark)}>
             <TextPlain className={styles.title}>Результаты поиска</TextPlain>
-            <Link className={styles.dropSearch} onClick={handleDropSearch}>
+            <Button className={styles.dropSearch} onClick={handleDropSearch} use="link">
                 Сбросить поиск
                 <span className={styles.closeIcon} />
-            </Link>
+            </Button>
             {sheetsList.length > 0 && (
                 <>
                     <TextPlain className={styles.searchTitle}>Найденные ноты</TextPlain>

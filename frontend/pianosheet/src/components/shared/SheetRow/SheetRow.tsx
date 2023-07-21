@@ -52,7 +52,6 @@ export const SheetRow: React.FC<Props> = ({
             className={cn(styles.root, styles[`root_${type}`], isDark && styles.root__dark)}
             onClick={() => onOpen(sheet)}
             style={type === 'main' ? style : undefined}
-            // TODO: поправить
             isLoading={isLoading}
             spinnerType="ellipsis"
         >

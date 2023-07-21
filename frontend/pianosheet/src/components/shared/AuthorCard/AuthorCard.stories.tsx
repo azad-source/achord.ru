@@ -28,12 +28,9 @@ const handleRemoveAuthor = () => {
 
 export const Primary: Story = {
     args: {
-        author: {
-            ...AuthorListMocks[0],
-        },
+        author: { ...AuthorListMocks[0] },
         canAddToFavorite: true,
         canEdit: true,
-        isDarkTheme: false,
         isLoading: false,
         onEditAuthor: handleEditAuthor,
         onAddToFavorite: handleAddToFavorite,
@@ -43,12 +40,9 @@ export const Primary: Story = {
 
 export const IsLoading: Story = {
     args: {
-        author: {
-            ...AuthorListMocks[0],
-        },
+        author: { ...AuthorListMocks[0] },
         canAddToFavorite: true,
         canEdit: true,
-        isDarkTheme: false,
         isLoading: true,
         onEditAuthor: handleEditAuthor,
         onAddToFavorite: handleAddToFavorite,

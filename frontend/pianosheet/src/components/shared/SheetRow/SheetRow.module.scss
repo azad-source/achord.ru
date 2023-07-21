@@ -3,6 +3,8 @@
 
 .root {
   position: relative;
+  display: flex;
+  align-items: center;
   margin-bottom: 16px;
   padding: 11px 10px 13px;
   box-sizing: border-box;
@@ -10,10 +12,9 @@
   cursor: pointer;
   user-select: none;
   overflow: hidden;
+  border-radius: 10px;
 
   &_main {
-    border-radius: 15px;
-
     .caption {
       color: #fff;
     }
@@ -29,7 +30,7 @@
 
     .caption {
       color: $linkColor;
-      margin-left: 30px;
+      margin-left: 25px;
     }
 
     &::before {
@@ -38,8 +39,8 @@
       top: 50%;
       left: 10px;
       transform: translateY(-50%);
-      width: 15px;
-      height: 15px;
+      width: 12px;
+      height: 12px;
       background-color: $defaultBg;
     }
 
@@ -89,7 +90,6 @@
 }
 
 .caption {
-  width: 93%;
   font-size: 16px;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -99,10 +99,6 @@
 .likeBtn,
 .favoriteBtn {
   color: rgb(241, 241, 241);
-  padding: 0;
-  margin: 0;
-  min-width: unset;
-  margin-right: 20px;
   outline: none;
 }
 
@@ -125,13 +121,8 @@
 
 .favoriteBtn {
   opacity: 0;
-  position: absolute;
-  z-index: 5;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 10px;
   transition: 0.3s;
-  margin-right: 0;
+  margin-left: auto;
 
   &_active {
     opacity: 1;
@@ -149,10 +140,6 @@
   .root {
     padding: 9px 10px 11px;
 
-    &_main {
-      border-radius: 8px;
-    }
-
     &_item {
       width: 100%;
       height: 135px;
@@ -161,7 +148,6 @@
 
   .caption {
     width: 90%;
-    font-size: 14px;
-    white-space: unset;
+    font-size: 13px;
   }
 }

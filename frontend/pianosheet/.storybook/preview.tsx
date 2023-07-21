@@ -1,8 +1,5 @@
 import type { Preview } from '@storybook/react';
-import { MemoryRouter } from 'react-router-dom';
-import React from 'react';
-import { Provider } from 'react-redux';
-import { store } from '../src/redux/store';
+import { StoryDecorator } from '../src/decorators/StoryDecorator';
 
 const preview: Preview = {
     parameters: {
@@ -14,15 +11,7 @@ const preview: Preview = {
             },
         },
     },
-    decorators: [
-        (Story) => (
-            <Provider store={store}>
-                <MemoryRouter>
-                    <Story />
-                </MemoryRouter>
-            </Provider>
-        ),
-    ],
+    decorators: [StoryDecorator],
 };
 
 export default preview;

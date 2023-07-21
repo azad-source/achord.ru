@@ -43,8 +43,6 @@ export const AuthorCard: React.FC<Props> = ({ author, className }) => {
 
     const isSuperUser = currentUser?.is_superuser || false;
 
-    const isDark = useAppSelector(isDarkTheme);
-
     const [logged] = useAuth();
 
     const handleEditAuthor = async (options: EditAuthorByIdRequest): Promise<void> => {
@@ -70,7 +68,6 @@ export const AuthorCard: React.FC<Props> = ({ author, className }) => {
             onEditAuthor={handleEditAuthor}
             onAddToFavorite={handleAddToFavorite}
             onRemoveAuthor={handleRemoveAuthor}
-            isDarkTheme={isDark}
         />
     );
 };
@@ -80,7 +77,6 @@ interface Props_ {
     isLoading: boolean;
     canEdit: boolean;
     canAddToFavorite: boolean;
-    isDarkTheme: boolean;
     className?: string;
     onEditAuthor: (options: EditAuthorByIdRequest) => Promise<void>;
     onAddToFavorite: () => void;
@@ -92,7 +88,6 @@ export const AuthorCard_: React.FC<Props_> = ({
     isLoading,
     canEdit,
     canAddToFavorite,
-    isDarkTheme,
     className,
     onEditAuthor,
     onAddToFavorite,
@@ -107,6 +102,8 @@ export const AuthorCard_: React.FC<Props_> = ({
     const authorPath = alias ? Paths.getAuthorPath(name.charAt(0), alias) : '';
 
     const hasPreview = preview_s && !preview_s.includes('default.png');
+
+    const isDark = useAppSelector(isDarkTheme);
 
     const openEditMenu = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -154,7 +151,7 @@ export const AuthorCard_: React.FC<Props_> = ({
     return (
         <Loader isLoading={isLoading} className={styles.wrapper}>
             <NavLink
-                className={cn(styles.root, isDarkTheme && styles.root__dark, className)}
+                className={cn(styles.root, isDark && styles.root__dark, className)}
                 to={authorPath}
             >
                 {canEdit && (

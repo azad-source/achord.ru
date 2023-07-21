@@ -10,7 +10,7 @@ import { SwitchThemeToggle } from 'components/shared/SwitchThemeToggle/SwitchThe
 import cn from 'classnames';
 import { MenuMobile } from 'components/shared/layout/Menu/MenuMobile';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { isDarkTheme, switchTheme } from 'redux/slices/appSlice';
+import { isDarkTheme } from 'redux/slices/appSlice';
 import {
     useLazySearchAuthorsQuery,
     useLazySearchSheetsQuery,
@@ -38,10 +38,6 @@ export const Header = () => {
     const dispatch = useAppDispatch();
 
     const isDark = useAppSelector(isDarkTheme);
-
-    const themeTogglerHandler = () => {
-        dispatch(switchTheme(isDark ? 'light' : 'dark'));
-    };
 
     React.useEffect(() => {
         document.title = SiteName;
@@ -83,13 +79,7 @@ export const Header = () => {
             handler: logged ? logoutHandler : undefined,
         },
         {
-            caption: (
-                <SwitchThemeToggle
-                    className={styles.switchTheme}
-                    isDark={isDark}
-                    themeToggler={themeTogglerHandler}
-                />
-            ),
+            caption: <SwitchThemeToggle className={styles.switchTheme} />,
         },
     ];
 

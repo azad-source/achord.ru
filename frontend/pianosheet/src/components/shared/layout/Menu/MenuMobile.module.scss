@@ -24,7 +24,7 @@
       border-color: $darkBgContent;
 
       &_line {
-        background-color: $darkBgContent;
+        background-color: #fff;
       }
     }
 
@@ -55,6 +55,7 @@
   background: #fff;
   box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3);
   transition: 0.4s;
+  box-sizing: border-box;
 }
 
 .menuitems {

@@ -65,22 +65,14 @@ export const Header = () => {
     const handleDropSearch = () => dispatch(dropSearch());
 
     const menuItems: MenuItemType[] = [
-        {
-            caption: 'Главная',
-            link: Paths.mainPage,
-        },
-        {
-            caption: 'Ноты',
-            link: Paths.sheetsPage,
-        },
+        { caption: 'Главная', link: Paths.mainPage },
+        { caption: 'Ноты', link: Paths.sheetsPage },
         {
             caption: logged ? 'Выйти' : 'Войти',
             link: !logged ? '/sign-in' : undefined,
             handler: logged ? logoutHandler : undefined,
         },
-        {
-            caption: <SwitchThemeToggle className={styles.switchTheme} />,
-        },
+        { caption: <SwitchThemeToggle /> },
     ];
 
     return (
@@ -100,7 +92,7 @@ export const Header = () => {
                     isDark={isDark}
                 />
                 <Menu items={menuItems} isDark={isDark} />
-                <MenuMobile items={menuItems} isDark={isDark} />
+                <MenuMobile items={menuItems} />
             </div>
         </header>
     );

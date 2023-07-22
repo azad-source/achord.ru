@@ -5,13 +5,14 @@ import { Toggle } from 'components/shared/Toggle/Toggle';
 import { SheetsNav } from '../SheetsNav/SheetsNav';
 import { MenuItemType } from '../Header/Header';
 import cn from 'classnames';
+import { useAppSelector } from 'redux/hooks';
+import { isDarkTheme } from 'redux/slices/appSlice';
 
 interface Props {
     items: MenuItemType[];
-    isDark?: boolean;
 }
 
-export const MenuMobile: React.FC<Props> = ({ items, isDark = false }) => {
+export const MenuMobile: React.FC<Props> = ({ items }) => {
     const [menu, setMenu] = React.useState({
         main: { transform: 'translateY(-150%)' },
         burger: { transform: 'none' },
@@ -19,6 +20,8 @@ export const MenuMobile: React.FC<Props> = ({ items, isDark = false }) => {
     });
 
     const location = useLocation();
+
+    const isDark = useAppSelector(isDarkTheme);
 
     React.useEffect(() => {
         closeMenu();

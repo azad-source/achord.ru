@@ -5,14 +5,12 @@ import styles from './Footer.module.scss';
 import cn from 'classnames';
 import { Button } from 'components/shared/Button/Button';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from 'redux/hooks';
+import { isDarkTheme } from 'redux/slices/appSlice';
 
-interface Props {
-    isDark?: boolean;
-}
-
-export const Footer: React.FC<Props> = ({ isDark = false }) => {
+export const Footer = () => {
+    const isDark = useAppSelector(isDarkTheme);
     const year = new Date().getFullYear();
-
     const navigate = useNavigate();
 
     return (

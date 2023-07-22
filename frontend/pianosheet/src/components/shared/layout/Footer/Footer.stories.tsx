@@ -1,11 +1,11 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Header } from './Header';
+import { Footer } from './Footer';
 
 const meta = {
-    title: 'shared/Header',
-    component: Header,
+    title: 'shared/Footer',
+    component: Footer,
     tags: ['autodocs'],
-} satisfies Meta<typeof Header>;
+} satisfies Meta<typeof Footer>;
 
 export default meta;
 

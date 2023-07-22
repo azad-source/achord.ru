@@ -28,7 +28,7 @@ const AppRouter = () => {
     React.useEffect(() => {
         dispatch(switchTheme());
     }, []);
-    
+
     const dispatch = useAppDispatch();
     const isDark = useAppSelector(isDarkTheme);
 
@@ -57,7 +57,7 @@ const AppRouter = () => {
                         <Route path={Paths.mainPage} element={<MainPage />} />
                         <Route element={<NotFoundPage />} />
                     </Routes>
-                    <Footer isDark={isDark} />
+                    <Footer />
                 </BrowserRouter>
             </React.Suspense>
         </div>

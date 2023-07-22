@@ -19,7 +19,7 @@ export const StoryDecorator = (Story: StoryType) => (
 
 const StoryWrapper: React.FC<{ Story: StoryType }> = ({ Story }) => {
     const isDark = useAppSelector(isDarkTheme);
-    const bgColor = isDark ? 'rgb(60, 64, 67)' : 'rgb(61, 68, 107)';
+    const bgColor = isDark ? 'rgb(60, 64, 67)' : '#fff';
 
     return (
         <div className={styles.root}>

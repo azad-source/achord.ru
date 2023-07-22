@@ -91,7 +91,7 @@ export const Header = () => {
                     className={styles.search}
                     isDark={isDark}
                 />
-                <Menu items={menuItems} isDark={isDark} />
+                <Menu items={menuItems} />
                 <MenuMobile items={menuItems} />
             </div>
         </header>

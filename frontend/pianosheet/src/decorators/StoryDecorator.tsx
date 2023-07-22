@@ -22,8 +22,8 @@ const StoryWrapper: React.FC<{ Story: StoryType }> = ({ Story }) => {
     const bgColor = isDark ? 'rgb(60, 64, 67)' : 'rgb(61, 68, 107)';
 
     return (
-        <div className={styles.root} style={{ backgroundColor: bgColor }}>
-            <div className={styles.topPanel}>
+        <div className={styles.root}>
+            <div className={styles.topPanel} style={{ backgroundColor: bgColor }}>
                 <SwitchThemeToggle />
             </div>
             <MemoryRouter>

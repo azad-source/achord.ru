@@ -3,13 +3,16 @@ import { NavLink } from 'react-router-dom';
 import { MenuItemType } from '../Header/Header';
 import styles from './Menu.module.scss';
 import cn from 'classnames';
+import { useAppSelector } from 'redux/hooks';
+import { isDarkTheme } from 'redux/slices/appSlice';
 
 interface Props {
     items: MenuItemType[];
-    isDark?: boolean;
 }
 
-export const Menu: React.FC<Props> = ({ items, isDark = false }) => {
+export const Menu: React.FC<Props> = ({ items }) => {
+    const isDark = useAppSelector(isDarkTheme);
+
     return (
         <div className={cn(styles.root, isDark && styles.root__dark)}>
             {items.length > 0 &&

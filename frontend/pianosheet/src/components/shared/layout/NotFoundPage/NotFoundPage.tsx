@@ -1,6 +1,6 @@
 import { Button } from 'components/shared/Button/Button';
 import { SadSmile } from 'components/shared/icons/SadSmile';
-import * as React from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Page } from '../Page/Page';
 import styles from './NotFoundPage.module.scss';

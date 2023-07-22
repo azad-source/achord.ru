@@ -90,7 +90,7 @@ export const Page: React.FC<Props> = ({
     return (
         <div className={cn(styles.backplate, isDark && styles.backplate__dark)}>
             <ErrorBoundary>
-                {!hideSheetsNav && <SheetsNav isDark={isDark} />}
+                {!hideSheetsNav && <SheetsNav />}
                 <div className={cn(styles.root, className)}>
                     {!!breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
                     {!!currentUser?.is_superuser && showAddAuthorBtn && !searchApplied && (

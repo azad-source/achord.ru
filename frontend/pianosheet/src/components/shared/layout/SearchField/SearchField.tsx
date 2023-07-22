@@ -3,10 +3,11 @@ import styles from './SearchField.module.scss';
 import cn from 'classnames';
 import { Loupe } from 'components/shared/icons/Loupe';
 import { useLocation } from 'react-router';
+import { useAppSelector } from 'redux/hooks';
+import { isDarkTheme } from 'redux/slices/appSlice';
 
 interface Props {
     className?: string;
-    isDark?: boolean;
     query: string;
     isSuccess: boolean;
     onSearch: (query: string) => void;
@@ -15,12 +16,13 @@ interface Props {
 
 export const SearchField: React.FC<Props> = ({
     className,
-    isDark = false,
     query,
     isSuccess,
     onSearch,
     onDropSearch,
 }) => {
+    const isDark = useAppSelector(isDarkTheme);
+
     const [input, setInput] = React.useState<string>('');
     let location = useLocation();
 

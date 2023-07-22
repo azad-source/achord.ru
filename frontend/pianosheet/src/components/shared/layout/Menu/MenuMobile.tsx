@@ -121,12 +121,7 @@ export const MenuMobile: React.FC<Props> = ({ items }) => {
                         isDark={isDark}
                         className={styles.navLanguageToggle}
                     />
-                    <SheetsNav
-                        isMenu
-                        hideEn={navLang != 'en'}
-                        hideRu={navLang != 'ru'}
-                        isDark={isDark}
-                    />
+                    <SheetsNav isMenu hideEn={navLang != 'en'} hideRu={navLang != 'ru'} />
                 </div>
             </div>
         </div>

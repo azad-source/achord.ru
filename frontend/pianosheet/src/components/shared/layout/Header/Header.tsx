@@ -89,7 +89,6 @@ export const Header = () => {
                     onDropSearch={handleDropSearch}
                     isSuccess={isSuccess}
                     className={styles.search}
-                    isDark={isDark}
                 />
                 <Menu items={menuItems} />
                 <MenuMobile items={menuItems} />

@@ -4,25 +4,25 @@ import { abcEn, abcRu } from 'utils/constants';
 import { Paths } from 'utils/routes/Paths';
 import cn from 'classnames';
 import styles from './SheetsNav.module.scss';
+import { useAppSelector } from 'redux/hooks';
+import { isDarkTheme } from 'redux/slices/appSlice';
 
 interface Props {
     isMenu?: boolean;
     hideEn?: boolean;
     hideRu?: boolean;
-    isDark?: boolean;
 }
 
-export const SheetsNav: React.FC<Props> = ({
-    isMenu = false,
-    hideEn = false,
-    hideRu = false,
-    isDark = false,
-}) => (
-    <div className={cn(styles.root, isMenu && styles.root_isMenu)}>
-        {!hideEn && <Letters items={abcEn} isMenu={isMenu} isDark={isDark} />}
-        {!hideRu && <Letters items={abcRu} isMenu={isMenu} isDark={isDark} />}
-    </div>
-);
+export const SheetsNav: React.FC<Props> = ({ isMenu = false, hideEn = false, hideRu = false }) => {
+    const isDark = useAppSelector(isDarkTheme);
+
+    return (
+        <div className={cn(styles.root, isMenu && styles.root_isMenu)}>
+            {!hideEn && <Letters items={abcEn} isMenu={isMenu} isDark={isDark} />}
+            {!hideRu && <Letters items={abcRu} isMenu={isMenu} isDark={isDark} />}
+        </div>
+    );
+};
 
 const Letters: React.FC<{ items: string[]; isMenu: boolean; isDark?: boolean }> = ({
     items,

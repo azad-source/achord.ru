@@ -17,12 +17,12 @@ export const Footer = () => {
         <footer className={cn(styles.backplate, isDark && styles.backplate__dark)}>
             <div className={styles.root}>
                 <div className={styles.item}>
-                    <Button onClick={() => navigate('/')} use="link">
+                    <Button className={styles.itemButton} onClick={() => navigate('/')} use="link">
                         Главная
                     </Button>
                 </div>
                 <div className={styles.item}>
-                    <Button onClick={() => navigate('/privacy')} use="link">
+                    <Button className={styles.itemButton} onClick={() => navigate('/privacy')} use="link">
                         Политика конфиденциальности
                     </Button>
                 </div>
@@ -32,17 +32,18 @@ export const Footer = () => {
                     </TextPlain>
                 </div>
                 <div className={styles.item}>
-                    <Button onClick={() => navigate('/contacts')} use="link">
+                    <Button className={styles.itemButton} onClick={() => navigate('/contacts')} use="link">
                         Контактная информация
                     </Button>
                 </div>
                 <div className={styles.item}>
-                    <Button onClick={() => navigate('/copyright-holders')} use="link">
+                    <Button className={styles.itemButton} onClick={() => navigate('/copyright-holders')} use="link">
                         Правовая информация
                     </Button>
                 </div>
                 <div className={styles.item}>
                     <Button
+                        className={styles.itemButton}
                         onClick={() => window.open('https://vk.com/piano_music_sheet', '_blank')}
                         use="link"
                     >

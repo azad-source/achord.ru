@@ -1,8 +1,70 @@
 @import 'colors.scss';
 
+
+@font-face {
+  font-family: 'Mulish';
+  src: url('../../public/fonts/Mulish-ExtraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Mulish';
+  src: url('../../public/fonts/Mulish-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Mulish';
+  src: url('../../public/fonts/Mulish-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Mulish';
+  src: url('../../public/fonts/Mulish-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Mulish';
+  src: url('../../public/fonts/Mulish-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'Mulish';
+  src: url('../../public/fonts/Mulish-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Mulish';
+  src: url('../../public/fonts/Mulish-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Mulish';
+  src: url('../../public/fonts/Mulish-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+:root {
+  --default-font: "Mulish"
+}
+
 html,
 body {
-  font: 14px/20px 'Segoe UI', 'Helvetica Neue', Arial, Tahoma, sans-serif;
+  font: 14px/20px $fontMain;
   color: $mainText;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
@@ -12,5 +74,7 @@ a,
 input,
 textarea,
 button {
-  font: 14px/20px 'Segoe UI', 'Helvetica Neue', Arial, Tahoma, sans-serif;
+  font: 14px/20px $fontMain;
 }
+
+

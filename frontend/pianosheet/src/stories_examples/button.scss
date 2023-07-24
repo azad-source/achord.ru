@@ -1,8 +1,10 @@
+@import 'styles/default.scss';
+
 .storybook-button {
-  font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: $fontMain;
   font-weight: 700;
   border: 0;
-  border-radius: 3em;
+  border-radius: $borderRadius;
   cursor: pointer;
   display: inline-block;
   line-height: 1;

@@ -33,9 +33,11 @@ $baseColor: rgb(217, 226, 255);
     padding: 15px 0;
     cursor: pointer;
     font-size: 18px;
-
+    font-weight: 600;
+    opacity: 0.8;
+    
     &_active {
-      font-weight: bold;
+      opacity: 1;
       cursor: default;
       border-bottom: 4px solid $defaultBg;
     }

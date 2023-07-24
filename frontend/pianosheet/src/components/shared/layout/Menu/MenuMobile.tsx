@@ -125,7 +125,6 @@ export const MenuMobile: React.FC<Props> = ({ items }) => {
                         isMenu
                         hideEn={navLang != 'en'}
                         hideRu={navLang != 'ru'}
-                        isDark={isDark}
                     />
                 </div>
             </div>

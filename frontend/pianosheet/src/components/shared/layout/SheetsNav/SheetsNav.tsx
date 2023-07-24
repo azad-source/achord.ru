@@ -11,6 +11,7 @@ interface Props {
     isMenu?: boolean;
     hideEn?: boolean;
     hideRu?: boolean;
+    // isDark?: boolean;
 }
 
 export const SheetsNav: React.FC<Props> = ({ isMenu = false, hideEn = false, hideRu = false }) => {

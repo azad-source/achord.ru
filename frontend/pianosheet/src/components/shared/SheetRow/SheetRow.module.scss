@@ -12,7 +12,7 @@
   cursor: pointer;
   user-select: none;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: $borderRadius;
 
   &_main {
     .caption {

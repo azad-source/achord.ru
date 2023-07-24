@@ -1,3 +1,6 @@
+@import 'styles/default.scss';
+
+
 *,
 body,
 html,
@@ -133,7 +136,7 @@ body {
   font-size: 20px;
   padding: 5px 20px;
   border: unset;
-  border-radius: 5px;
+  border-radius: $borderRadius;
   box-shadow: 1px 1px 1px 2px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   transition: 0.1s;
@@ -168,7 +171,7 @@ body {
 .drum-element {
   padding: 50px 0;
   box-shadow: 0 0 2px 4px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
+  border-radius: $borderRadius;
   text-align: center;
   font-size: 40px;
   font-weight: bold;

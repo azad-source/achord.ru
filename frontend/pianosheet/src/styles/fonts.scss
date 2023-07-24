@@ -64,7 +64,7 @@
 
 html,
 body {
-  font: 14px/20px var(--default-font);
+  font: 14px/20px $fontMain;
   color: $mainText;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
@@ -74,7 +74,7 @@ a,
 input,
 textarea,
 button {
-  font: 14px/20px var(--default-font);
+  font: 14px/20px $fontMain;
 }
 
 

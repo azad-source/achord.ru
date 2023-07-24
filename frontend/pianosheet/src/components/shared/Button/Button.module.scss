@@ -7,7 +7,7 @@
   justify-content: center;
   cursor: pointer;
   border: none;
-  border-radius: 8px;
+  border-radius: $borderRadius;
   color: #fff;
   padding: 14px;
   line-height: 1;
@@ -62,10 +62,6 @@
 .large {
   font-size: 18px;
 }
-
-// .root:hover {
-//   opacity: 0.95;
-// }
 
 .default {
   background-color: $defaultButtonBg;

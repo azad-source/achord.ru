@@ -9,7 +9,7 @@
 //   incrementIfOdd,
 //   selectCount,
 // } from './counterSlice';
-// import styles from './Counter.module.css';
+// import styles from './Counter.module.scss';
 
 // export function Counter() {
 //   const count = useAppSelector(selectCount);

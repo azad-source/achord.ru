@@ -1,3 +1,5 @@
+@import 'styles/default.scss';
+
 .googleAuth {
   display: flex;
   width: 300px;
@@ -12,7 +14,7 @@
     background-color: #df4a32;
     color: #fff;
     padding: 8px 35px 2px;
-    border-radius: 8px;
+    border-radius: $borderRadius;
 
     &:hover {
       background-color: #d4412a;

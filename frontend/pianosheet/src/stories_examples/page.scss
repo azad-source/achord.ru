@@ -1,5 +1,7 @@
+@import 'styles/default.scss';
+
 .storybook-page {
-  font-family:  var(--default-font);
+  font-family:  $fontMain;
   font-size: 14px;
   line-height: 24px;
   padding: 48px 20px;
